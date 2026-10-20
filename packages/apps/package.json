@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "tsx scripts/build-all.ts",
+    "embed": "tsx scripts/embed.ts",
     "test": "vitest run",
     "lint": "tsc -p tsconfig.json --noEmit"
   },
