@@ -6,6 +6,8 @@
   "scripts": {
     "build": "tsx scripts/build-all.ts",
     "embed": "tsx scripts/embed.ts",
+    "contact-sheet": "tsx scripts/contact-sheet.ts",
+    "dev": "vite design/sheet",
     "test": "vitest run",
     "lint": "tsc -p tsconfig.json --noEmit"
   },
