@@ -5,6 +5,8 @@ import { registerAccuseTool } from '../tools/accuse.js';
 import { registerCatalogTools } from '../tools/catalog.js';
 import { registerInterrogationTools } from '../tools/interrogate.js';
 import { registerInvestigationTools } from '../tools/investigate.js';
+import { registerLabTools } from '../tools/lab.js';
+import { registerProgressTools } from '../tools/progress.js';
 
 export const SERVER_INFO = { name: 'alibi', title: 'Alibi', version: '0.1.0' };
 
@@ -21,5 +23,7 @@ export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo }): McpServer
   registerInterrogationTools(server, toolCtx);
   registerInvestigationTools(server, toolCtx);
   registerAccuseTool(server, toolCtx);
+  registerLabTools(server, toolCtx);
+  registerProgressTools(server, toolCtx);
   return server;
 }
