@@ -52,6 +52,19 @@ describe('custom cases', () => {
     expect(text(status)).toMatch(/writing|queued/i);
   });
 
+  it('a case that cannot be started gives the credit back', async () => {
+    const deps = testDeps({ demoMode: true, dispatcher: { enqueueCasegen: async () => { throw new Error('throttled'); } } });
+    await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');
+    const client = await connect(deps, userAuth('okafor'));
+    const r = await client.callTool({ name: 'create_custom_case', arguments: args });
+    expect(r.isError).toBeFalsy();
+    expect(text(r)).toMatch(/couldn't start/i);
+    expect(await deps.entitlements.has('okafor', 'custom-case')).toBe(true);
+    const [job] = await deps.jobs.listByHousehold('okafor');
+    expect(job).toMatchObject({ status: 'failed' });
+    expect(await deps.jobs.countToday('custom:okafor')).toBe(0);
+  });
+
   it('missing names asks for them', async () => {
     const deps = testDeps();
     await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');

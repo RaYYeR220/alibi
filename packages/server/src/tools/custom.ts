@@ -115,10 +115,18 @@ export function registerCustomTools(server: McpServer, ctx: Ctx): void {
         updatedAt: now,
       };
       await ctx.deps.jobs.create(job);
+      try {
+        await ctx.deps.dispatcher.enqueueCasegen(job.jobId);
+      } catch (err) {
+        // Nothing will ever write this case: hand the credit back (same order key the pipeline refunds under).
+        console.error(JSON.stringify({ event: 'casegen_dispatch_failed', jobId: job.jobId, error: String(err) }));
+        await ctx.deps.entitlements.grant(hh, CUSTOM_CASE_SKU, `refund-${job.jobId}`);
+        await ctx.deps.jobs.update(job.jobId, { status: 'failed', stage: 'dispatch', updatedAt: ctx.deps.clock() });
+        return say("I couldn't start writing that case just now. Your credit is back; try again in a minute.");
+      }
       if (ctx.deps.demoMode) {
         await Promise.all([ctx.deps.jobs.incrementToday(`custom:${hh}`), ctx.deps.jobs.incrementToday('custom:global')]);
       }
-      await ctx.deps.dispatcher.enqueueCasegen(job.jobId);
 
       const view: ProgressView = { kind: 'progress', games: [], labsReady: [], jobs: [jobView(job)], inbox: [] };
       return say(jobText(job), view);

@@ -92,7 +92,11 @@ export function depsFromEnv(env: Env, publicOrigin: string, cases: Case[], views
     assetsBaseUrl: env.ASSETS_BASE_URL ?? `${publicOrigin}/assets`,
     dispatcher: stateMachineArn
       ? createStepFunctionsDispatcher({ stateMachineArn })
-      : { enqueueCasegen: async (jobId) => console.warn(JSON.stringify({ event: 'casegen_disabled', jobId })) },
+      : {
+          enqueueCasegen: async () => {
+            throw new Error('custom cases are not configured (STATE_MACHINE_ARN unset)');
+          },
+        },
     scheduler: createEventBridgeScheduler({
       groupName: required(env, 'LAB_SCHEDULE_GROUP'),
       targetArn: required(env, 'LAB_TARGET_ARN'),
