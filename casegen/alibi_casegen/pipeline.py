@@ -160,7 +160,7 @@ def run_stage(name: str, draft: Draft, deps: PipelineDeps) -> Draft:
 def record_failure(deps: PipelineDeps, job: JobInput, stage: str, message: str) -> None:
     """Marks the job failed and tells the household. The custom-case credit comes back unless the
     case was already delivered or the details themselves were refused at moderation."""
-    if deps.progress.is_done(job.job_id):
+    if deps.progress.is_done(job.job_id) or deps.progress.is_failed(job.job_id):
         return
     refund = stage != "moderate"
     if refund:

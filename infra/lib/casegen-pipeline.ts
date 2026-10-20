@@ -93,8 +93,8 @@ export class CasegenPipeline extends Construct {
         retryOnServiceExceptions: false,
         taskTimeout: sfn.Timeout.duration(Duration.minutes(15)),
       });
-      // A JobFailed is a verdict, not a glitch: never retry it.
-      task.addRetry({ errors: ['JobFailed'], maxAttempts: 0 });
+      // A JobFailed is a verdict and a JobCancelled was called off by the server: never retry either.
+      task.addRetry({ errors: ['JobFailed', 'JobCancelled'], maxAttempts: 0 });
       task.addRetry({ errors: ['States.ALL'], interval: Duration.seconds(10), backoffRate: 2, maxAttempts: 2 });
       task.addCatch(markFailed, { errors: ['States.ALL'], resultPath: '$.error' });
       return task;

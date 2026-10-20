@@ -108,6 +108,12 @@ export function createMemoryStores(opts: { bundled: Case[]; clock?: () => number
         jobs.set(id, next);
         return clone(next);
       },
+      async cancelQueued(id, stage) {
+        const job = jobs.get(id);
+        if (job?.status !== 'queued') return false;
+        jobs.set(id, { ...job, status: 'failed', stage, updatedAt: clock() });
+        return true;
+      },
       async listByHousehold(hh) {
         return [...jobs.values()].filter((j) => j.householdId === hh).map(clone);
       },

@@ -222,6 +222,24 @@ export function createDynamoStores(opts: { table: string; bundled: Case[]; clock
         await db.send(new PutCommand({ TableName, Item: { pk: `JOB#${id}`, sk: 'JOB', job: next } }));
         return next;
       },
+      async cancelQueued(id, stage) {
+        try {
+          await db.send(
+            new UpdateCommand({
+              TableName,
+              Key: { pk: `JOB#${id}`, sk: 'JOB' },
+              UpdateExpression: 'SET #job.#status = :failed, #job.#stage = :stage, #job.#updatedAt = :now',
+              ConditionExpression: '#job.#status = :queued',
+              ExpressionAttributeNames: { '#job': 'job', '#status': 'status', '#stage': 'stage', '#updatedAt': 'updatedAt' },
+              ExpressionAttributeValues: { ':failed': 'failed', ':queued': 'queued', ':stage': stage, ':now': clock() },
+            }),
+          );
+          return true;
+        } catch (err) {
+          if (err instanceof ConditionalCheckFailedException) return false;
+          throw err;
+        }
+      },
       async listByHousehold(hh) {
         const ids = (await query(`HH#${hh}`, 'JOB#')).map((i) => String(i.sk).slice(4));
         const jobsFound = await Promise.all(ids.map(async (j) => (await getItem(`JOB#${j}`, 'JOB'))?.job as Job | undefined));

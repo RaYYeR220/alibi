@@ -5,7 +5,7 @@ import httpx
 import pytest
 
 from alibi_casegen.llmjson import extract_json
-from alibi_casegen.progress import DynamoJobs
+from alibi_casegen.progress import DynamoJobs, JobCancelled
 from alibi_casegen.stages.anchors import claim_supported, sources_for
 from alibi_casegen.stages.art import HOUSE_STYLE, VeniceImages
 from alibi_casegen.stages.compile import normalize_case
@@ -162,3 +162,22 @@ def test_dynamo_jobs_patch_the_job_map():
     jobs.done("j1", "custom-x")
     assert table.updates[-1]["ExpressionAttributeValues"][":caseId"] == "custom-x"
     assert jobs.get("j1")["householdId"] == "hh"
+
+
+def test_dynamo_jobs_refuse_to_run_a_cancelled_job():
+    from botocore.exceptions import ClientError
+
+    class Table:
+        def update_item(self, **kw):
+            self.kw = kw
+            raise ClientError({"Error": {"Code": "ConditionalCheckFailedException", "Message": "failed"}}, "UpdateItem")
+
+    table = Table()
+    jobs = DynamoJobs(table, clock=lambda: 1234)
+    try:
+        jobs.update("j1", "moderate", 5)
+    except JobCancelled:
+        pass
+    else:
+        raise AssertionError("update ran on a cancelled job")
+    assert ":failed" in table.kw["ExpressionAttributeValues"]

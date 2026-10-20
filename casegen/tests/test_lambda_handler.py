@@ -2,7 +2,7 @@ import json
 
 from alibi_casegen import lambda_handler
 from alibi_casegen.pipeline import Draft, JobInput
-from alibi_casegen.progress import MemoryProgress
+from alibi_casegen.progress import JobCancelled, MemoryProgress
 from alibi_casegen.replay import ReplayLlm
 from alibi_casegen.storage import LocalStorage
 from tests.test_pipeline import RECORDED, FakeImages, FakeTts
@@ -91,3 +91,25 @@ def test_job_input_is_built_from_the_job_record(monkeypatch, tmp_path):
     draft = Draft.model_validate_json(storage.load_draft("j-77"))
     assert isinstance(draft.job, JobInput)
     assert draft.job.occasion == "Grandma Ada's 80th birthday"
+
+
+def test_a_job_cancelled_before_it_started_is_not_written(monkeypatch, tmp_path):
+    jobs, storage = wire(monkeypatch, tmp_path)
+    jobs.failed("j-77", "dispatch", "could not start")
+    try:
+        lambda_handler.handler({"op": "stage", "stage": "moderate", "jobId": "j-77"}, None)
+    except JobCancelled:
+        pass
+    else:
+        raise AssertionError("a cancelled job ran its first stage")
+    assert jobs.events == []
+
+
+def test_fail_op_leaves_an_already_failed_job_alone(monkeypatch, tmp_path):
+    jobs, storage = wire(monkeypatch, tmp_path)
+    jobs.failed("j-77", "dispatch", "could not start")
+    jobs.record.update(status="failed", stage="dispatch")
+    lambda_handler.handler({"op": "fail", "jobId": "j-77", "error": {"Error": "JobCancelled"}}, None)
+    assert storage.inbox("hh-okafor") == []
+    assert storage.refunds("hh-okafor") == []
+    assert jobs.jobs["j-77"]["error"] == "could not start"

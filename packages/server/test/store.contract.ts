@@ -90,6 +90,21 @@ export function storeContract(name: string, make: () => Promise<Harness>) {
       expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(false);
     });
 
+    it('a job can be called off only while it is still queued', async () => {
+      const { stores } = await make();
+      const hh = uid('hh');
+      const job = { householdId: hh, status: 'queued' as const, stage: 'queued', percent: 0, input: { names: ['Ada'] }, createdAt: 1, updatedAt: 1 };
+      const queued = uid('job');
+      await stores.jobs.create({ ...job, jobId: queued });
+      expect(await stores.jobs.cancelQueued(queued, 'dispatch')).toBe(true);
+      expect(await stores.jobs.get(queued)).toMatchObject({ status: 'failed', stage: 'dispatch' });
+      expect(await stores.jobs.cancelQueued(queued, 'dispatch')).toBe(false);
+      const running = uid('job');
+      await stores.jobs.create({ ...job, jobId: running, status: 'running', stage: 'plot' });
+      expect(await stores.jobs.cancelQueued(running, 'dispatch')).toBe(false);
+      expect(await stores.jobs.get(running)).toMatchObject({ status: 'running', stage: 'plot' });
+    });
+
     it('daily quota counts per scope', async () => {
       const { stores } = await make();
       const scope = uid('quota');

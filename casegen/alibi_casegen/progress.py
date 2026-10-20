@@ -7,6 +7,12 @@ import time
 from decimal import Decimal
 from typing import Any, Protocol
 
+from botocore.exceptions import ClientError
+
+
+class JobCancelled(Exception):
+    """The job was called off (marked failed) before the pipeline picked it up."""
+
 
 def now_ms() -> int:
     return int(time.time() * 1000)
@@ -17,6 +23,7 @@ class ProgressSink(Protocol):
     def done(self, job_id: str, case_id: str) -> None: ...
     def failed(self, job_id: str, stage: str, error: str) -> None: ...
     def is_done(self, job_id: str) -> bool: ...
+    def is_failed(self, job_id: str) -> bool: ...
 
 
 class MemoryProgress:
@@ -30,6 +37,8 @@ class MemoryProgress:
         return self.jobs.setdefault(job_id, {"jobId": job_id})
 
     def update(self, job_id: str, stage: str, percent: int) -> None:
+        if self.is_failed(job_id):
+            raise JobCancelled(job_id)
         self.events.append({"jobId": job_id, "stage": stage, "percent": percent})
         self._job(job_id).update(status="running", stage=stage, percent=percent)
 
@@ -41,6 +50,9 @@ class MemoryProgress:
 
     def is_done(self, job_id: str) -> bool:
         return self.jobs.get(job_id, {}).get("status") == "done"
+
+    def is_failed(self, job_id: str) -> bool:
+        return self.jobs.get(job_id, {}).get("status") == "failed"
 
 
 class PrintProgress(MemoryProgress):
@@ -69,23 +81,33 @@ class DynamoJobs:
         item = self.table.get_item(Key={"pk": f"JOB#{job_id}", "sk": "JOB"}).get("Item")
         return _plain(item["job"]) if item else None
 
-    def _patch(self, job_id: str, **fields: Any) -> None:
+    def _patch(self, job_id: str, unless_failed: bool = False, **fields: Any) -> None:
         fields["updatedAt"] = self.clock()
         names = {f"#{k}": k for k in fields}
         names["#job"] = "job"
         values = {f":{k}": Decimal(str(v)) if isinstance(v, float) else v for k, v in fields.items()}
         values[":now"] = values.pop(":updatedAt")
         sets = ", ".join(f"#job.#{k} = :{'now' if k == 'updatedAt' else k}" for k in fields)
+        condition = "attribute_exists(pk)"
+        if unless_failed:
+            condition += " AND #job.#status <> :failed"
+            values[":failed"] = "failed"
         self.table.update_item(
             Key={"pk": f"JOB#{job_id}", "sk": "JOB"},
             UpdateExpression=f"SET {sets}",
             ExpressionAttributeNames=names,
             ExpressionAttributeValues=values,
-            ConditionExpression="attribute_exists(pk)",
+            ConditionExpression=condition,
         )
 
     def update(self, job_id: str, stage: str, percent: int) -> None:
-        self._patch(job_id, status="running", stage=stage, percent=percent)
+        # The server marks a job failed when it could not start it and has refunded the credit.
+        try:
+            self._patch(job_id, unless_failed=True, status="running", stage=stage, percent=percent)
+        except ClientError as err:
+            if err.response.get("Error", {}).get("Code") == "ConditionalCheckFailedException":
+                raise JobCancelled(job_id) from err
+            raise
 
     def done(self, job_id: str, case_id: str) -> None:
         self._patch(job_id, status="done", stage="done", percent=100, caseId=case_id)
@@ -95,3 +117,6 @@ class DynamoJobs:
 
     def is_done(self, job_id: str) -> bool:
         return (self.get(job_id) or {}).get("status") == "done"
+
+    def is_failed(self, job_id: str) -> bool:
+        return (self.get(job_id) or {}).get("status") == "failed"

@@ -41,7 +41,7 @@ describe('CasegenPipeline', () => {
   it('passes only the job id to each stage and never retries a deliberate failure', () => {
     const task = definition.States['Stage plot'];
     expect(task.Parameters).toEqual({ op: 'stage', stage: 'plot', 'jobId.$': '$.jobId' });
-    expect(task.Retry[0]).toMatchObject({ ErrorEquals: ['JobFailed'], MaxAttempts: 0 });
+    expect(task.Retry[0]).toMatchObject({ ErrorEquals: ['JobFailed', 'JobCancelled'], MaxAttempts: 0 });
     expect(task.Retry[1]).toMatchObject({ ErrorEquals: ['States.ALL'], MaxAttempts: 2 });
     expect(task.Catch[0]).toMatchObject({ ErrorEquals: ['States.ALL'], ResultPath: '$.error', Next: 'MarkFailed' });
     expect(definition.States.MarkFailed.Parameters).toEqual({ op: 'fail', 'jobId.$': '$.jobId', 'error.$': '$.error' });

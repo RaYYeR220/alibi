@@ -76,6 +76,8 @@ export interface JobStore {
   create(job: Job): Promise<void>;
   get(jobId: string): Promise<Job | null>;
   update(jobId: string, patch: Partial<Omit<Job, 'jobId'>>): Promise<Job>;
+  /** Marks a job failed only if no worker has picked it up yet; false when it already moved on. */
+  cancelQueued(jobId: string, stage: string): Promise<boolean>;
   listByHousehold(householdId: string): Promise<Job[]>;
   /** Atomically counts one more use of a daily quota and returns the new total. */
   incrementToday(scope: string): Promise<number>;

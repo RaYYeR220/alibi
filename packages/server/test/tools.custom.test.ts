@@ -65,6 +65,23 @@ describe('custom cases', () => {
     expect(await deps.jobs.countToday('custom:okafor')).toBe(0);
   });
 
+  it('a case that started despite a dispatch error keeps the credit spent', async () => {
+    const deps = testDeps();
+    deps.dispatcher = {
+      enqueueCasegen: async (jobId) => {
+        await deps.jobs.update(jobId, { status: 'running', stage: 'moderate' });
+        throw new Error('socket hang up');
+      },
+    };
+    await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');
+    const client = await connect(deps, userAuth('okafor'));
+    const r = await client.callTool({ name: 'create_custom_case', arguments: args });
+    expect(text(r)).not.toMatch(/couldn't start/i);
+    expect(await deps.entitlements.has('okafor', 'custom-case')).toBe(false);
+    const [job] = await deps.jobs.listByHousehold('okafor');
+    expect(job).toMatchObject({ status: 'running' });
+  });
+
   it('missing names asks for them', async () => {
     const deps = testDeps();
     await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');
