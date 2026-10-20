@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "types": ["node", "vite/client"],
+    "noEmit": true,
+    "declaration": false,
+    "sourceMap": false,
+    // Views only need the view-model types, so resolve them from source and skip the canon build.
+    "paths": {
+      "@alibi/canon": ["../canon/src/views.ts"]
+    }
+  },
+  "include": ["src", "test", "scripts", "fixtures", "design", "vite.config.ts", "vitest.config.ts"]
+}

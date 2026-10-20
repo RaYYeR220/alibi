@@ -1,0 +1,93 @@
+.interview-grid {
+  display: grid;
+  grid-template-columns: 196px 1fr;
+  gap: var(--s-7);
+  align-items: start;
+}
+
+.interview-subject {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.interview-subject .polaroid {
+  --tilt: -2deg;
+}
+
+.interview-subject .polaroid-name {
+  font-size: var(--t-head-2);
+}
+
+.interview-record {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  min-width: 0;
+}
+
+.interview-head h1 {
+  font-size: var(--t-display-2);
+}
+
+.interview-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-3) var(--s-4);
+  margin-top: var(--s-3);
+  color: var(--folder-muted);
+}
+
+.interview-card {
+  min-height: 140px;
+  padding-bottom: var(--s-6);
+}
+
+.statements {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.statement {
+  font-size: var(--t-body-1);
+}
+
+.statement-text {
+  text-wrap: pretty;
+}
+
+.statement[data-contradicted='true'] .statement-text {
+  text-decoration: underline wavy var(--thread);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 5px;
+  text-decoration-skip-ink: none;
+}
+
+.flag {
+  display: inline-block;
+  margin-left: var(--s-3);
+  font-weight: 700;
+  color: var(--stamp);
+  rotate: -2deg;
+}
+
+.statement-none {
+  color: var(--paper-muted);
+}
+
+.logged {
+  position: absolute;
+  right: var(--s-4);
+  bottom: calc(-1 * var(--s-5));
+  font-size: var(--t-head-2);
+}
+
+.interview-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4) var(--s-6);
+  margin-top: var(--s-3);
+}

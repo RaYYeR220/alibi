@@ -1,0 +1,78 @@
+.lab-form {
+  position: relative;
+  margin-bottom: var(--s-6);
+  padding: var(--s-6) var(--s-7) var(--s-6) 44px;
+  color: var(--paper-ink);
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(circle at 14px 50%, var(--folder) 0 5px, transparent 5.5px),
+    var(--fibre);
+  background-size: 28px 22px, auto;
+  background-repeat: repeat-y, repeat;
+  border-radius: var(--r-xs);
+  box-shadow: var(--lift);
+}
+
+/* the perforated tear-off edge */
+.lab-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28px;
+  border-left: 2px dashed color-mix(in srgb, var(--paper-ink) 25%, transparent);
+}
+
+.lab-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+  margin-bottom: var(--s-5);
+  padding-bottom: var(--s-4);
+  border-bottom: 2px solid var(--paper-ink);
+}
+
+.lab-head h1 {
+  font-size: var(--t-display-3);
+}
+
+.lab-stamp {
+  font-size: var(--t-head-1);
+}
+
+.lab-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.lab-rows-after {
+  margin-top: var(--s-5);
+  padding-top: var(--s-4);
+  border-top: 1px dashed color-mix(in srgb, var(--paper-ink) 35%, transparent);
+}
+
+.lab-item {
+  font-size: var(--t-display-5);
+  text-transform: none;
+}
+
+.lab-findings {
+  margin-top: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  font-size: var(--t-head-2);
+  line-height: 1.45;
+}
+
+.lab-when {
+  margin-top: var(--s-2);
+  font-size: var(--t-head-2);
+  font-weight: 700;
+}
+
+.lab-empty {
+  font-size: var(--t-head-2);
+}

@@ -1,0 +1,153 @@
+.catalog-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-6);
+  margin-bottom: var(--s-6);
+}
+
+.catalog-head h1 {
+  font-size: var(--t-display-3);
+}
+
+.shelf {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 2 * var(--s-6)) / 3);
+  gap: var(--s-6);
+  /* room for tilted folders and their shadows inside the scroller */
+  margin: calc(-1 * var(--s-3));
+  padding: var(--s-3) var(--s-3) var(--s-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.shelf::-webkit-scrollbar {
+  display: none;
+}
+
+.shelf[data-count='4'],
+.shelf[data-count='5'] {
+  grid-auto-columns: 200px;
+}
+
+.shelf > li {
+  scroll-snap-align: start;
+}
+
+.case {
+  --tilt: 0deg;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  width: 100%;
+  height: 100%;
+  padding: var(--s-3) var(--s-3) var(--s-4);
+  text-align: left;
+  color: var(--paper-ink);
+  background-color: var(--paper);
+  background-image: var(--fibre);
+  border: 0;
+  border-radius: var(--r-xs) var(--r-md) var(--r-xs) var(--r-xs);
+  box-shadow: var(--lift);
+  rotate: var(--tilt);
+  cursor: pointer;
+}
+
+.case:active {
+  translate: 0 1px;
+}
+
+.case-photo {
+  position: relative;
+  display: block;
+}
+
+.case-photo .photo {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-xs);
+}
+
+/* a price tag tucked into the folder */
+.case-badge {
+  position: absolute;
+  top: var(--s-4);
+  left: calc(-1 * var(--s-3));
+  padding: 5px var(--s-4) 4px;
+  font-size: var(--t-body-2);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--paper-ink);
+  background: var(--memo);
+  box-shadow: var(--lift);
+  rotate: -4deg;
+}
+
+.case-badge-status {
+  color: var(--stamp);
+  background: var(--paper);
+}
+
+/* ---------- a single case on offer ---------- */
+
+.offer-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--s-8);
+  align-items: center;
+}
+
+.offer-cover {
+  --tilt: -2deg;
+  padding: var(--s-3);
+  background: var(--photo);
+  border-radius: var(--r-xs);
+  box-shadow: var(--lift);
+  rotate: var(--tilt);
+}
+
+.offer-cover .photo {
+  aspect-ratio: 4 / 3;
+}
+
+.offer-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+
+.offer-text h1 {
+  font-size: var(--t-display-3);
+}
+
+.offer-line {
+  font-size: var(--t-head-2);
+  line-height: 1.4;
+}
+
+.offer-price {
+  font-family: var(--font-display);
+  font-size: var(--t-display-4);
+  line-height: 1;
+}
+
+.case-title {
+  margin-top: var(--s-3);
+  font-family: var(--font-display);
+  font-size: var(--t-head-1);
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.case-line {
+  font-size: var(--t-body-2);
+  line-height: 1.35;
+  color: var(--paper-muted);
+}
+
+[data-layout='phone'] .shelf {
+  grid-auto-columns: 78%;
+}
