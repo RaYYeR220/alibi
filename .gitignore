@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env*
+!.env.example
+cdk.out/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.log
+coverage/
+eval/results/raw/
+packages/server/src/apps/generated.ts
