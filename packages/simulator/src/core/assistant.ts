@@ -75,7 +75,8 @@ const INBOX_EVERY_MS = 30_000;
 export const SIMULATOR_NOTES = `
 On this device:
 - Without a linked account the player can browse the cases and play the free one. Lab tests, purchases, custom cases and saved progress need a linked account.
-- When the player opens Alibi or asks what there is to play, call list_cases. Call my_progress only when they ask about their progress, lab results or notifications.`;
+- When the player opens Alibi or asks what there is to play, call list_cases. Call my_progress only when they ask about their progress, lab results or notifications.
+- When the player asks to buy a case, call buy_case straight away: it only shows the price, and this device asks for the confirmation itself before any payment.`;
 
 const structured = (f: UiFrame) => ((f.toolResult as { structuredContent?: Record<string, unknown> } | undefined)?.structuredContent ?? {}) as SpeechFrame['view'];
 
