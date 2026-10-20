@@ -19,10 +19,28 @@ export interface CallOutcome {
   error?: string;
 }
 
+export interface ResourceMeta {
+  ui?: {
+    csp?: { connectDomains?: string[]; resourceDomains?: string[]; frameDomains?: string[]; baseUriDomains?: string[] };
+    permissions?: Record<string, object>;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+export interface ResourceContent {
+  text: string;
+  mimeType?: string;
+  meta?: ResourceMeta;
+}
+
 export interface McpConn {
   tools(): Promise<McpTool[]>;
   call(name: string, args: Record<string, unknown>): Promise<CallOutcome>;
+  /** Text of a resource. View html (ui://) is cached; everything else is read fresh. */
   readResource(uri: string): Promise<string>;
+  /** A resource with its mime type and _meta (for views: the declared csp and permissions). */
+  resource(uri: string): Promise<ResourceContent>;
   era(): string | undefined;
   close(): Promise<void>;
 }
@@ -68,7 +86,22 @@ export async function connectMcp(opts: ConnectOptions): Promise<McpConn> {
   await client.connect(new StreamableHTTPClientTransport(new URL(opts.url), { fetch: timedFetch }));
 
   let toolCache: McpTool[] | null = null;
-  const html = new Map<string, string>();
+  const views = new Map<string, ResourceContent>();
+
+  const resource = async (uri: string): Promise<ResourceContent> => {
+    const cached = views.get(uri);
+    if (cached) return cached;
+    const res = await client.readResource({ uri });
+    const first = res.contents[0] as { text?: string; mimeType?: string; _meta?: ResourceMeta } | undefined;
+    const content: ResourceContent = {
+      text: first?.text ?? '',
+      ...(first?.mimeType ? { mimeType: first.mimeType } : {}),
+      ...(first?._meta ? { meta: first._meta } : {}),
+    };
+    // Views are static per deployment; household resources (inbox) change and must stay fresh.
+    if (uri.startsWith('ui://')) views.set(uri, content);
+    return content;
+  };
 
   return {
     async tools() {
@@ -85,13 +118,9 @@ export async function connectMcp(opts: ConnectOptions): Promise<McpConn> {
       }
     },
     async readResource(uri) {
-      const cached = html.get(uri);
-      if (cached !== undefined) return cached;
-      const res = await client.readResource({ uri });
-      const text = (res.contents[0] as { text?: string } | undefined)?.text ?? '';
-      html.set(uri, text);
-      return text;
+      return (await resource(uri)).text;
     },
+    resource,
     era: () => client.getProtocolEra(),
     close: () => client.close(),
   };

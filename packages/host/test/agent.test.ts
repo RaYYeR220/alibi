@@ -91,4 +91,25 @@ describe('host agent', () => {
     // The optional GET stream answers 405 on a stateless server; every JSON-RPC POST succeeds.
     expect(traffic.filter((t) => t.method !== 'GET').every((t) => t.ms >= 0 && t.status >= 200 && t.status < 300)).toBe(true);
   });
+
+  it('reads household resources fresh but caches view html', async () => {
+    const deps = testDeps({ appHtml: { lab: '<!doctype html><p>lab</p>' } });
+    const { fetch } = inProcess(deps);
+    const traffic: string[] = [];
+    const mcp = await connectMcp({ url: 'https://api.alibi.test/mcp', getToken: async () => 'user-hh1', fetch, onTraffic: (t) => traffic.push(t.method) });
+    expect(JSON.parse(await mcp.readResource('alibi://household/inbox'))).toEqual([]);
+    await deps.inbox.add('hh1', { id: 'n1', kind: 'lab_ready', text: 'Lab results are in.', at: 1 });
+    expect(JSON.parse(await mcp.readResource('alibi://household/inbox'))).toHaveLength(1);
+    await mcp.readResource('ui://alibi/lab.html');
+    await mcp.readResource('ui://alibi/lab.html');
+    expect(traffic.filter((m) => m === 'resources/read')).toHaveLength(3);
+  });
+
+  it('exposes the csp a view resource declares', async () => {
+    const { fetch } = inProcess(testDeps({ appHtml: { lab: '<!doctype html><p>lab</p>' } }));
+    const mcp = await connectMcp({ url: 'https://api.alibi.test/mcp', getToken: async () => 'service', fetch });
+    const res = await mcp.resource('ui://alibi/lab.html');
+    expect(res.text).toContain('lab');
+    expect(res.meta?.ui?.csp?.resourceDomains?.length).toBeGreaterThan(0);
+  });
 });
