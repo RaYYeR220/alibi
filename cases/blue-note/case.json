@@ -1,0 +1,375 @@
+{
+  "meta": {
+    "id": "blue-note",
+    "title": "The Last Set at the Blue Note",
+    "tagline": "The star walked off between sets. Her dressing room didn't stay in one piece.",
+    "rating": "teen",
+    "minutes": 30,
+    "priceCents": 499,
+    "author": "Alibi",
+    "cover": "cover.png",
+    "artStyle": "ink-gouache",
+    "setting": "The Blue Note Room, a basement jazz club on Chicago's South Side, February 1954. It is closing night and the snow is piling up on the El tracks. Between the second and third sets the club's star, Lark Delaney, vanished, and her dressing room has been turned inside out.",
+    "startingFacts": ["f_closing_night", "f_lark_gone", "f_room_tossed"]
+  },
+  "victim": {
+    "id": "lark",
+    "name": "Lark Delaney",
+    "role": "headline singer",
+    "description": "Thirty-one, a voice like warm bourbon, and the bad habit of reading contracts before she signs them.",
+    "portrait": "lark.png"
+  },
+  "places": [
+    { "id": "dressing_room", "name": "Lark's dressing room", "aliases": ["dressing room", "her dressing room", "lark's room", "her room", "dressing table", "mirror"] },
+    { "id": "bar", "name": "the bar", "aliases": ["bar", "the bar", "register", "till", "cigar box", "behind the bar", "counter"] },
+    { "id": "office", "name": "Sol's office", "aliases": ["office", "sol's office", "the office", "back office", "desk", "safe"] },
+    { "id": "coat_check", "name": "the coat check", "aliases": ["coat check", "coat-check", "hat check", "coat room", "cloakroom", "tip jar"] },
+    { "id": "kitchen", "name": "the kitchen", "aliases": ["kitchen", "cellar", "the cellar", "coal cellar", "kitchen stairs", "basement stairs"] },
+    { "id": "back_corridor", "name": "the back corridor", "aliases": ["back corridor", "corridor", "hallway", "back hall", "coat hooks", "hooks", "stage door"] }
+  ],
+  "suspects": [
+    {
+      "id": "sol",
+      "name": "Sol Brenner",
+      "role": "club owner",
+      "aliases": ["sol", "brenner", "mr brenner", "sol brenner", "the owner", "the boss", "the club owner", "owner"],
+      "persona": {
+        "traits": ["gruff", "sentimental", "cornered"],
+        "speech": "Fifty-eight, chews an unlit cigar, rounds every number off, and calls everybody 'kid', including people older than he is.",
+        "demeanor": "weary"
+      },
+      "voiceId": "Kenneth",
+      "portrait": "sol.png"
+    },
+    {
+      "id": "deuce",
+      "name": "Marcus 'Deuce' Whitlow",
+      "role": "bandleader",
+      "aliases": ["deuce", "marcus", "whitlow", "mr whitlow", "marcus whitlow", "deuce whitlow", "the bandleader", "bandleader", "the piano player", "pianist"],
+      "persona": {
+        "traits": ["smooth", "proud", "evasive"],
+        "speech": "Pianist with a pencil mustache and one gold tooth. Answers a question with a question, calls everybody 'cat', and drums his fingers on whatever is nearest.",
+        "demeanor": "cool"
+      },
+      "voiceId": "Stephen",
+      "portrait": "deuce.png"
+    },
+    {
+      "id": "ruth",
+      "name": "Ruth Calloway",
+      "role": "coat-check girl",
+      "aliases": ["ruth", "calloway", "miss calloway", "ruth calloway", "the coat check girl", "coat check girl", "hat check girl", "the dresser"],
+      "persona": {
+        "traits": ["anxious", "loyal", "observant"],
+        "speech": "Twenty-three and quick. Says 'sorry' before she answers anything, keeps her voice low, and counts things off on her fingers.",
+        "demeanor": "nervous"
+      },
+      "voiceId": "Danielle",
+      "portrait": "ruth.png"
+    },
+    {
+      "id": "vinnie",
+      "name": "Vinnie Pruitt",
+      "role": "bartender",
+      "aliases": ["vinnie", "vincent", "pruitt", "mr pruitt", "vinnie pruitt", "the bartender", "bartender", "barman"],
+      "persona": {
+        "traits": ["charming", "greedy", "quick"],
+        "speech": "Towel over one shoulder, grin first and answer second. Talks like the racing pages: everything is a sure thing or a long shot.",
+        "demeanor": "easy"
+      },
+      "voiceId": "Nate",
+      "portrait": "vinnie.png"
+    }
+  ],
+  "facts": [
+    { "id": "f_closing_night", "text": "It is closing night at the Blue Note Room, and the house is full.", "about": ["lark"], "kind": "event", "fingerprints": [] },
+    { "id": "f_lark_gone", "text": "Lark Delaney walked off after the second set and has not been seen since.", "about": ["lark"], "kind": "event", "time": "9:55 pm", "fingerprints": [] },
+    { "id": "f_room_tossed", "text": "Lark's dressing room has been turned inside out.", "about": ["lark", "dressing_room"], "kind": "state", "place": "dressing_room", "fingerprints": [] },
+    { "id": "f_band_vamp", "text": "The band has been vamping for twenty minutes, waiting for Lark to come back on.", "about": ["deuce"], "kind": "event", "fingerprints": [] },
+    { "id": "f_ruth_saw_lark", "text": "Ruth saw Lark go into her dressing room alone at five to ten.", "about": ["ruth", "lark", "dressing_room"], "kind": "event", "place": "dressing_room", "time": "9:55 pm", "fingerprints": [] },
+    { "id": "f_purse_left", "text": "Whoever turned over Lark's dressing room left forty dollars in her purse.", "about": ["lark", "dressing_room"], "kind": "state", "place": "dressing_room", "fingerprints": [] },
+    { "id": "f_lark_in_cellar", "text": "Someone is locked in the old coal cellar under the kitchen, humming Lark's songs.", "about": ["lark", "kitchen"], "kind": "state", "place": "kitchen", "fingerprints": [] },
+    { "id": "f_lark_leaving", "text": "Lark had signed with the Rhumboogie Club and was leaving the Blue Note after tonight.", "about": ["lark"], "kind": "event", "fingerprints": [] },
+    { "id": "f_sol_motive", "text": "Lark found Sol's second set of books, wrote 'Sol, this is fraud' in the margin, and was ready to take it with her to the Rhumboogie.", "about": ["sol", "lark"], "kind": "motive", "place": "office", "fingerprints": ["second set of books", "sol this is fraud"], "logic": { "suspectId": "sol", "attr": "motive", "holds": true } },
+    { "id": "f_sol_kessler", "text": "Sol owes Dutch Kessler more than the club takes in a year.", "about": ["sol"], "kind": "state", "fingerprints": ["owes dutch kessler"] },
+    { "id": "f_sol_means", "text": "Sol keeps the only key to the old coal cellar under the kitchen.", "about": ["sol", "kitchen"], "kind": "means", "place": "kitchen", "fingerprints": ["only key to the old coal cellar"], "logic": { "suspectId": "sol", "attr": "means", "holds": true } },
+    { "id": "f_sol_opp", "text": "The black smudges on Sol's overcoat are fresh coal dust from the cellar, so he was down there tonight.", "about": ["sol", "kitchen"], "kind": "opportunity", "place": "kitchen", "fingerprints": ["fresh coal dust from the cellar"], "logic": { "suspectId": "sol", "attr": "opportunity", "holds": true } },
+    { "id": "f_sol_did", "text": "Sol told Lark that Dutch Kessler's men were upstairs, walked her down to the coal cellar to hide, and locked her in.", "about": ["sol", "lark"], "kind": "event", "fingerprints": ["kesslers men were upstairs"] },
+    { "id": "f_deuce_fight", "text": "Deuce and Lark had a shouting match that afternoon because she was taking her act, and his band's job, to the Rhumboogie.", "about": ["deuce", "lark"], "kind": "motive", "fingerprints": ["shouting match that afternoon"], "logic": { "suspectId": "deuce", "attr": "motive", "holds": true } },
+    { "id": "f_deuce_cards", "text": "Deuce sat in the back-room card game from ten until half past and lost three hundred dollars.", "about": ["deuce"], "kind": "opportunity", "time": "10:00 pm", "fingerprints": ["back room card game from ten"], "logic": { "suspectId": "deuce", "attr": "opportunity", "holds": false } },
+    { "id": "f_ruth_alley", "text": "Ruth spent the intermission in the alley with a union organizer, from ten until half past.", "about": ["ruth"], "kind": "opportunity", "time": "10:00 pm", "fingerprints": ["in the alley with a union organizer"], "logic": { "suspectId": "ruth", "attr": "opportunity", "holds": false } },
+    { "id": "f_ruth_cellar_door", "text": "When Ruth came back in through the kitchen at half past ten, there was fresh coal dust on the floor by the cellar door.", "about": ["ruth", "kitchen"], "kind": "event", "place": "kitchen", "time": "10:30 pm", "fingerprints": ["fresh coal dust on the floor"] },
+    { "id": "f_vinnie_skim", "text": "Lark caught Vinnie skimming the till to pay his bookie and said she would tell Sol after closing.", "about": ["vinnie", "lark"], "kind": "motive", "fingerprints": ["skimming the till to pay his bookie"], "logic": { "suspectId": "vinnie", "attr": "motive", "holds": true } },
+    { "id": "f_vinnie_bar", "text": "Vinnie never left the bar during the intermission; he poured for a full house from ten until half past.", "about": ["vinnie", "bar"], "kind": "opportunity", "place": "bar", "time": "10:00 pm", "fingerprints": ["never left the bar during the intermission"], "logic": { "suspectId": "vinnie", "attr": "opportunity", "holds": false } },
+    { "id": "f_vinnie_saw_sol", "text": "At five past ten Vinnie saw Sol head into the kitchen with his overcoat on.", "about": ["vinnie", "sol", "kitchen"], "kind": "event", "place": "kitchen", "time": "10:05 pm", "fingerprints": ["sol head into the kitchen"] }
+  ],
+  "topics": [
+    {
+      "id": "t_whereabouts",
+      "label": "where they were during the intermission",
+      "aliases": ["where were you", "whereabouts", "alibi", "intermission", "during the break", "between sets", "at ten", "ten o'clock", "half past ten", "what were you doing", "where did you go", "after the second set"],
+      "factIds": ["f_deuce_cards", "f_ruth_alley", "f_vinnie_bar"]
+    },
+    {
+      "id": "t_lark",
+      "label": "Lark and where she went",
+      "aliases": ["lark", "lark delaney", "the singer", "miss delaney", "disappearance", "missing", "vanished", "what happened", "where is she", "where did she go", "gone"],
+      "factIds": ["f_lark_gone", "f_ruth_saw_lark", "f_lark_in_cellar", "f_sol_did"]
+    },
+    {
+      "id": "t_dressing_room",
+      "label": "the dressing room",
+      "aliases": ["dressing room", "her room", "turned over", "tossed", "the mess", "robbery", "burglary", "purse", "stage dress", "ransacked"],
+      "factIds": ["f_room_tossed", "f_ruth_saw_lark", "f_purse_left"]
+    },
+    {
+      "id": "t_cellar",
+      "label": "the coal cellar and its key",
+      "aliases": ["cellar", "coal cellar", "basement", "the key", "cellar key", "key", "padlock", "locked", "cellar door", "coal", "coal dust"],
+      "factIds": ["f_sol_means", "f_ruth_cellar_door", "f_lark_in_cellar"]
+    },
+    {
+      "id": "t_contract",
+      "label": "Lark's new contract",
+      "aliases": ["contract", "rhumboogie", "rhumboogie club", "leaving", "new club", "signed", "quitting", "rival club", "offer", "new job"],
+      "factIds": ["f_lark_leaving", "f_deuce_fight"]
+    },
+    {
+      "id": "t_money",
+      "label": "money and debts",
+      "aliases": ["money", "debt", "debts", "owe", "kessler", "dutch kessler", "loan", "books", "ledger", "the take", "broke", "bookie", "till", "skimming", "fraud"],
+      "factIds": ["f_sol_kessler", "f_sol_motive", "f_vinnie_skim"]
+    },
+    {
+      "id": "t_fight",
+      "label": "the afternoon fight",
+      "aliases": ["fight", "argument", "shouting", "row", "quarrel", "words", "this afternoon", "falling out", "rehearsal"],
+      "factIds": ["f_deuce_fight"]
+    },
+    {
+      "id": "t_others",
+      "label": "what they saw of the others",
+      "aliases": ["who else", "anyone else", "the others", "did you see anyone", "see anything", "notice anything", "anything strange", "what about sol", "what about deuce", "what about ruth", "what about vinnie", "the boss"],
+      "factIds": ["f_vinnie_saw_sol", "f_ruth_cellar_door", "f_vinnie_bar"]
+    },
+    {
+      "id": "t_band",
+      "label": "the band and the show",
+      "aliases": ["band", "show", "set", "third set", "music", "vamping", "piano", "closing night", "the crowd", "audience"],
+      "factIds": ["f_closing_night", "f_band_vamp"]
+    },
+    {
+      "id": "t_cards",
+      "label": "the back-room card game",
+      "aliases": ["cards", "card game", "poker", "back room", "chips", "gambling", "game", "iou", "three hundred"],
+      "factIds": ["f_deuce_cards"]
+    },
+    {
+      "id": "t_union",
+      "label": "the union",
+      "aliases": ["union", "organizer", "union meeting", "flyer", "handbill", "alley", "the alley"],
+      "factIds": ["f_ruth_alley"]
+    }
+  ],
+  "knowledge": [
+    { "suspectId": "sol", "factId": "f_closing_night", "tier": "open" },
+    { "suspectId": "sol", "factId": "f_lark_gone", "tier": "open" },
+    { "suspectId": "sol", "factId": "f_room_tossed", "tier": "open" },
+    { "suspectId": "sol", "factId": "f_lark_leaving", "tier": "open" },
+    { "suspectId": "sol", "factId": "f_deuce_fight", "tier": "open" },
+    { "suspectId": "sol", "factId": "f_sol_means", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_sol" }] },
+    { "suspectId": "sol", "factId": "f_sol_motive", "tier": "never" },
+    { "suspectId": "sol", "factId": "f_sol_kessler", "tier": "never" },
+    { "suspectId": "sol", "factId": "f_sol_did", "tier": "never" },
+
+    { "suspectId": "deuce", "factId": "f_closing_night", "tier": "open" },
+    { "suspectId": "deuce", "factId": "f_lark_gone", "tier": "open" },
+    { "suspectId": "deuce", "factId": "f_band_vamp", "tier": "open" },
+    { "suspectId": "deuce", "factId": "f_room_tossed", "tier": "open" },
+    { "suspectId": "deuce", "factId": "f_lark_leaving", "tier": "guarded" },
+    { "suspectId": "deuce", "factId": "f_deuce_fight", "tier": "guarded" },
+    { "suspectId": "deuce", "factId": "f_deuce_cards", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_deuce" }] },
+
+    { "suspectId": "ruth", "factId": "f_closing_night", "tier": "open" },
+    { "suspectId": "ruth", "factId": "f_lark_gone", "tier": "open" },
+    { "suspectId": "ruth", "factId": "f_ruth_saw_lark", "tier": "open" },
+    { "suspectId": "ruth", "factId": "f_room_tossed", "tier": "open" },
+    { "suspectId": "ruth", "factId": "f_lark_leaving", "tier": "open" },
+    { "suspectId": "ruth", "factId": "f_deuce_fight", "tier": "open" },
+    { "suspectId": "ruth", "factId": "f_vinnie_skim", "tier": "guarded" },
+    { "suspectId": "ruth", "factId": "f_ruth_alley", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_ruth" }] },
+    { "suspectId": "ruth", "factId": "f_ruth_cellar_door", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_ruth" }] },
+
+    { "suspectId": "vinnie", "factId": "f_closing_night", "tier": "open" },
+    { "suspectId": "vinnie", "factId": "f_lark_gone", "tier": "open" },
+    { "suspectId": "vinnie", "factId": "f_band_vamp", "tier": "open" },
+    { "suspectId": "vinnie", "factId": "f_vinnie_bar", "tier": "guarded" },
+    { "suspectId": "vinnie", "factId": "f_deuce_fight", "tier": "guarded" },
+    { "suspectId": "vinnie", "factId": "f_sol_kessler", "tier": "guarded" },
+    { "suspectId": "vinnie", "factId": "f_vinnie_saw_sol", "tier": "locked", "unlock": [{ "kind": "evidence_presented", "evidenceId": "e_betting_slip", "suspectId": "vinnie" }] }
+  ],
+  "lies": [
+    {
+      "id": "l_sol",
+      "suspectId": "sol",
+      "topicId": "t_cellar",
+      "claim": "That cellar's been bricked up since Repeal, kid. Nobody's had a key to it in twenty years.",
+      "contradicts": "f_sol_means",
+      "exposedBy": ["e_cellar_key"],
+      "crackAnchorId": "a_sol_crack"
+    },
+    {
+      "id": "l_deuce",
+      "suspectId": "deuce",
+      "topicId": "t_whereabouts",
+      "claim": "I was at the piano the whole intermission, cat, working out the changes for the third set. Ask anybody.",
+      "contradicts": "f_deuce_cards",
+      "exposedBy": ["e_iou"],
+      "crackAnchorId": "a_deuce_crack"
+    },
+    {
+      "id": "l_ruth",
+      "suspectId": "ruth",
+      "topicId": "t_whereabouts",
+      "claim": "Sorry. I never left the coat check. Not once, not for a minute.",
+      "contradicts": "f_ruth_alley",
+      "exposedBy": ["e_flyer"],
+      "crackAnchorId": "a_ruth_crack"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e_cellar_door",
+      "name": "padlocked cellar door",
+      "aliases": ["cellar door", "the cellar door", "padlock", "the padlock", "humming", "door under the stairs"],
+      "description": "The door to the old coal cellar under the kitchen stairs, shut with a shiny new padlock. From the other side, someone is humming 'Stormy Weather', badly out of tune and very annoyed.",
+      "image": "cellar-door.png",
+      "foundAt": "kitchen",
+      "implies": ["f_lark_in_cellar"]
+    },
+    {
+      "id": "e_cellar_key",
+      "name": "cellar key",
+      "aliases": ["key", "the key", "cellar key", "brass key", "tagged key", "the cellar key"],
+      "description": "A brass key on a cardboard tag marked 'CELLAR', pushed to the back of the top drawer of the office desk. There is coal dust in its teeth.",
+      "image": "cellar-key.png",
+      "foundAt": "office",
+      "implies": []
+    },
+    {
+      "id": "e_overcoat",
+      "name": "camel-hair overcoat",
+      "aliases": ["overcoat", "camel coat", "camel-hair coat", "camel hair overcoat", "sol's overcoat", "smudges"],
+      "description": "Sol's camel-hair overcoat on its hook in the back corridor. The hem and both cuffs are streaked with black smudges.",
+      "image": "overcoat.png",
+      "foundAt": "back_corridor",
+      "implies": [],
+      "lab": { "resultFactIds": ["f_sol_opp"], "delayHours": 12 }
+    },
+    {
+      "id": "e_ledger",
+      "name": "second ledger",
+      "aliases": ["ledger", "the ledger", "books", "the books", "account book", "accounts", "second ledger"],
+      "description": "A second set of books in the office safe, which someone left open. The real numbers are on every page, and in the margin, in Lark's hand: 'Sol, this is fraud.'",
+      "image": "ledger.png",
+      "foundAt": "office",
+      "implies": ["f_sol_motive"]
+    },
+    {
+      "id": "e_iou",
+      "name": "IOU on a napkin",
+      "aliases": ["iou", "the iou", "napkin", "cocktail napkin", "poker chips", "chips"],
+      "description": "An IOU for three hundred dollars scrawled on a cocktail napkin, signed 'M. Whitlow' and dated tonight, under a stack of poker chips in the cigar box behind the bar.",
+      "image": "iou.png",
+      "foundAt": "bar",
+      "implies": []
+    },
+    {
+      "id": "e_flyer",
+      "name": "union handbill",
+      "aliases": ["handbill", "flyer", "union flyer", "leaflet", "union handbill", "the handbill"],
+      "description": "A union handbill folded into the coat-check tip jar. On the back, in pencil: 'Alley, 10 sharp.'",
+      "image": "handbill.png",
+      "foundAt": "coat_check",
+      "implies": []
+    },
+    {
+      "id": "e_betting_slip",
+      "name": "betting slip",
+      "aliases": ["betting slip", "slip", "the slip", "bookie slip", "racing slip", "register tray"],
+      "description": "A bookie's slip tucked under the register tray, initialled 'V.P.', with a long column of weekly payments and nothing crossed off.",
+      "image": "betting-slip.png",
+      "foundAt": "bar",
+      "implies": []
+    },
+    {
+      "id": "e_purse",
+      "name": "Lark's purse",
+      "aliases": ["purse", "handbag", "her purse", "beaded purse", "forty dollars"],
+      "description": "Lark's beaded purse on the dressing table, in the middle of the mess, with forty dollars still folded inside.",
+      "image": "purse.png",
+      "foundAt": "dressing_room",
+      "implies": ["f_purse_left"]
+    }
+  ],
+  "solution": {
+    "culprit": "sol",
+    "motiveFact": "f_sol_motive",
+    "meansFact": "f_sol_means",
+    "opportunityFact": "f_sol_opp",
+    "minimalProof": ["e_cellar_key", "e_overcoat"]
+  },
+  "anchors": [
+    {
+      "id": "a_cold_open",
+      "speakerId": "narrator",
+      "trigger": "cold_open",
+      "text": "Chicago, February 1954. Snow on the El tracks, smoke in the Blue Note Room, and a closing-night crowd that paid to hear Lark Delaney sing. She walked off after the second set and never came back, and her dressing room has been turned inside out. Four people work this room. Every one of them had a reason. The band can only vamp for so long."
+    },
+    {
+      "id": "a_sol_crack",
+      "speakerId": "sol",
+      "trigger": "crack",
+      "lieId": "l_sol",
+      "text": "All right, kid, so there's a key. It's mine. My cellar, my club, my snow on the sidewalk. A man's allowed a key to his own cellar."
+    },
+    {
+      "id": "a_deuce_crack",
+      "speakerId": "deuce",
+      "trigger": "crack",
+      "lieId": "l_deuce",
+      "text": "Piano? Cat, I was in the back room from ten till half past, holding cards I should've folded. Three hundred dollars I don't have. That's my crime tonight. Don't tell the band."
+    },
+    {
+      "id": "a_ruth_crack",
+      "speakerId": "ruth",
+      "trigger": "crack",
+      "lieId": "l_ruth",
+      "text": "Sorry. Sorry. I slipped out to the alley at ten to meet a man from the union, and I froze out there till half past. And when I came back in through the kitchen, there was fresh coal dust all over the floor by the cellar door."
+    },
+    {
+      "id": "a_confession",
+      "speakerId": "sol",
+      "trigger": "confession",
+      "text": "Kessler wanted his money by Monday, and Lark wanted out knowing every number in my books. So I told her Kessler's boys were upstairs and walked her down where they'd never look. I locked the door. I was going to let her out after the last set, kid. I swear on this club."
+    },
+    {
+      "id": "a_end_correct",
+      "speakerId": "narrator",
+      "trigger": "ending_correct",
+      "text": "A cellar key in the desk of a man who swore there wasn't one. Coal dust on a camel-hair coat. And a second set of books with the truth pencilled in the margin. Sol Brenner hands over the key, Lark Delaney comes up out of the cellar singing louder than ever, and the Blue Note gets one more set before the lights go out for good."
+    },
+    {
+      "id": "a_end_partial",
+      "speakerId": "narrator",
+      "trigger": "ending_partial",
+      "text": "You might be onto something. But on the South Side a hunch and a nickel get you a cup of coffee. Come back with proof."
+    },
+    {
+      "id": "a_end_wrong",
+      "speakerId": "narrator",
+      "trigger": "ending_wrong",
+      "text": "Wrong door, detective. The accused is already shouting for a lawyer, the band is out of songs, and somewhere in this basement the real culprit is lighting a fresh cigarette."
+    }
+  ]
+}
