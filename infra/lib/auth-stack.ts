@@ -15,6 +15,7 @@ export class AuthStack extends Stack {
   readonly userPool: cognito.UserPool;
   readonly issuerUrl: string;
   readonly clientIds: string[];
+  readonly cognitoDomain: string;
 
   constructor(scope: Construct, id: string, props: AuthStackProps) {
     super(scope, id, props);
@@ -81,6 +82,7 @@ export class AuthStack extends Stack {
     });
 
     this.issuerUrl = `https://cognito-idp.${this.region}.amazonaws.com/${this.userPool.userPoolId}`;
+    this.cognitoDomain = domain.baseUrl();
     this.clientIds = [serviceClient.userPoolClientId, householdClient.userPoolClientId, simulatorClient.userPoolClientId];
 
     new CfnOutput(this, 'UserPoolId', { value: this.userPool.userPoolId });

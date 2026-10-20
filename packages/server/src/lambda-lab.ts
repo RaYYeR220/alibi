@@ -22,3 +22,12 @@ export async function handleLabReady(deps: Pick<Deps, 'games' | 'cases' | 'inbox
     ...(c ? { caseId: c.meta.id } : {}),
   });
 }
+
+/** Lambda entry for EventBridge Scheduler: lab results came due. */
+export const handler = async (event: LabReadyEvent) => {
+  const { createDynamoStores } = await import('./store/dynamo.js');
+  const { loadCases } = await import('./prod.js');
+  const { randomId } = await import('./deps.js');
+  const stores = createDynamoStores({ table: process.env.TABLE!, bundled: loadCases(process.env.CASES_DIR ?? './cases') });
+  await handleLabReady({ ...stores, clock: Date.now, newId: randomId }, event);
+};
