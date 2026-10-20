@@ -18,8 +18,9 @@ export function createEventBridgeScheduler(cfg: SchedulerConfig): LabScheduler {
   return {
     async schedule(householdId, gameId, evidenceId, at) {
       const name = `lab-${gameId}-${evidenceId}`.replace(/[^0-9a-zA-Z_.-]/g, '-').slice(0, 64);
-      await client.send(
-        new CreateScheduleCommand({
+      try {
+        await client.send(
+          new CreateScheduleCommand({
           Name: name,
           GroupName: cfg.groupName,
           ScheduleExpression: atExpression(Math.max(at, Date.now() + 60_000)),
@@ -32,7 +33,11 @@ export function createEventBridgeScheduler(cfg: SchedulerConfig): LabScheduler {
             Input: JSON.stringify({ householdId, gameId, evidenceId }),
           },
         }) as never,
-      );
+        );
+      } catch (err) {
+        // The name is per game and item, so an existing schedule is this same lab run.
+        if ((err as { name?: string }).name !== 'ConflictException') throw err;
+      }
     },
   };
 }

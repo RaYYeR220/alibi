@@ -31,6 +31,27 @@ describe('lab, progress and demo clock', () => {
     expect(view<LabView>(ready).results[0]).toMatchObject({ evidenceId: 'e_desk_key', findings: [expect.stringMatching(/lily perfume/)] });
   });
 
+  it('sending the same item twice books the lab once', async () => {
+    const schedule = vi.fn(async () => {});
+    const deps = testDeps({ scheduler: { schedule } });
+    const { client, gameId } = await gameWithKey(deps);
+    await client.callTool({ name: 'request_lab_test', arguments: { game_id: gameId, evidence: 'brass key' } });
+    const again = await client.callTool({ name: 'request_lab_test', arguments: { game_id: gameId, evidence: 'brass key' } });
+    expect(again.isError).toBeFalsy();
+    expect(text(again)).toMatch(/already/i);
+    expect(schedule).toHaveBeenCalledTimes(1);
+  });
+
+  it('sending an item not found yet gives nothing away', async () => {
+    const deps = testDeps();
+    const client = await connect(deps, userAuth('alice'));
+    const { gameId } = view<CaseIntroView>(await client.callTool({ name: 'start_case', arguments: { case_id: 'tiny-brooch' } }));
+    const r = await client.callTool({ name: 'request_lab_test', arguments: { game_id: gameId, evidence: 'brass key' } });
+    expect(r.isError).toBeFalsy();
+    expect(text(r)).toMatch(/haven't found/i);
+    expect(JSON.stringify(r)).not.toMatch(/e_desk_key|desk key/i);
+  });
+
   it('my_progress lists in-progress game and ready lab', async () => {
     const deps = testDeps({ demoMode: true });
     const { client, gameId } = await gameWithKey(deps);

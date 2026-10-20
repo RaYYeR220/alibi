@@ -14,7 +14,7 @@ export function requestLab(
 ): { state: GameState; ticket: { evidenceId: string; availableAt: number } } {
   const evidence = lookup(c).evidence.get(input.evidenceId);
   if (!evidence || !prev.discovered.includes(input.evidenceId)) {
-    throw new GameError('unknown_entity', `you have not found "${input.evidenceId}"`, prev.discovered);
+    throw new GameError('unknown_entity', "you haven't found anything like that yet", prev.discovered);
   }
   if (!evidence.lab) {
     throw new GameError('not_lab_testable', `the lab can't learn anything more from the ${evidence.name}`);

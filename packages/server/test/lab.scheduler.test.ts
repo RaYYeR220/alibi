@@ -26,6 +26,20 @@ describe('lab scheduling', () => {
     expect(sent[0].Name).toMatch(/^lab-g_abc-e_desk_key/);
   });
 
+  it('a schedule that already exists counts as scheduled', async () => {
+    const scheduler = createEventBridgeScheduler({
+      groupName: 'alibi-labs',
+      targetArn: 'arn:aws:lambda:us-east-1:1:function:alibi-lab',
+      roleArn: 'arn:aws:iam::1:role/scheduler',
+      client: {
+        send: async () => {
+          throw Object.assign(new Error('Schedule lab-g_abc-e_desk_key already exists.'), { name: 'ConflictException' });
+        },
+      },
+    });
+    await expect(scheduler.schedule('alice', 'g_abc', 'e_desk_key', Date.UTC(2026, 9, 21, 8))).resolves.toBeUndefined();
+  });
+
   it('the lab-ready handler drops a notification in the household inbox', async () => {
     const deps = testDeps();
     const client = await connect(deps, userAuth('alice'));

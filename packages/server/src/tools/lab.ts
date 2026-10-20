@@ -49,21 +49,27 @@ export function registerLabTools(server: McpServer, ctx: Ctx): void {
       if ('miss' in what) return what.miss;
       const { c } = game;
       let realAt = 0;
+      let booked = false;
       try {
         const result = await act(
           ctx,
           game,
           (s) => {
             const now = ctx.deps.clock();
+            const sentBefore = s.labs.some((l) => l.evidenceId === what.id);
             const { state, ticket } = requestLab(c, s, { evidenceId: what.id }, now);
             realAt = ticket.availableAt - state.clockOffsetMs;
+            booked = !sentBefore;
             const name = lookup(c).evidence.get(what.id)!.name;
             const hours = (ticket.availableAt - (now + state.clockOffsetMs)) / 3_600_000;
-            return { state, result: say(`The lab has the ${name}. Results ${when(hours)}; I'll let you know when they're in.`, labView(c, state, [])) };
+            const text = sentBefore
+              ? `The lab already has the ${name}. Results ${hours > 0 ? when(hours) : 'are ready: ask me to check the lab'}.`
+              : `The lab has the ${name}. Results ${when(hours)}; I'll let you know when they're in.`;
+            return { state, result: say(text, labView(c, state, [])) };
           },
           () => say('The lab could not take that item.'),
         );
-        await ctx.deps.scheduler.schedule(hh, game.s.gameId, what.id, realAt);
+        if (booked) await ctx.deps.scheduler.schedule(hh, game.s.gameId, what.id, realAt);
         return result;
       } catch (err) {
         if (err instanceof GameError) return say(err.message.replace(/^./, (ch) => ch.toUpperCase()) + '.');
