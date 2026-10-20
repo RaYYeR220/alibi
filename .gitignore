@@ -13,3 +13,4 @@ eval/results/raw/
 packages/server/src/apps/generated.ts
 cdk-outputs*.json
 dist-lambda/
+cases/*/assets/

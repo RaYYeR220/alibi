@@ -65,6 +65,8 @@ def test_pipeline_happy_path_produces_valid_case(tmp_path):
     assert case["meta"]["id"].startswith("custom-")
     assert case["meta"]["priceCents"] == 0
     assert all(a.get("audioUrl") for a in case["anchors"])
+    # relative to the case folder, the way the server builds asset URLs
+    assert all(a["audioUrl"] == f"audio/{a['id']}.mp3" for a in case["anchors"])
     assert {v for _, v in deps.tts.calls} <= set(result.voices.values()) | {result.narrator_voice}
     assert all(s["portrait"] for s in case["suspects"])
     assert len(deps.images.prompts) == len(case["suspects"]) + len(case["evidence"]) + 2  # + victim and cover

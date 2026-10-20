@@ -10,6 +10,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as scheduler from 'aws-cdk-lib/aws-scheduler';
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import type { Construct } from 'constructs';
+import { CasegenPipeline } from './casegen-pipeline.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const bundle = path.join(here, '..', '..', 'packages', 'server', 'dist-lambda');
@@ -21,7 +22,6 @@ export interface ApiStackProps extends StackProps {
   clientIds: string[];
   corsOrigins: string[];
   demoMode: boolean;
-  stateMachineArn?: string;
 }
 
 /**
@@ -43,6 +43,9 @@ export class ApiStack extends Stack {
       encryption: s3.BucketEncryption.S3_MANAGED,
       removalPolicy: RemovalPolicy.RETAIN,
     });
+
+    // Custom-case generation (Step Functions over the stage worker) shares the table and bucket.
+    const casegen = new CasegenPipeline(this, 'Casegen', { table: props.table, bucket: this.assets });
 
     const code = lambda.Code.fromAsset(bundle);
     const LAB_GROUP = 'alibi-labs';
@@ -87,7 +90,7 @@ export class ApiStack extends Stack {
         VIEWS_DIR: './views',
         ASSETS_BUCKET: this.assets.bucketName,
         ASSETS_PREFIX: 'assets/',
-        ...(props.stateMachineArn ? { STATE_MACHINE_ARN: props.stateMachineArn } : {}),
+        STATE_MACHINE_ARN: casegen.stateMachine.stateMachineArn,
       },
     });
     props.table.grantReadWriteData(api);
@@ -105,9 +108,7 @@ export class ApiStack extends Stack {
       }),
     );
     schedulerRole.grantPassRole(api.role!);
-    if (props.stateMachineArn) {
-      api.addToRolePolicy(new iam.PolicyStatement({ actions: ['states:StartExecution'], resources: [props.stateMachineArn] }));
-    }
+    casegen.grantStart(api);
 
     // Provisioned concurrency is not available on this account (concurrency limit 10), so a
     // warmer below keeps an instance hot instead.

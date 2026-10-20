@@ -48,4 +48,7 @@ def run(draft: Draft, deps: PipelineDeps) -> None:
     for a in case["anchors"]:
         voice = draft.voices.get(a["speakerId"], NARRATOR_VOICE)
         audio = deps.tts.synthesize(a["text"], voice)
-        a["audioUrl"] = deps.storage.put_asset(case["meta"]["id"], f"audio/{a['id']}.mp3", audio, "audio/mpeg")
+        name = f"audio/{a['id']}.mp3"
+        deps.storage.put_asset(case["meta"]["id"], name, audio, "audio/mpeg")
+        # Relative to the case's asset folder; the server turns it into a full URL.
+        a["audioUrl"] = name

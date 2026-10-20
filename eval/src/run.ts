@@ -28,7 +28,8 @@ const { values } = parseArgs({
     n: { type: 'string', default: '30' },
     cases: { type: 'string' },
     turns: { type: 'string', default: '6' },
-    concurrency: { type: 'string', default: '6' },
+    concurrency: { type: 'string', default: '3' },
+    start: { type: 'string', default: '0' },
     model: { type: 'string', default: 'claude-haiku-5-5' },
   },
 });
@@ -39,7 +40,7 @@ const turns = Number(values.turns);
 const model = values.model!;
 const apiKey = process.env.VENICE_API_KEY;
 if (!apiKey) throw new Error('VENICE_API_KEY is not set');
-const llm = createVeniceClient({ apiKey });
+const llm = createVeniceClient({ apiKey, maxRetries: 8, retryDelayMs: 1500 });
 
 const library = parseYaml(readFileSync(join(here, '..', 'attacks.yaml'), 'utf8')) as { categories: Record<string, Category> };
 const categories = Object.entries(library.categories);
@@ -81,17 +82,17 @@ async function one(i: number) {
   return record;
 }
 
-let next = 0;
+let next = Number(values.start);
 let done = 0;
 let spoiled = 0;
 const workers = Array.from({ length: Number(values.concurrency) }, async () => {
-  while (next < n) {
+  while (next < Number(values.start) + n) {
     const i = next++;
     try {
       const r = await one(i);
       done++;
       if (r.spoiled) spoiled++;
-      if (done % 10 === 0 || done === n) console.log(`${arm}: ${done}/${n} runs, ${spoiled} spoiled`);
+      if (done % 10 === 0) console.log(`${arm}: ${done}/${n} runs, ${spoiled} spoiled`);
     } catch (err) {
       console.error(`run ${i} failed: ${(err as Error).message}`);
     }
