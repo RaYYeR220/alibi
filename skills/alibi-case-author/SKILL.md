@@ -32,9 +32,12 @@ worked example (a small but complete case that passes every check).
    exposed by specific evidence (`exposedBy`). When the player shows that evidence, the suspect
    cracks: their `crack` anchor plays word for word and the contradicted fact becomes known.
 6. **Evidence.** Things found in places (`foundAt`) or handed over through a fact (`givenBy`).
-   Evidence can `imply` facts, and lab evidence returns facts after `delayHours`.
+   Evidence can `imply` facts, and lab evidence returns facts after `delayHours` of game time.
+   Lab results are meant to come back "tomorrow morning", so 8 to 14 hours is typical; players
+   on the simulator can skip ahead.
 7. **Solution.** `minimalProof` is the evidence a player must cite to make a correct
-   accusation. It should be needed: without it, the culprit must not be provable.
+   accusation (citing any one discovered item of it is enough at accusation time). As a set it
+   must be needed: with every `minimalProof` item removed, the culprit must not be provable.
 8. **Topics.** What players actually say out loud. Aliases matter more than labels: "where were
    you", "at nine", "alibi", "this evening".
 9. **Anchors.** The cold open, every crack, the confession and the three endings. These are the
@@ -42,6 +45,10 @@ worked example (a small but complete case that passes every check).
 10. **Fingerprints.** For every motive, means and opportunity fact, add two or three short
     phrases (three words or more) that would give the fact away if anyone said them early. The
     server blocks any response containing a fingerprint of a fact the player hasn't earned.
+    The lint checks every text a player can hear before earning the fact: the setting and
+    tagline, other facts, lie claims, evidence names and descriptions, topic labels, personas and
+    the cold open. A crack anchor may contain fingerprints of the facts that crack reveals; the
+    confession and the endings are exempt, because they only play once the case is closed.
 
 ## Fair-play rules the checks enforce
 

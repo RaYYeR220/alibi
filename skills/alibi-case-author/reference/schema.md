@@ -1,7 +1,16 @@
 # Case format reference
 
-The authoritative definition is `packages/canon/src/schema.ts` (also exported as JSON Schema at
-`packages/canon/dist/case.schema.json`). Ids are lowercase letters, digits, `_` and `-`.
+The authoritative definition lives in the Alibi repository at `packages/canon/src/schema.ts`
+(exported as JSON Schema to `packages/canon/dist/case.schema.json` by `pnpm --filter @alibi/canon build`).
+This page is a self-contained summary. Ids are lowercase letters, digits, `_` and `-`.
+
+Field notes:
+- `fact.about` lists the ids the fact is about: suspects, places or the victim.
+- `fact.time` is free text for the timeline ("9:15 pm").
+- `suspect.voiceId` is an Amazon Polly voice with the generative engine (for example Matthew,
+  Ruth, Stephen, Danielle, Gregory, Joanna, Brian, Amy).
+- A `never` fact may still sit in a topic: the topic gives players a way to ask about it, and the
+  suspect will deflect until the case is closed.
 
 ## Top level
 
