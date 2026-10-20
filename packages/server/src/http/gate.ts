@@ -22,7 +22,7 @@ const DISCOVERY = new Set([
 ]);
 
 /** Resources that belong to a household rather than to the add-on. */
-const HOUSEHOLD_RESOURCES = /^alibi:\/\/household\//;
+const HOUSEHOLD_RESOURCES = /^alibi:\/\/household\//i;
 
 type Message = { method?: unknown; params?: { name?: unknown; uri?: unknown } };
 

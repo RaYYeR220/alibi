@@ -2,6 +2,7 @@ import { McpServer, type AuthInfo } from '@modelcontextprotocol/server';
 import { registerViews } from '../apps/registry.js';
 import type { Deps } from '../deps.js';
 import { registerAccuseTool } from '../tools/accuse.js';
+import { registerBuyTool } from '../tools/buy.js';
 import { registerCatalogTools } from '../tools/catalog.js';
 import { registerInterrogationTools } from '../tools/interrogate.js';
 import { registerInvestigationTools } from '../tools/investigate.js';
@@ -25,5 +26,6 @@ export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo }): McpServer
   registerAccuseTool(server, toolCtx);
   registerLabTools(server, toolCtx);
   registerProgressTools(server, toolCtx);
+  registerBuyTool(server, toolCtx);
   return server;
 }

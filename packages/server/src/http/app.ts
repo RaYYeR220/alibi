@@ -4,6 +4,8 @@ import { createCognitoVerifier } from '../auth/verifier.js';
 import type { Deps } from '../deps.js';
 import { buildServer } from '../mcp/build-server.js';
 import { createAlibiMcpHandler } from '../mcp/handler.js';
+import { ucpProfile } from '../ucp/profile.js';
+import { ucpRoutes } from '../ucp/routes.js';
 import { gate, type Verify } from './gate.js';
 import { authorizationServerMetadata, protectedResourceMetadata } from './wellknown.js';
 
@@ -55,6 +57,10 @@ export function createApp(deps: Deps, cfg: AppConfig): Hono {
   app.get('/.well-known/oauth-protected-resource/mcp', (c) => c.json(prm()));
   app.get('/.well-known/oauth-authorization-server', (c) => c.json(authorizationServerMetadata(cfg)));
   app.get('/healthz', (c) => c.json({ ok: true }));
+
+  const origin = new URL(cfg.mcpUrl).origin;
+  app.get('/.well-known/ucp', (c) => c.json(ucpProfile(`${origin}/ucp`)));
+  app.route('/ucp', ucpRoutes(deps, { verify, linksBase: origin }));
 
   return app;
 }
