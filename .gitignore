@@ -11,3 +11,4 @@ __pycache__/
 coverage/
 eval/results/raw/
 packages/server/src/apps/generated.ts
+cdk-outputs*.json
