@@ -2,19 +2,20 @@ import { useEffect, useRef } from 'preact/hooks';
 import type { McpUiHostContext } from '@modelcontextprotocol/ext-apps/app-bridge';
 import { mountView, type DisplayMode, type MountedView } from '../bridge/view-frame.js';
 import type { Assistant, ShownView } from '../core/assistant.js';
+import { FRAMES, type FrameKind } from './frames.js';
 
-export const SCREEN = { width: 1280, height: 800 } as const;
-
-export function hostContext(mode: DisplayMode, theme: 'light' | 'dark'): McpUiHostContext {
+export function hostContext(mode: DisplayMode, theme: 'light' | 'dark', kind: FrameKind = 'show8'): McpUiHostContext {
+  const frame = FRAMES[kind];
+  const screen = frame.screen ?? { width: 1280, height: 800 };
   return {
     theme,
     displayMode: mode,
     availableDisplayModes: ['inline', 'fullscreen'],
-    deviceClass: 'Echo Show 8',
-    maxWidth: SCREEN.width,
-    maxHeight: SCREEN.height,
+    ...(frame.deviceClass ? { deviceClass: frame.deviceClass } : {}),
+    maxWidth: screen.width,
+    maxHeight: screen.height,
     isMobile: false,
-    containerDimensions: { width: SCREEN.width, height: SCREEN.height },
+    containerDimensions: { width: screen.width, height: screen.height },
     deviceCapabilities: { touch: true, hover: false },
     safeAreaInsets: { top: 0, right: 0, bottom: 0, left: 0 },
     locale: navigator.language || 'en-US',
@@ -26,12 +27,12 @@ export function hostContext(mode: DisplayMode, theme: 'light' | 'dark'): McpUiHo
  * Keeps one view on screen. A new tool result mounts a fresh frame behind the
  * current one and swaps once the view has drawn, so cards never flash empty.
  */
-export function ViewHost(props: { assistant: Assistant; view: ShownView | null; mode: DisplayMode; theme: 'light' | 'dark' }) {
+export function ViewHost(props: { assistant: Assistant; view: ShownView | null; mode: DisplayMode; theme: 'light' | 'dark'; frame: FrameKind }) {
   const box = useRef<HTMLDivElement>(null);
   const visible = useRef<MountedView | null>(null);
   const pending = useRef<{ key: number; view: MountedView } | null>(null);
   const shownKey = useRef<number | null>(null);
-  const { assistant, view, mode, theme } = props;
+  const { assistant, view, mode, theme, frame } = props;
 
   useEffect(() => {
     const el = box.current;
@@ -47,7 +48,7 @@ export function ViewHost(props: { assistant: Assistant; view: ShownView | null; 
     if (shownKey.current === view.key || pending.current?.key === view.key) return;
     void pending.current?.view.teardown();
 
-    const mounted = mountView(el, `${assistant.cfg.sandboxOrigin}/sandbox.html`, view.spec, hostContext(assistant.store.get().displayMode, theme), {
+    const mounted = mountView(el, `${assistant.cfg.sandboxOrigin}/sandbox.html`, view.spec, hostContext(assistant.store.get().displayMode, theme, frame), {
       onMessage: (msg) => assistant.fromView(msg),
       onDisplayMode: (m) => assistant.setDisplayMode(m),
       onCallTool: (name, args) => assistant.viewToolCall(name, args),
@@ -71,10 +72,10 @@ export function ViewHost(props: { assistant: Assistant; view: ShownView | null; 
   }, [view?.key]);
 
   useEffect(() => {
-    const ctx = hostContext(mode, theme);
+    const ctx = hostContext(mode, theme, frame);
     visible.current?.setContext(ctx);
     pending.current?.view.setContext(ctx);
-  }, [mode, theme]);
+  }, [mode, theme, frame]);
 
   useEffect(
     () => () => {

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Assistant, SimState } from '../core/assistant.js';
 import { DEMO_PIN } from '../core/assistant.js';
+import { FRAME_KINDS, FRAMES, type FrameKind } from './frames.js';
 
 function Copy(props: { label: string; value: string }) {
   const [done, setDone] = useState(false);
@@ -99,11 +100,28 @@ export function Landing(props: { open: boolean; onStart: (line?: string) => void
   );
 }
 
-export function Settings(props: { assistant: Assistant; s: SimState; theme: 'light' | 'dark'; setTheme: (t: 'light' | 'dark') => void; onClose: () => void }) {
+export function Settings(props: {
+  assistant: Assistant;
+  s: SimState;
+  theme: 'light' | 'dark';
+  setTheme: (t: 'light' | 'dark') => void;
+  frame: FrameKind;
+  setFrame: (f: FrameKind) => void;
+  onClose: () => void;
+}) {
   const { assistant, s } = props;
   const label: Record<string, string> = { 'claude-haiku-5-5': 'Haiku 5.5, fastest', 'claude-sonnet-5-5': 'Sonnet 5.5' };
   return (
     <div class="popover" role="dialog" aria-label="Settings">
+      <fieldset>
+        <legend>Device</legend>
+        {FRAME_KINDS.map((f) => (
+          <label key={f} class="opt">
+            <input type="radio" name="frame" checked={props.frame === f} onChange={() => props.setFrame(f)} />
+            {FRAMES[f].label}
+          </label>
+        ))}
+      </fieldset>
       <fieldset>
         <legend>Host model</legend>
         {assistant.cfg.models.map((m) => (

@@ -6,8 +6,18 @@ import { Controls } from './Controls.js';
 import { Device } from './Device.js';
 import { Landing, LinkDialog, Settings } from './Dialogs.js';
 import { Inspector } from './Inspector.js';
+import { FRAMES, type FrameKind } from './frames.js';
 
 const SEEN = 'alibi.sim.seen';
+const FRAME_KEY = 'alibi.sim.frame';
+const savedFrame = (): FrameKind => {
+  try {
+    const f = localStorage.getItem(FRAME_KEY);
+    return f && f in FRAMES ? (f as FrameKind) : 'show8';
+  } catch {
+    return 'show8';
+  }
+};
 const seen = () => {
   try {
     return localStorage.getItem(SEEN) === '1';
@@ -23,6 +33,15 @@ export function App(props: { assistant: Assistant }) {
   const [inspector, setInspector] = useState(false);
   const [settings, setSettings] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [frame, setFrameState] = useState<FrameKind>(savedFrame);
+  const setFrame = (f: FrameKind) => {
+    setFrameState(f);
+    try {
+      localStorage.setItem(FRAME_KEY, f);
+    } catch {
+      // not remembered across visits
+    }
+  };
   const tp95 = p95(s.traffic.filter((t) => t.kind === 'mcp' && t.method === 'tools/call').map((t) => t.ms));
 
   const start = (line?: string) => {
@@ -40,7 +59,7 @@ export function App(props: { assistant: Assistant }) {
       <header class="topbar">
         <div class="brand">
           <span class="brand-name">Alibi</span>
-          <span class="brand-sub">on a simulated smart display</span>
+          <span class="brand-sub">on a simulated {frame === 'speaker' ? 'smart speaker' : frame === 'tv' ? 'TV' : 'smart display'}</span>
         </div>
         <nav class="tools">
           <button type="button" class="tool" onClick={() => setLanding(true)}>
@@ -50,7 +69,7 @@ export function App(props: { assistant: Assistant }) {
             <button type="button" class="tool" aria-expanded={settings} onClick={() => setSettings(!settings)}>
               Settings
             </button>
-            {settings ? <Settings assistant={assistant} s={s} theme={theme} setTheme={setTheme} onClose={() => setSettings(false)} /> : null}
+            {settings ? <Settings assistant={assistant} s={s} theme={theme} setTheme={setTheme} frame={frame} setFrame={setFrame} onClose={() => setSettings(false)} /> : null}
           </div>
           <button type="button" class={`tool ${inspector ? 'on' : ''}`} aria-pressed={inspector} onClick={() => setInspector(!inspector)}>
             Inspector
@@ -62,7 +81,7 @@ export function App(props: { assistant: Assistant }) {
       <main class="desk">
         <section class="center">
           {s.bootError ? <p class="boot-error">{s.bootError}</p> : null}
-          <Device assistant={assistant} s={s} theme={theme} />
+          <Device assistant={assistant} s={s} theme={theme} frame={frame} />
           <p class="host-label">You are hearing a simulated host voice.</p>
           <Controls assistant={assistant} s={s} />
         </section>
