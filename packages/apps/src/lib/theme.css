@@ -1,0 +1,606 @@
+/*
+ * Alibi case-file system.
+ * Authored on the 768x480 canvas; the bridge sets one root zoom per device
+ * (1.667 on Echo Show 8/15), so every size below is a base-canvas pixel.
+ * Type sizes follow the Alexa+ token scale, which already carries the
+ * far-field 1.6 ratio once the root zoom is applied.
+ */
+
+@font-face {
+  font-family: 'Young Serif';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('@fontsource/young-serif/files/young-serif-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('@fontsource/courier-prime/files/courier-prime-latin-400-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Courier Prime';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('@fontsource/courier-prime/files/courier-prime-latin-700-normal.woff2') format('woff2');
+}
+
+:root,
+[data-theme='light'] {
+  /* type */
+  --font-display: 'Young Serif', Georgia, 'Times New Roman', serif;
+  --font-type: 'Courier Prime', 'Courier New', Courier, monospace;
+  --t-display-1: 48px;
+  --t-display-2: 40px;
+  --t-display-3: 32px;
+  --t-display-4: 28px;
+  --t-display-5: 24px;
+  --t-head-1: 20px;
+  --t-head-2: 18px;
+  --t-body-1: 16px;
+  --t-body-2: 14px;
+  --t-body-3: 12px;
+
+  /* space, from one 4px unit */
+  --s-1: 2px;
+  --s-2: 6px;
+  --s-3: 8px;
+  --s-4: 12px;
+  --s-5: 16px;
+  --s-6: 20px;
+  --s-7: 24px;
+  --s-8: 32px;
+
+  /* shape: one base radius, halved and doubled */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 16px;
+  --r-pill: 9999px;
+  --touch: 48px;
+
+  /* the folder the card sits in */
+  --folder: #cdb98b;
+  --folder-edge: #b29d6c;
+  --folder-ink: #2a2216;
+  --folder-muted: #4e3f24;
+  /* paper stuck inside it */
+  --paper: #f1e7cc;
+  --paper-ink: #221e18;
+  --paper-muted: #5f574a;
+  --paper-rule: rgba(66, 98, 150, 0.32);
+  --paper-margin: rgba(178, 36, 27, 0.45);
+  --memo: #f2df9a;
+  --photo: #f7f3e8;
+  /* the cork the board is pinned to */
+  --cork: #b48a5a;
+  --cork-ink: #2a1d10;
+  /* red string, red pen, red stamp */
+  --thread: #b3241b;
+  --thread-on: #fff6ec;
+  --stamp: #a3261f;
+  --focus: #1f4fbf;
+  --lift: 0 1px 0 rgba(70, 48, 12, 0.18), 0 6px 14px -6px rgba(70, 48, 12, 0.55);
+}
+
+[data-theme='dark'] {
+  --folder: #1f2b25;
+  --folder-edge: #2c3a33;
+  --folder-ink: #ede3cb;
+  --folder-muted: #b5ac95;
+  --paper: #cdbf9e;
+  --paper-ink: #1d1913;
+  --paper-muted: #4f4637;
+  --paper-rule: rgba(48, 72, 112, 0.35);
+  --paper-margin: rgba(150, 30, 24, 0.5);
+  --memo: #cdb975;
+  --photo: #d8d1c1;
+  --cork: #4a3826;
+  --cork-ink: #efe5cf;
+  --thread: #e0473a;
+  --thread-on: #fff6ec;
+  --stamp: #a3261f;
+  --focus: #9cc0ff;
+  --lift: 0 1px 0 rgba(0, 0, 0, 0.4), 0 8px 18px -6px rgba(0, 0, 0, 0.7);
+}
+
+/* paper fibre and felt nap: one noise tile, tinted by what it sits on */
+:root {
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .2 0 0 0 0 .16 0 0 0 0 .1 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --fibre: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.012 .09' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 .3 0 0 0 0 .24 0 0 0 0 .12 0 0 0 .22 0'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>");
+  --stamp-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='11'/><feComponentTransfer><feFuncA type='discrete' tableValues='1 1 1 1 0.45 1 1 1 1 1'/></feComponentTransfer><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23s)'/></svg>");
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+body {
+  font-family: var(--font-type);
+  font-size: var(--t-body-1);
+  line-height: 1.4;
+  color: var(--folder-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#root {
+  width: 100%;
+  max-width: 768px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+figure {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* ---------- the folder ---------- */
+
+.sheet {
+  position: relative;
+  margin-top: 20px;
+  padding: var(--s-7) var(--s-7) var(--s-6);
+  color: var(--folder-ink);
+  background-color: var(--folder);
+  background-image: var(--grain), linear-gradient(172deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.07));
+  border-radius: 0 var(--r-lg) var(--r-lg) var(--r-lg);
+  box-shadow: inset 0 0 0 1px var(--folder-edge);
+}
+
+.sheet-tab {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  height: 22px;
+  margin-bottom: -2px;
+  padding: 4px 18px 0 16px;
+  font-size: var(--t-body-3);
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--folder-muted);
+  background-color: var(--folder);
+  background-image: var(--grain);
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  box-shadow: inset 1px 1px 0 var(--folder-edge), inset -1px 0 0 var(--folder-edge);
+}
+
+/* ---------- shared pieces ---------- */
+
+.say {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--s-3);
+  font-size: var(--t-body-1);
+  color: var(--folder-muted);
+}
+
+.say-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.say-label::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--thread);
+  translate: 0 -1px;
+}
+
+.say-phrase {
+  font-weight: 700;
+  color: var(--folder-ink);
+}
+
+.stamp {
+  display: inline-block;
+  padding: 7px 12px 5px;
+  font-family: var(--font-display);
+  font-size: var(--t-display-5);
+  line-height: 1;
+  color: var(--stamp);
+  border: 3px solid currentColor;
+  border-radius: var(--r-md);
+  box-shadow: inset 0 0 0 3px transparent, inset 0 0 0 5px currentColor;
+  rotate: -5deg;
+  white-space: nowrap;
+  -webkit-mask-image: var(--stamp-mask);
+  mask-image: var(--stamp-mask);
+  mix-blend-mode: multiply;
+}
+
+[data-theme='dark'] .sheet > .stamp,
+[data-theme='dark'] .on-folder.stamp {
+  color: var(--thread);
+  mix-blend-mode: normal;
+}
+
+.photo {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: #3a3329;
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-missing {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-display);
+  font-size: var(--t-display-3);
+  color: #e9dfc6;
+  background: radial-gradient(circle at 35% 30%, #6d6250, #2b251d);
+}
+
+.polaroid {
+  --ink: #b9862a;
+  --tilt: 0deg;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-3) var(--s-3);
+  color: var(--paper-ink);
+  background: var(--photo);
+  border-radius: var(--r-xs);
+  box-shadow: var(--lift);
+  rotate: var(--tilt);
+}
+
+/* a strip of coloured tape in the suspect's ink */
+.polaroid::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: -9px;
+  left: 50%;
+  width: 58px;
+  height: 18px;
+  translate: -50% 0;
+  rotate: -4deg;
+  background: var(--ink);
+  background: color-mix(in srgb, var(--ink) 78%, transparent);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.18);
+}
+
+.polaroid .photo {
+  aspect-ratio: 5 / 6;
+}
+
+.polaroid figcaption {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--s-1);
+}
+
+.polaroid-name {
+  font-family: var(--font-display);
+  font-size: var(--t-head-2);
+  line-height: 1.1;
+}
+
+.polaroid-role {
+  font-size: var(--t-body-2);
+  color: var(--paper-muted);
+}
+
+.bag {
+  --tilt: 0deg;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 18px var(--s-3) var(--s-3);
+  background: color-mix(in srgb, var(--photo) 86%, #9fb6c6);
+  border-radius: var(--r-md);
+  box-shadow: var(--lift);
+  rotate: var(--tilt);
+}
+
+/* the red zip seal across the top of the bag */
+.bag-seal {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  background: repeating-linear-gradient(90deg, var(--thread) 0 10px, color-mix(in srgb, var(--thread) 70%, #fff) 10px 12px);
+}
+
+/* plastic sheen over the photo */
+.bag::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(128deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0) 34%, rgba(255, 255, 255, 0) 62%, rgba(255, 255, 255, 0.2) 70%, rgba(255, 255, 255, 0) 80%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.bag .photo {
+  aspect-ratio: 1;
+  border-radius: var(--r-xs);
+}
+
+.bag-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  margin-top: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  color: var(--paper-ink);
+  background: var(--paper);
+  border-radius: var(--r-xs);
+}
+
+.bag-name {
+  font-family: var(--font-display);
+  font-size: var(--t-head-2);
+  line-height: 1.1;
+}
+
+.lab-tag {
+  font-size: var(--t-body-3);
+  font-weight: 700;
+  color: var(--paper-muted);
+}
+
+.lab-available,
+.lab-ready {
+  color: var(--stamp);
+}
+
+.index-card {
+  position: relative;
+  padding: 12px var(--s-6) 12px 34px;
+  color: var(--paper-ink);
+  line-height: 26px;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, transparent 22px, var(--paper-margin) 22px 23.5px, transparent 23.5px),
+    repeating-linear-gradient(transparent 0 25px, var(--paper-rule) 25px 26px),
+    var(--fibre);
+  background-position: 0 0, 0 12px, 0 0;
+  border-radius: var(--r-xs);
+  box-shadow: var(--lift);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  min-width: var(--touch);
+  min-height: var(--touch);
+  padding: 0 28px;
+  font-family: var(--font-type);
+  font-size: var(--t-head-1);
+  font-weight: 700;
+  line-height: 1;
+  border: 0;
+  border-radius: var(--r-md);
+  cursor: pointer;
+}
+
+.btn-primary {
+  color: var(--thread-on);
+  background: var(--thread);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.24), 0 2px 0 rgba(0, 0, 0, 0.16);
+}
+
+.btn-primary:active {
+  translate: 0 1px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.24);
+}
+
+.btn-primary[aria-disabled='true'] {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btn-audio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: var(--touch);
+  padding: 0 var(--s-5) 0 var(--s-4);
+  font-size: var(--t-body-1);
+  font-weight: 700;
+  color: var(--folder-ink);
+  background: transparent;
+  border: 2px solid color-mix(in srgb, var(--folder-ink) 40%, transparent);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+}
+
+/* autoplay was refused: the control is now the way in, so it takes the red */
+.btn-audio-ready {
+  border-color: var(--thread);
+}
+
+.btn-audio-glyph {
+  width: 0;
+  height: 0;
+  border-left: 12px solid var(--thread);
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+.polygraph {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  color: var(--paper-ink);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(rgba(178, 36, 27, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(178, 36, 27, 0.14) 1px, transparent 1px);
+  background-size: 8px 8px;
+  border-radius: var(--r-xs);
+  box-shadow: var(--lift);
+}
+
+.polygraph svg {
+  width: 100%;
+  height: 34px;
+  overflow: visible;
+}
+
+.polygraph polyline {
+  fill: none;
+  stroke: var(--paper-ink);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.polygraph-word {
+  font-family: var(--font-display);
+  font-size: var(--t-head-1);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  padding: 3px var(--s-4) 4px;
+  font-size: var(--t-body-2);
+  color: var(--paper-ink);
+  background: var(--paper);
+  border-radius: var(--r-pill);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.chip b {
+  font-weight: 700;
+}
+
+.clamp-2,
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-2 {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.clamp-3 {
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* the one orchestrated moment: a stamp coming down */
+@keyframes thunk {
+  0% {
+    opacity: 0;
+    scale: 1.35;
+  }
+  70% {
+    opacity: 1;
+    scale: 0.97;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+.stamp-in {
+  animation: thunk 260ms cubic-bezier(0.3, 0.7, 0.4, 1) 120ms both;
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: var(--len, 600);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-in,
+  .string-path {
+    animation: none !important;
+  }
+}
+
+/* ---------- note ---------- */
+
+.note .note-text {
+  max-width: 34ch;
+  font-size: var(--t-display-5);
+  line-height: 1.2;
+}
+
+.note .note-more {
+  margin-top: var(--s-4);
+  max-width: 60ch;
+}
+
+/* ---------- phones: stack anything side by side ---------- */
+
+[data-layout='phone'] .sheet {
+  padding: var(--s-5);
+}
+
+[data-layout='phone'] .split {
+  grid-template-columns: 1fr !important;
+}

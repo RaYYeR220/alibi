@@ -1,0 +1,72 @@
+.evidence-title {
+  margin-bottom: var(--s-6);
+  font-size: var(--t-display-3);
+}
+
+.evidence-items {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  gap: var(--s-7);
+  margin-bottom: var(--s-6);
+}
+
+.evidence-items[data-count='2'] {
+  --cols: 2;
+  max-width: 560px;
+}
+
+.evidence-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.evidence-item .bag {
+  width: 100%;
+  max-width: 200px;
+}
+
+.evidence-items[data-count='2'] .evidence-item:nth-child(2) .bag {
+  margin-top: var(--s-3);
+}
+
+.evidence-desc {
+  font-size: var(--t-body-2);
+  line-height: 1.4;
+  max-width: 34ch;
+}
+
+.evidence-single {
+  --cols: 1;
+}
+
+.evidence-single .evidence-item {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  align-items: center;
+  gap: var(--s-7);
+}
+
+.evidence-single .evidence-item .bag {
+  max-width: none;
+}
+
+.evidence-single .evidence-desc {
+  font-size: var(--t-head-1);
+  line-height: 1.45;
+}
+
+.evidence-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4) var(--s-6);
+}
+
+[data-layout='phone'] .evidence-items {
+  --cols: 1;
+}
+
+[data-layout='phone'] .evidence-single .evidence-item {
+  grid-template-columns: 1fr;
+}
