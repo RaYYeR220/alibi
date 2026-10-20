@@ -7,6 +7,7 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, rmSync } from 'node:f
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
+import { VIEWS } from '../src/apps/registry.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pkg = resolve(here, '..');
@@ -46,6 +47,9 @@ if (caseIds.length === 0) {
 const viewsDir = join(root, 'packages', 'apps', 'dist');
 mkdirSync(join(out, 'views'), { recursive: true });
 const views = existsSync(viewsDir) ? readdirSync(viewsDir).filter((f) => f.endsWith('.html')) : [];
+// Without the built views the server falls back to empty placeholder pages, so every card renders blank.
+const missing = VIEWS.filter((v) => !views.includes(`${v}.html`));
+if (missing.length) throw new Error(`missing built views (${missing.join(', ')}): run pnpm --filter @alibi/apps build`);
 for (const f of views) copyFileSync(join(viewsDir, f), join(out, 'views', f));
 
 console.log(`dist-lambda: ${caseIds.length || 1} case(s), ${views.length} view(s)`);

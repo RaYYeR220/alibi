@@ -8,7 +8,7 @@
     "test": "vitest run",
     "lint": "tsc -p tsconfig.json --noEmit",
     "dev": "tsx src/local.ts",
-    "bundle": "pnpm --filter @alibi/canon build && tsx scripts/build-lambda.ts",
+    "bundle": "pnpm --filter @alibi/canon build && pnpm --filter @alibi/apps build && tsx scripts/build-lambda.ts",
     "smoke": "tsx scripts/smoke.ts"
   },
   "dependencies": {
