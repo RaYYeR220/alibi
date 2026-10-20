@@ -107,7 +107,7 @@
     {
       "id": "t_whereabouts",
       "label": "where they were during the intermission",
-      "aliases": ["where were you", "whereabouts", "alibi", "intermission", "during the break", "between sets", "at ten", "ten o'clock", "half past ten", "what were you doing", "where did you go", "after the second set"],
+      "aliases": ["where were you", "whereabouts", "alibi", "intermission", "during the break", "between sets", "at ten", "ten o'clock", "half past ten", "what were you doing", "where did you go", "after the second set", "leave the room", "left the room", "step out"],
       "factIds": ["f_deuce_cards", "f_ruth_alley", "f_vinnie_bar"]
     },
     {
@@ -149,7 +149,7 @@
     {
       "id": "t_others",
       "label": "what they saw of the others",
-      "aliases": ["who else", "anyone else", "the others", "did you see anyone", "see anything", "notice anything", "anything strange", "what about sol", "what about deuce", "what about ruth", "what about vinnie", "the boss"],
+      "aliases": ["who else", "anyone else", "the others", "did you see anyone", "see anything", "notice anything", "anything strange", "weird", "suspicious", "hear anything", "heard anything", "what about sol", "what about deuce", "what about ruth", "what about vinnie", "the boss"],
       "factIds": ["f_vinnie_saw_sol", "f_ruth_cellar_door", "f_vinnie_bar"]
     },
     {

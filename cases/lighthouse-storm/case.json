@@ -126,7 +126,7 @@
     {
       "id": "t_whereabouts",
       "label": "where they were in the night",
-      "aliases": ["where were you", "whereabouts", "alibi", "last night", "in the night", "during the night", "at three", "three o'clock", "after midnight", "were you asleep", "your movements", "what were you doing", "where did you go"],
+      "aliases": ["where were you", "whereabouts", "alibi", "last night", "in the night", "leave the room", "left the room", "go to bed", "bed", "during the night", "at three", "three o'clock", "after midnight", "were you asleep", "your movements", "what were you doing", "where did you go"],
       "factIds": ["f_watch", "f_trev_opp", "f_pascoe_stairs", "f_tamsin_kitchen", "f_hester_kitchen", "f_alleyne_draught"]
     },
     {
@@ -150,7 +150,7 @@
     {
       "id": "t_transfer",
       "label": "Pascoe's transfer and the quarrel",
-      "aliases": ["transfer", "quarrel", "argument", "row", "shouting at supper", "request", "falling out", "ashore", "leave the rock"],
+      "aliases": ["transfer", "quarrel", "argument", "row", "shouting at supper", "request", "falling out", "ashore", "off the rock"],
       "factIds": ["f_pascoe_transfer"]
     },
     {
@@ -180,7 +180,7 @@
     {
       "id": "t_noises",
       "label": "what they heard in the night",
-      "aliases": ["heard", "hear anything", "did you hear", "noise", "noises", "footsteps", "boots", "voices", "arguing", "sounds", "snoring"],
+      "aliases": ["heard", "hear anything", "did you hear", "noise", "noises", "footsteps", "boots", "voices", "arguing", "sounds", "snoring", "see anything", "notice anything", "anything strange", "weird", "suspicious"],
       "factIds": ["f_tamsin_heard_steps", "f_pascoe_stairs", "f_alleyne_asleep"]
     },
     {

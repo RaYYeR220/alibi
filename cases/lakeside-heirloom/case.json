@@ -133,13 +133,13 @@
     {
       "id": "t_family",
       "label": "who should have Old Goldie",
-      "aliases": ["family", "history", "great grandpa earl", "earl", "your father", "her father", "will", "inheritance", "promise", "promised", "who gets it", "whose is it", "sister", "feud", "christmas", "rivalry"],
+      "aliases": ["who would want it", "who wanted it", "steal", "why would anyone", "family", "history", "great grandpa earl", "earl", "your father", "her father", "will", "inheritance", "promise", "promised", "who gets it", "whose is it", "sister", "feud", "christmas", "rivalry"],
       "factIds": ["f_lorraine_motive", "f_marv_offer"]
     },
     {
       "id": "t_others",
       "label": "what they saw of the others",
-      "aliases": ["who else", "anyone else", "the others", "did you see anyone", "see anything", "notice anything", "anything strange", "suspicious", "what about dale", "what about lorraine", "what about marv", "what about tess", "everyone else"],
+      "aliases": ["who else", "anyone else", "the others", "did you see anyone", "see anything", "notice anything", "anything strange", "suspicious", "weird", "hear anything", "heard anything", "what about dale", "what about lorraine", "what about marv", "what about tess", "everyone else"],
       "factIds": ["f_marv_light", "f_dale_phone", "f_marv_pontoon", "f_tess_stream"]
     },
     {
