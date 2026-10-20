@@ -19,6 +19,7 @@ export interface GameStore {
 
 export interface EntitlementStore {
   has(householdId: string, sku: string): Promise<boolean>;
+  /** Adds one credit per order; granting the same order again is a no-op. */
   grant(householdId: string, sku: string, orderId: string): Promise<void>;
   /** Uses up one credit (custom cases); false when there is none. */
   consume(householdId: string, sku: string): Promise<boolean>;
@@ -46,8 +47,9 @@ export interface IdempotencyRecord {
 export interface CheckoutStore {
   put(session: CheckoutSession): Promise<void>;
   get(id: string): Promise<CheckoutSession | null>;
-  getIdem(key: string): Promise<IdempotencyRecord | null>;
-  putIdem(key: string, record: IdempotencyRecord): Promise<void>;
+  /** Idempotency keys are scoped to the caller (OAuth client or household) that used them. */
+  getIdem(owner: string, key: string): Promise<IdempotencyRecord | null>;
+  putIdem(owner: string, key: string, record: IdempotencyRecord): Promise<void>;
 }
 
 export type JobStatus = 'queued' | 'running' | 'done' | 'failed';

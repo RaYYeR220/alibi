@@ -1,10 +1,11 @@
-import { ConditionalCheckFailedException, DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { ConditionalCheckFailedException, DynamoDBClient, TransactionCanceledException } from '@aws-sdk/client-dynamodb';
 import {
   BatchGetCommand,
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
   QueryCommand,
+  TransactWriteCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { parseCase, type Case, type GameState } from '@alibi/canon';
@@ -26,8 +27,9 @@ import {
  *   GAME#<id>/STATE          game state (guest games carry a ttl)
  *   HH#<hh>/GAME#<id>        household → game pointer
  *   HH#<hh>/ENT#<sku>        entitlement credits
+ *   ORDER#<id>/GRANT         marks an order as already credited
  *   CHK#<id>/SESSION         UCP checkout session
- *   IDEM#<key>/IDEM          idempotent response replay
+ *   IDEM#<owner>#<key>/IDEM  idempotent response replay, per caller
  *   JOB#<id>/JOB             custom-case job; HH#<hh>/JOB#<id> pointer
  *   HH#<hh>/INBOX#<at>#<id>  inbox items
  *   HH#<hh>/CASE#<id>        a household's generated case
@@ -117,14 +119,32 @@ export function createDynamoStores(opts: { table: string; bundled: Case[]; clock
         return Number((await getItem(`HH#${hh}`, `ENT#${sku}`))?.credits ?? 0) > 0;
       },
       async grant(hh, sku, orderId) {
-        await db.send(
-          new UpdateCommand({
-            TableName,
-            Key: { pk: `HH#${hh}`, sk: `ENT#${sku}` },
-            UpdateExpression: 'ADD credits :one SET lastOrder = :o',
-            ExpressionAttributeValues: { ':one': 1, ':o': orderId },
-          }),
-        );
+        try {
+          await db.send(
+            new TransactWriteCommand({
+              TransactItems: [
+                {
+                  Put: {
+                    TableName,
+                    Item: { pk: `ORDER#${orderId}`, sk: 'GRANT', householdId: hh, sku },
+                    ConditionExpression: 'attribute_not_exists(pk)',
+                  },
+                },
+                {
+                  Update: {
+                    TableName,
+                    Key: { pk: `HH#${hh}`, sk: `ENT#${sku}` },
+                    UpdateExpression: 'ADD credits :one SET lastOrder = :o',
+                    ExpressionAttributeValues: { ':one': 1, ':o': orderId },
+                  },
+                },
+              ],
+            }),
+          );
+        } catch (err) {
+          const already = err instanceof TransactionCanceledException && err.CancellationReasons?.[0]?.Code === 'ConditionalCheckFailed';
+          if (!already) throw err;
+        }
       },
       async consume(hh, sku) {
         try {
@@ -151,12 +171,14 @@ export function createDynamoStores(opts: { table: string; bundled: Case[]; clock
       async get(id) {
         return ((await getItem(`CHK#${id}`, 'SESSION'))?.session as CheckoutSession | undefined) ?? null;
       },
-      async getIdem(key) {
-        return ((await getItem(`IDEM#${key}`, 'IDEM'))?.record as IdempotencyRecord | undefined) ?? null;
+      async getIdem(owner, key) {
+        const item = await getItem(`IDEM#${owner}#${key}`, 'IDEM');
+        if (!item || Number(item.ttl) < seconds(clock())) return null;
+        return item.record as IdempotencyRecord;
       },
-      async putIdem(key, record) {
+      async putIdem(owner, key, record) {
         await db.send(
-          new PutCommand({ TableName, Item: { pk: `IDEM#${key}`, sk: 'IDEM', record, ttl: seconds(clock() + 24 * 3_600_000) } }),
+          new PutCommand({ TableName, Item: { pk: `IDEM#${owner}#${key}`, sk: 'IDEM', record, ttl: seconds(clock() + 24 * 3_600_000) } }),
         );
       },
     },

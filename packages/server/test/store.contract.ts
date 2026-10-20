@@ -31,9 +31,25 @@ export function storeContract(name: string, make: () => Promise<Harness>) {
     it('idempotency record returns stored response', async () => {
       const { stores } = await make();
       const key = uid('idem');
-      await stores.checkouts.putIdem(key, { bodyHash: 'h1', status: 201, response: { id: 'chk_1' } });
-      expect(await stores.checkouts.getIdem(key)).toEqual({ bodyHash: 'h1', status: 201, response: { id: 'chk_1' } });
-      expect(await stores.checkouts.getIdem(uid('missing'))).toBeNull();
+      await stores.checkouts.putIdem('client-a', key, { bodyHash: 'h1', status: 201, response: { id: 'chk_1' } });
+      expect(await stores.checkouts.getIdem('client-a', key)).toEqual({ bodyHash: 'h1', status: 201, response: { id: 'chk_1' } });
+      expect(await stores.checkouts.getIdem('client-a', uid('missing'))).toBeNull();
+    });
+
+    it('idempotency records are scoped to the caller that created them', async () => {
+      const { stores } = await make();
+      const key = uid('idem');
+      await stores.checkouts.putIdem('client-a', key, { bodyHash: 'h1', status: 201, response: { id: 'chk_1' } });
+      expect(await stores.checkouts.getIdem('client-b', key)).toBeNull();
+    });
+
+    it('granting the same order twice adds one credit', async () => {
+      const { stores } = await make();
+      const hh = uid('hh');
+      await stores.entitlements.grant(hh, 'custom-case', 'ord-same');
+      await stores.entitlements.grant(hh, 'custom-case', 'ord-same');
+      expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(true);
+      expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(false);
     });
 
     it('guest game has ttl set', async () => {

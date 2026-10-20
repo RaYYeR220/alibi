@@ -19,6 +19,7 @@ export function createMemoryStores(opts: { bundled: Case[]; clock?: () => number
   const clock = opts.clock ?? Date.now;
   const games = new Map<string, GameState>();
   const entitlements = new Map<string, number>();
+  const orders = new Set<string>();
   const sessions = new Map<string, CheckoutSession>();
   const idem = new Map<string, IdempotencyRecord>();
   const jobs = new Map<string, Job>();
@@ -58,7 +59,9 @@ export function createMemoryStores(opts: { bundled: Case[]; clock?: () => number
       async has(hh, sku) {
         return (entitlements.get(`${hh}|${sku}`) ?? 0) > 0;
       },
-      async grant(hh, sku) {
+      async grant(hh, sku, orderId) {
+        if (orders.has(orderId)) return;
+        orders.add(orderId);
         entitlements.set(`${hh}|${sku}`, (entitlements.get(`${hh}|${sku}`) ?? 0) + 1);
       },
       async consume(hh, sku) {
@@ -75,11 +78,11 @@ export function createMemoryStores(opts: { bundled: Case[]; clock?: () => number
       async get(id) {
         return clone(sessions.get(id) ?? null);
       },
-      async getIdem(key) {
-        return clone(idem.get(key) ?? null);
+      async getIdem(owner, key) {
+        return clone(idem.get(`${owner}|${key}`) ?? null);
       },
-      async putIdem(key, record) {
-        idem.set(key, clone(record));
+      async putIdem(owner, key, record) {
+        idem.set(`${owner}|${key}`, clone(record));
       },
     },
     jobs: {
