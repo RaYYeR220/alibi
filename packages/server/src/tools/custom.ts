@@ -1,5 +1,5 @@
 import { registerAppTool } from '@modelcontextprotocol/ext-apps/server';
-import type { McpServer } from '@modelcontextprotocol/server';
+import { acceptedContent, inputRequired, type McpServer } from '@modelcontextprotocol/server';
 import * as z from 'zod';
 import type { ProgressView } from '@alibi/canon';
 import { viewUri } from '../apps/registry.js';
@@ -9,6 +9,19 @@ import { CUSTOM_CASE_SKU, openSession, resolveSku } from '../ucp/sessions.js';
 import { purchaseView } from './buy.js';
 import { householdOf, say, type Ctx } from './common.js';
 import { LINK_FIRST } from './lab.js';
+
+const ASK_NAMES = 'Who should be in it? Tell me up to five first names, and the occasion if there is one.';
+
+/** What a 2026-07-28 client is asked for when the names are missing (flat, elicitation-safe schema). */
+const DETAILS = z.object({
+  names: z.string().meta({ title: 'First names, separated by commas (up to five)' }),
+  occasion: z.string().optional().meta({ title: 'Occasion' }),
+});
+
+type RequestCtx = { mcpReq: { envelope?: Record<string, unknown>; inputResponses?: unknown } };
+
+const canElicit = (ctx: RequestCtx) =>
+  Boolean((ctx.mcpReq.envelope?.['io.modelcontextprotocol/clientCapabilities'] as { elicitation?: unknown } | undefined)?.elicitation);
 
 export const DAILY_PER_HOUSEHOLD = 1;
 export const DAILY_GLOBAL = 15;
@@ -51,10 +64,23 @@ export function registerCustomTools(server: McpServer, ctx: Ctx): void {
       }),
       _meta: { ui: { resourceUri: viewUri('progress') } },
     },
-    async ({ names, occasion, setting, tone, rating }) => {
+    async ({ names: given, occasion: givenOccasion, setting, tone, rating }, reqCtx) => {
       const hh = householdOf(ctx.authInfo);
       if (!hh) return say(LINK_FIRST);
-      if (names.length === 0) return say('Who should be in it? Tell me up to five first names, and the occasion if there is one.');
+      let names = given;
+      let occasion = givenOccasion;
+      if (names.length === 0) {
+        const req = reqCtx as unknown as RequestCtx;
+        const details = acceptedContent(req.mcpReq.inputResponses as never, 'details', DETAILS);
+        if (details) {
+          names = details.names.split(',').map((n) => n.trim()).filter(Boolean).slice(0, 5);
+          occasion ??= details.occasion;
+        } else if (canElicit(req)) {
+          // 2026-07-28: ask the client to collect the details, then the call is retried with the answers.
+          return inputRequired({ inputRequests: { details: inputRequired.elicit({ message: ASK_NAMES, requestedSchema: DETAILS }) } }) as never;
+        }
+        if (names.length === 0) return say(ASK_NAMES);
+      }
 
       const check = moderate([...names, occasion ?? '', setting ?? '']);
       if (!check.ok) return say(`I can't use ${check.reason === 'language' ? 'some of those words' : check.reason} in a case. Try different names or details.`);

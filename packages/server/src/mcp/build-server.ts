@@ -17,7 +17,7 @@ When a tool returns a performance brief, speak as that suspect using only the st
 Keep the game_id from start_case and pass it to every later call. Keep narration short: this is a voice game.`;
 
 /** Builds the per-request MCP server; the caller's verified auth decides which household it acts for. */
-export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo }): McpServer {
+export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo; era?: string }): McpServer {
   const server = new McpServer(SERVER_INFO, { instructions: INSTRUCTIONS });
   const toolCtx = { deps, authInfo: ctx.authInfo };
   registerViews(server, deps.appHtml, deps.assetsBaseUrl);
