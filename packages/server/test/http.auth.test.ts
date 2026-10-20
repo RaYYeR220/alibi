@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { OAuthError, OAuthErrorCode } from '@modelcontextprotocol/server';
 import { createApp } from '../src/http/app.js';
+import { demoProcessor } from '../src/ucp/payment.js';
 import { serviceAuth, testDeps, userAuth } from './harness.js';
 
 const cfg = {
@@ -9,6 +10,7 @@ const cfg = {
   cognitoDomain: 'https://alibi.auth.us-east-1.amazoncognito.com',
   clientIds: ['service-client', 'household-client'],
   corsOrigins: ['https://play.alibi.test'],
+  payments: demoProcessor,
   verify: async (token: string) => {
     if (token === 'service') return serviceAuth;
     if (token === 'alice') return userAuth('alice');

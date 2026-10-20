@@ -4,6 +4,7 @@ import { createCognitoVerifier } from '../auth/verifier.js';
 import type { Deps } from '../deps.js';
 import { buildServer } from '../mcp/build-server.js';
 import { createAlibiMcpHandler } from '../mcp/handler.js';
+import type { PaymentProcessor } from '../ucp/payment.js';
 import { ucpProfile } from '../ucp/profile.js';
 import { ucpRoutes } from '../ucp/routes.js';
 import { gate, type Verify } from './gate.js';
@@ -15,6 +16,8 @@ export interface AppConfig {
   cognitoDomain: string;
   clientIds: string[];
   corsOrigins: string[];
+  /** Payment processor for UCP checkout; the deployment chooses it explicitly. */
+  payments: PaymentProcessor;
   /** Injected in tests; defaults to the Cognito JWKS verifier. */
   verify?: Verify;
 }
@@ -60,7 +63,7 @@ export function createApp(deps: Deps, cfg: AppConfig): Hono {
 
   const origin = new URL(cfg.mcpUrl).origin;
   app.get('/.well-known/ucp', (c) => c.json(ucpProfile(`${origin}/ucp`)));
-  app.route('/ucp', ucpRoutes(deps, { verify, linksBase: origin }));
+  app.route('/ucp', ucpRoutes(deps, { verify, linksBase: origin, processor: cfg.payments }));
 
   return app;
 }
