@@ -46,7 +46,10 @@ function jobText(job: Job): string {
     case 'done':
       return 'Your custom case is ready. Say "list cases" to find it.';
     case 'failed':
-      return "Something went wrong writing that case. Your credit is safe; ask me to try again.";
+      // Moderation refusals keep the credit spent; every other failure refunds it (see the pipeline's record_failure).
+      return job.stage === 'moderate'
+        ? "That case couldn't be written with those details. Try different names or a different occasion."
+        : 'Something went wrong writing that case, so your credit is back. Ask me to try again.';
   }
 }
 

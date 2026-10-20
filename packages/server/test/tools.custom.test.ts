@@ -82,6 +82,22 @@ describe('custom cases', () => {
     expect(job).toMatchObject({ status: 'running' });
   });
 
+  it('a failed case only promises the credit back when it was given back', async () => {
+    const deps = testDeps();
+    await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');
+    await deps.entitlements.grant('okafor', 'custom-case', 'ord-2');
+    const client = await connect(deps, userAuth('okafor'));
+    const start = async () => view<ProgressView>(await client.callTool({ name: 'create_custom_case', arguments: args })).jobs[0]!.jobId;
+    const refused = await start();
+    await deps.jobs.update(refused, { status: 'failed', stage: 'moderate' });
+    const broken = await start();
+    await deps.jobs.update(broken, { status: 'failed', stage: 'prove' });
+    const check = async (job_id: string) => text(await client.callTool({ name: 'check_custom_case', arguments: { job_id } }));
+    expect(await check(refused)).not.toMatch(/credit/i);
+    expect(await check(refused)).toMatch(/different names/i);
+    expect(await check(broken)).toMatch(/credit is back/i);
+  });
+
   it('missing names asks for them', async () => {
     const deps = testDeps();
     await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');

@@ -51,7 +51,10 @@ runs in four steps:
 
 The response is the **performance brief** for the host plus a view model for the MCP App. Before
 it leaves the server, the output guard scans it for the fingerprints of every fact the player
-has not earned. On a hit, the server returns a deflection and leaves the state unchanged.
+has not earned. On a hit, the server returns a deflection and leaves the state unchanged. This
+covers every action that can reveal something (questions, searches, confrontations, lab
+results, hints, accusations); the case board is read-only and built from what the player
+already knows.
 
 The host model is therefore never told the solution, a locked fact, or which of a suspect's
 lines are false. Whatever an attacker says to it, it cannot repeat what it never received.
@@ -91,8 +94,11 @@ runs the same check for any case file.
   households can skip the clock ahead.
 - **Custom cases** are a Step Functions execution named after the job id (dispatch is idempotent).
   Each stage runs on one container image and passes the draft through S3. A failed proof loops
-  back to compile up to three times, then fails the job visibly and refunds nothing silently:
-  the household gets a `custom_failed` inbox item and keeps its credit.
+  back to compile up to three times, then fails the job visibly: the household gets a
+  `custom_failed` inbox item and its credit back. Two exceptions keep the credit spent: details
+  refused at moderation, and a case that was already delivered. If the execution cannot be
+  started at all, the server calls the job off atomically (`queued` to `failed`) and refunds; the
+  pipeline refuses a called-off job, so a case is either written or refunded, never both.
 
 ## Packages
 

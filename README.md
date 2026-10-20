@@ -49,9 +49,11 @@ question it decides what this suspect is willing to say right now:
 The host model only ever sees that performance brief. The solution is never in its context, so
 no prompt can extract it.
 
-On top of that, every response passes an **output guard** that fails closed. It checks the
-response for the fingerprints of every fact the player hasn't earned; a hit is replaced by an
-in-character deflection, and the game state is left untouched.
+On top of that, every response that can reveal something new (questions, searches,
+confrontations, lab results, hints, accusations) passes an **output guard** that fails closed.
+It checks the response for the fingerprints of every fact the player hasn't earned; a hit is
+replaced by an in-character deflection, and the game state is left untouched. The case board is
+built only from what the player already has, and the tests run it through the same guard.
 
 Every case is **proven fair before it ships**. A Z3 model over everything a player can ever
 learn checks four things:
