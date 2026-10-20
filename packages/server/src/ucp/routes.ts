@@ -4,14 +4,15 @@ import type { AuthInfo } from '@modelcontextprotocol/server';
 import type { Deps } from '../deps.js';
 import type { Verify } from '../http/gate.js';
 import { householdOf } from '../tools/common.js';
-import { demoProcessor, type PaymentInstrument, type PaymentProcessor } from './payment.js';
+import type { PaymentInstrument, PaymentProcessor } from './payment.js';
 import { openSession, resolveSku, ucpSession } from './sessions.js';
 
 interface UcpOptions {
   verify: Verify;
   /** Public origin used for policy and order links. */
   linksBase: string;
-  processor?: PaymentProcessor;
+  /** Chosen explicitly by the deployment; there is no default. */
+  processor: PaymentProcessor;
 }
 
 type Reply = { status: number; body: unknown };
@@ -29,7 +30,7 @@ const json = (c: Context, r: Reply) => {
  */
 export function ucpRoutes(deps: Deps, opts: UcpOptions): Hono {
   const app = new Hono();
-  const processor = opts.processor ?? demoProcessor;
+  const processor = opts.processor;
 
   const auth = async (c: Context): Promise<AuthInfo | null> => {
     const m = /^Bearer\s+(.+)$/i.exec(c.req.header('authorization') ?? '');

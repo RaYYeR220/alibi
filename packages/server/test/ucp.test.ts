@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { OAuthError, OAuthErrorCode } from '@modelcontextprotocol/server';
 import { parseCase, type CaseIntroView, type PurchaseView } from '@alibi/canon';
 import { createApp } from '../src/http/app.js';
+import { demoProcessor } from '../src/ucp/payment.js';
 import { connect, serviceAuth, testDeps, text, tinyCase, userAuth, view } from './harness.js';
 
 const paid = parseCase({ ...structuredClone(tinyCase), meta: { ...tinyCase.meta, id: 'tiny-paid', title: 'The Paid Brooch', priceCents: 499 } });
@@ -12,6 +13,7 @@ const cfg = {
   cognitoDomain: 'https://alibi.auth.us-east-1.amazoncognito.com',
   clientIds: ['service-client', 'household-client'],
   corsOrigins: ['https://play.alibi.test'],
+  payments: demoProcessor,
   verify: async (token: string) => {
     if (token === 'service') return serviceAuth;
     if (token.startsWith('hh-')) return userAuth(token.slice(3));

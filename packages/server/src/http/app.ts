@@ -4,6 +4,7 @@ import { createCognitoVerifier } from '../auth/verifier.js';
 import type { Deps } from '../deps.js';
 import { buildServer } from '../mcp/build-server.js';
 import { createAlibiMcpHandler } from '../mcp/handler.js';
+import type { PaymentProcessor } from '../ucp/payment.js';
 import { ucpProfile } from '../ucp/profile.js';
 import { ucpRoutes } from '../ucp/routes.js';
 import { gate, type Verify } from './gate.js';
@@ -15,6 +16,8 @@ export interface AppConfig {
   cognitoDomain: string;
   clientIds: string[];
   corsOrigins: string[];
+  /** Payment processor for UCP checkout; the deployment chooses it explicitly. */
+  payments: PaymentProcessor;
   /** Injected in tests; defaults to the Cognito JWKS verifier. */
   verify?: Verify;
 }
@@ -58,9 +61,26 @@ export function createApp(deps: Deps, cfg: AppConfig): Hono {
   app.get('/.well-known/oauth-authorization-server', (c) => c.json(authorizationServerMetadata(cfg)));
   app.get('/healthz', (c) => c.json({ ok: true }));
 
+  const assetStore = deps.assetStore;
+  if (assetStore) {
+    app.get('/assets/*', async (c) => {
+      const key = decodeURIComponent(c.req.path.slice('/assets/'.length));
+      if (!key || key.split('/').some((part) => part === '..' || part === '')) return c.notFound();
+      const file = await assetStore.get(key);
+      if (!file) return c.notFound();
+      return new Response(file.body as BodyInit, {
+        headers: {
+          'content-type': file.contentType,
+          'cache-control': 'public, max-age=86400, immutable',
+          'access-control-allow-origin': '*',
+        },
+      });
+    });
+  }
+
   const origin = new URL(cfg.mcpUrl).origin;
   app.get('/.well-known/ucp', (c) => c.json(ucpProfile(`${origin}/ucp`)));
-  app.route('/ucp', ucpRoutes(deps, { verify, linksBase: origin }));
+  app.route('/ucp', ucpRoutes(deps, { verify, linksBase: origin, processor: cfg.payments }));
 
   return app;
 }

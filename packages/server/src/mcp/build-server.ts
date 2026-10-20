@@ -4,6 +4,7 @@ import type { Deps } from '../deps.js';
 import { registerAccuseTool } from '../tools/accuse.js';
 import { registerBuyTool } from '../tools/buy.js';
 import { registerCatalogTools } from '../tools/catalog.js';
+import { registerCustomTools } from '../tools/custom.js';
 import { registerInterrogationTools } from '../tools/interrogate.js';
 import { registerInvestigationTools } from '../tools/investigate.js';
 import { registerLabTools } from '../tools/lab.js';
@@ -16,10 +17,10 @@ When a tool returns a performance brief, speak as that suspect using only the st
 Keep the game_id from start_case and pass it to every later call. Keep narration short: this is a voice game.`;
 
 /** Builds the per-request MCP server; the caller's verified auth decides which household it acts for. */
-export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo }): McpServer {
+export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo; era?: string }): McpServer {
   const server = new McpServer(SERVER_INFO, { instructions: INSTRUCTIONS });
   const toolCtx = { deps, authInfo: ctx.authInfo };
-  registerViews(server, deps.appHtml);
+  registerViews(server, deps.appHtml, deps.assetsBaseUrl);
   registerCatalogTools(server, toolCtx);
   registerInterrogationTools(server, toolCtx);
   registerInvestigationTools(server, toolCtx);
@@ -27,5 +28,6 @@ export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo }): McpServer
   registerLabTools(server, toolCtx);
   registerProgressTools(server, toolCtx);
   registerBuyTool(server, toolCtx);
+  registerCustomTools(server, toolCtx);
   return server;
 }
