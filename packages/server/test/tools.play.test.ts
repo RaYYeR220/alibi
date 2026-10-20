@@ -22,6 +22,13 @@ describe('play tools', () => {
     expect(text(r)).toContain("Aunt Margaret's sapphire brooch is gone");
   });
 
+  it('suspect cards carry the voice each suspect is cast with', async () => {
+    const client = await connect(testDeps());
+    const v = await startGame(client);
+    const byId = Object.fromEntries(v.suspects.map((s) => [s.id, s.voiceId]));
+    expect(byId).toEqual(Object.fromEntries(tinyCase.suspects.map((s) => [s.id, s.voiceId])));
+  });
+
   it('start_case accepts a title instead of an id', async () => {
     const client = await connect(testDeps());
     const r = await client.callTool({ name: 'start_case', arguments: { case_id: 'the brooch at ashby house' } });

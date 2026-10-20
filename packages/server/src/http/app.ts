@@ -78,6 +78,18 @@ export function createApp(deps: Deps, cfg: AppConfig): Hono {
     });
   }
 
+  // The simulator plays the assistant's payment phase from the browser, so checkout calls need CORS too.
+  app.use(
+    '/ucp/*',
+    cors({
+      origin: cfg.corsOrigins,
+      allowMethods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+      allowHeaders: ['authorization', 'content-type', 'idempotency-key', 'request-id', 'ucp-agent'],
+      exposeHeaders: ['request-id'],
+      maxAge: 600,
+    }),
+  );
+
   const origin = new URL(cfg.mcpUrl).origin;
   app.get('/.well-known/ucp', (c) => c.json(ucpProfile(`${origin}/ucp`)));
   app.route('/ucp', ucpRoutes(deps, { verify, linksBase: origin, processor: cfg.payments }));

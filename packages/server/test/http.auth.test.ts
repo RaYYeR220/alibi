@@ -136,6 +136,30 @@ describe('http auth gate', () => {
     expect(res.headers.get('access-control-allow-origin')).toBe('https://play.alibi.test');
   });
 
+  it('CORS preflight for UCP checkout from the simulator origin is allowed', async () => {
+    const app = createApp(testDeps(), cfg);
+    const res = await app.fetch(
+      new Request('https://api.alibi.test/ucp/checkout-sessions/cs_1/complete', {
+        method: 'OPTIONS',
+        headers: { origin: 'https://play.alibi.test', 'access-control-request-method': 'POST', 'access-control-request-headers': 'authorization,content-type,idempotency-key' },
+      }),
+    );
+    expect(res.status).toBeLessThan(300);
+    expect(res.headers.get('access-control-allow-origin')).toBe('https://play.alibi.test');
+    expect(res.headers.get('access-control-allow-headers')?.toLowerCase()).toContain('idempotency-key');
+  });
+
+  it('UCP CORS does not echo unknown origins', async () => {
+    const app = createApp(testDeps(), cfg);
+    const res = await app.fetch(
+      new Request('https://api.alibi.test/ucp/checkout-sessions/cs_1/complete', {
+        method: 'OPTIONS',
+        headers: { origin: 'https://evil.test', 'access-control-request-method': 'POST' },
+      }),
+    );
+    expect(res.headers.get('access-control-allow-origin')).toBeNull();
+  });
+
   it('health check answers', async () => {
     const app = createApp(testDeps(), cfg);
     expect((await app.fetch(new Request('https://api.alibi.test/healthz'))).status).toBe(200);

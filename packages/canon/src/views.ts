@@ -19,6 +19,8 @@ export interface SuspectCard {
   role: string;
   portrait: string;
   demeanor: Demeanor;
+  /** The voice the suspect is cast with, so a host can speak their lines in it. */
+  voiceId?: string;
 }
 
 export interface TopicRef {

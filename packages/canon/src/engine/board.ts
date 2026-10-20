@@ -12,6 +12,7 @@ export function suspectCard(c: Case, s: GameState, suspectId: string): SuspectCa
     role: suspect.role,
     portrait: suspect.portrait,
     demeanor: demeanorFor(c, s, suspect.id),
+    voiceId: suspect.voiceId,
   };
 }
 
