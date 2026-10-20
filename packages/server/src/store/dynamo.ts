@@ -1,0 +1,228 @@
+import { ConditionalCheckFailedException, DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import {
+  BatchGetCommand,
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+  QueryCommand,
+  UpdateCommand,
+} from '@aws-sdk/lib-dynamodb';
+import { parseCase, type Case, type GameState } from '@alibi/canon';
+import {
+  ConflictError,
+  dayKey,
+  GUEST_TTL_MS,
+  isExpiredGuest,
+  metaOf,
+  type CheckoutSession,
+  type IdempotencyRecord,
+  type InboxItem,
+  type Job,
+  type Stores,
+} from './types.js';
+
+/**
+ * Single-table layout (table "alibi", keys pk/sk):
+ *   GAME#<id>/STATE          game state (guest games carry a ttl)
+ *   HH#<hh>/GAME#<id>        household → game pointer
+ *   HH#<hh>/ENT#<sku>        entitlement credits
+ *   CHK#<id>/SESSION         UCP checkout session
+ *   IDEM#<key>/IDEM          idempotent response replay
+ *   JOB#<id>/JOB             custom-case job; HH#<hh>/JOB#<id> pointer
+ *   HH#<hh>/INBOX#<at>#<id>  inbox items
+ *   HH#<hh>/CASE#<id>        a household's generated case
+ *   QUOTA#<day>/<scope>      daily counters
+ */
+export function createDynamoStores(opts: { table: string; bundled: Case[]; clock?: () => number; client?: DynamoDBClient }): Stores {
+  const clock = opts.clock ?? Date.now;
+  const db = DynamoDBDocumentClient.from(opts.client ?? new DynamoDBClient({}), {
+    marshallOptions: { removeUndefinedValues: true },
+  });
+  const TableName = opts.table;
+  const bundled = new Map(opts.bundled.map((c) => [c.meta.id, c]));
+  const seconds = (ms: number) => Math.floor(ms / 1000);
+  const guestTtl = (s: GameState) => (s.householdId === null ? seconds(s.updatedAt + GUEST_TTL_MS) : undefined);
+
+  const getItem = async (pk: string, sk: string) => (await db.send(new GetCommand({ TableName, Key: { pk, sk } }))).Item;
+  const query = async (pk: string, prefix: string) =>
+    (
+      await db.send(
+        new QueryCommand({
+          TableName,
+          KeyConditionExpression: 'pk = :pk AND begins_with(sk, :p)',
+          ExpressionAttributeValues: { ':pk': pk, ':p': prefix },
+        }),
+      )
+    ).Items ?? [];
+
+  const games: Stores['games'] = {
+    async get(id) {
+      const item = await getItem(`GAME#${id}`, 'STATE');
+      const s = item?.state as GameState | undefined;
+      return s && !isExpiredGuest(s, clock()) ? s : null;
+    },
+    async create(s) {
+      await db.send(
+        new PutCommand({
+          TableName,
+          Item: { pk: `GAME#${s.gameId}`, sk: 'STATE', state: s, version: s.version, ttl: guestTtl(s) },
+          ConditionExpression: 'attribute_not_exists(pk)',
+        }),
+      );
+      if (s.householdId) {
+        await db.send(new PutCommand({ TableName, Item: { pk: `HH#${s.householdId}`, sk: `GAME#${s.gameId}` } }));
+      }
+    },
+    async update(id, fn) {
+      for (let attempt = 0; attempt < 4; attempt++) {
+        const current = await games.get(id);
+        if (!current) throw new Error(`no game ${id}`);
+        const next: GameState = { ...fn(current), version: current.version + 1 };
+        try {
+          await db.send(
+            new PutCommand({
+              TableName,
+              Item: { pk: `GAME#${id}`, sk: 'STATE', state: next, version: next.version, ttl: guestTtl(next) },
+              ConditionExpression: 'version = :v',
+              ExpressionAttributeValues: { ':v': current.version },
+            }),
+          );
+          return next;
+        } catch (err) {
+          if (!(err instanceof ConditionalCheckFailedException)) throw err;
+        }
+      }
+      throw new ConflictError();
+    },
+    async listByHousehold(hh) {
+      const ids = (await query(`HH#${hh}`, 'GAME#')).map((i) => String(i.sk).slice(5));
+      if (!ids.length) return [];
+      const out: GameState[] = [];
+      for (let i = 0; i < ids.length; i += 100) {
+        const res = await db.send(
+          new BatchGetCommand({
+            RequestItems: { [TableName]: { Keys: ids.slice(i, i + 100).map((g) => ({ pk: `GAME#${g}`, sk: 'STATE' })) } },
+          }),
+        );
+        out.push(...(res.Responses?.[TableName] ?? []).map((r) => r.state as GameState));
+      }
+      return out.sort((a, b) => b.updatedAt - a.updatedAt);
+    },
+  };
+
+  return {
+    games,
+    entitlements: {
+      async has(hh, sku) {
+        return Number((await getItem(`HH#${hh}`, `ENT#${sku}`))?.credits ?? 0) > 0;
+      },
+      async grant(hh, sku, orderId) {
+        await db.send(
+          new UpdateCommand({
+            TableName,
+            Key: { pk: `HH#${hh}`, sk: `ENT#${sku}` },
+            UpdateExpression: 'ADD credits :one SET lastOrder = :o',
+            ExpressionAttributeValues: { ':one': 1, ':o': orderId },
+          }),
+        );
+      },
+      async consume(hh, sku) {
+        try {
+          await db.send(
+            new UpdateCommand({
+              TableName,
+              Key: { pk: `HH#${hh}`, sk: `ENT#${sku}` },
+              UpdateExpression: 'SET credits = credits - :one',
+              ConditionExpression: 'credits > :zero',
+              ExpressionAttributeValues: { ':one': 1, ':zero': 0 },
+            }),
+          );
+          return true;
+        } catch (err) {
+          if (err instanceof ConditionalCheckFailedException) return false;
+          throw err;
+        }
+      },
+    },
+    checkouts: {
+      async put(s) {
+        await db.send(new PutCommand({ TableName, Item: { pk: `CHK#${s.id}`, sk: 'SESSION', session: s } }));
+      },
+      async get(id) {
+        return ((await getItem(`CHK#${id}`, 'SESSION'))?.session as CheckoutSession | undefined) ?? null;
+      },
+      async getIdem(key) {
+        return ((await getItem(`IDEM#${key}`, 'IDEM'))?.record as IdempotencyRecord | undefined) ?? null;
+      },
+      async putIdem(key, record) {
+        await db.send(
+          new PutCommand({ TableName, Item: { pk: `IDEM#${key}`, sk: 'IDEM', record, ttl: seconds(clock() + 24 * 3_600_000) } }),
+        );
+      },
+    },
+    jobs: {
+      async create(job) {
+        await db.send(new PutCommand({ TableName, Item: { pk: `JOB#${job.jobId}`, sk: 'JOB', job } }));
+        await db.send(new PutCommand({ TableName, Item: { pk: `HH#${job.householdId}`, sk: `JOB#${job.jobId}` } }));
+      },
+      async get(id) {
+        return ((await getItem(`JOB#${id}`, 'JOB'))?.job as Job | undefined) ?? null;
+      },
+      async update(id, patch) {
+        const current = (await getItem(`JOB#${id}`, 'JOB'))?.job as Job | undefined;
+        if (!current) throw new Error(`no job ${id}`);
+        const next = { ...current, ...patch, updatedAt: clock() };
+        await db.send(new PutCommand({ TableName, Item: { pk: `JOB#${id}`, sk: 'JOB', job: next } }));
+        return next;
+      },
+      async listByHousehold(hh) {
+        const ids = (await query(`HH#${hh}`, 'JOB#')).map((i) => String(i.sk).slice(4));
+        const jobsFound = await Promise.all(ids.map(async (j) => (await getItem(`JOB#${j}`, 'JOB'))?.job as Job | undefined));
+        return jobsFound.filter((j): j is Job => Boolean(j));
+      },
+      async incrementToday(scope) {
+        const res = await db.send(
+          new UpdateCommand({
+            TableName,
+            Key: { pk: `QUOTA#${dayKey(clock())}`, sk: scope },
+            UpdateExpression: 'ADD n :one SET #ttl = :ttl',
+            ExpressionAttributeNames: { '#ttl': 'ttl' },
+            ExpressionAttributeValues: { ':one': 1, ':ttl': seconds(clock() + 3 * 24 * 3_600_000) },
+            ReturnValues: 'UPDATED_NEW',
+          }),
+        );
+        return Number(res.Attributes?.n ?? 0);
+      },
+      async countToday(scope) {
+        return Number((await getItem(`QUOTA#${dayKey(clock())}`, scope))?.n ?? 0);
+      },
+    },
+    inbox: {
+      async add(hh, item) {
+        await db.send(
+          new PutCommand({ TableName, Item: { pk: `HH#${hh}`, sk: `INBOX#${String(item.at).padStart(15, '0')}#${item.id}`, item } }),
+        );
+      },
+      async list(hh, since) {
+        const items = (await query(`HH#${hh}`, 'INBOX#')).map((i) => i.item as InboxItem);
+        return items.filter((i) => since === undefined || i.at > since).sort((a, b) => a.at - b.at);
+      },
+    },
+    cases: {
+      async list(hh) {
+        const own = hh ? (await query(`HH#${hh}`, 'CASE#')).map((i) => metaOf(parseCase(i.case), true)) : [];
+        return [...[...bundled.values()].map((c) => metaOf(c, false)), ...own];
+      },
+      async get(id, hh) {
+        const b = bundled.get(id);
+        if (b) return b;
+        if (!hh) return null;
+        const item = await getItem(`HH#${hh}`, `CASE#${id}`);
+        return item ? parseCase(item.case) : null;
+      },
+      async putCustom(hh, c) {
+        await db.send(new PutCommand({ TableName, Item: { pk: `HH#${hh}`, sk: `CASE#${c.meta.id}`, case: c } }));
+      },
+    },
+  };
+}
