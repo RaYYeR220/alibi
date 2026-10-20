@@ -59,5 +59,8 @@ const sandbox = sandboxRoutes(readFileSync('./sandbox.html', 'utf8'), [simOrigin
 const live = handle(app);
 const proxy = handle(sandbox);
 
-export const handler = (event: LambdaEvent, context: LambdaContext) =>
-  context.invokedFunctionArn.endsWith(':sandbox') ? proxy(event, context) : live(event, context);
+export const handler = async (event: LambdaEvent | { warm: true }, context: LambdaContext) => {
+  // The scheduled warm-up only needs the cold start above to have happened.
+  if ('warm' in event) return { warm: true };
+  return context.invokedFunctionArn.endsWith(':sandbox') ? proxy(event, context) : live(event, context);
+};
