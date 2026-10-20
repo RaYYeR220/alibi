@@ -5,8 +5,8 @@
 **/.pytest_cache
 **/cdk.out
 **/coverage
-.git
-.env*
+.*
+*.md
 cases/*/assets
 eval/results
 casegen/tests
