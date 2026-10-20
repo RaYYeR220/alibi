@@ -45,7 +45,9 @@ export function createDynamoStores(opts: { table: string; bundled: Case[]; clock
   const seconds = (ms: number) => Math.floor(ms / 1000);
   const guestTtl = (s: GameState) => (s.householdId === null ? seconds(s.updatedAt + GUEST_TTL_MS) : undefined);
 
-  const getItem = async (pk: string, sk: string) => (await db.send(new GetCommand({ TableName, Key: { pk, sk } }))).Item;
+  const getItem = async (pk: string, sk: string, consistent = false) =>
+    (await db.send(new GetCommand({ TableName, Key: { pk, sk }, ConsistentRead: consistent }))).Item;
+  const pause = (attempt: number) => new Promise((r) => setTimeout(r, 15 * 2 ** attempt + Math.random() * 20));
   const query = async (pk: string, prefix: string) =>
     (
       await db.send(
@@ -76,9 +78,11 @@ export function createDynamoStores(opts: { table: string; bundled: Case[]; clock
       }
     },
     async update(id, fn) {
-      for (let attempt = 0; attempt < 4; attempt++) {
-        const current = await games.get(id);
-        if (!current) throw new Error(`no game ${id}`);
+      for (let attempt = 0; attempt < 6; attempt++) {
+        if (attempt > 0) await pause(attempt);
+        const item = await getItem(`GAME#${id}`, 'STATE', true);
+        const current = item?.state as GameState | undefined;
+        if (!current || isExpiredGuest(current, clock())) throw new Error(`no game ${id}`);
         const next: GameState = { ...fn(current), version: current.version + 1 };
         try {
           await db.send(

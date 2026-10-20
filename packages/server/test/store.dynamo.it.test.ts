@@ -1,6 +1,8 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { fromIni } from '@aws-sdk/credential-providers';
-import { describe, it } from 'vitest';
+import { describe, it, vi } from 'vitest';
+
+vi.setConfig({ testTimeout: 30_000 });
 import { createDynamoStores } from '../src/store/dynamo.js';
 import { storeContract, tinyCase } from './store.contract.js';
 
