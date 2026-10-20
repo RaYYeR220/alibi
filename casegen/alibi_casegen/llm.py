@@ -52,9 +52,16 @@ def model_params(role: Role, key: str | None = None) -> dict:
     return params
 
 
+def model_id_for(role: Role) -> str:
+    """Config model per role; ALIBI_WRITER_MODEL / ALIBI_CHECKER_MODEL override it (e.g. a cheaper writer)."""
+    if role == "writer":
+        return os.environ.get("ALIBI_WRITER_MODEL") or config()["writerModel"]
+    return os.environ.get("ALIBI_CHECKER_MODEL") or config()["checkerModel"]
+
+
 def make_model(role: Role, *, key: str | None = None, api_key: str | None = None) -> OpenAIModel:
     cfg = config()
-    model_id = cfg["writerModel"] if role == "writer" else cfg["checkerModel"]
+    model_id = model_id_for(role)
     return OpenAIModel(
         client_args={"api_key": api_key or get_venice_key(), "base_url": cfg["veniceBaseUrl"], "timeout": 900},
         model_id=model_id,

@@ -64,6 +64,28 @@ def sealed_facts(case: dict) -> set[str]:
     return {f["id"] for f in case["facts"]} - speakable - implied - starting
 
 
+def open_cracks(case: dict) -> list[str]:
+    """A lie about the culprit's motive, means or opportunity (or any lie by someone else) exists to be
+    broken: if the writer sealed the fact it contradicts, let the liar admit it once the lie breaks.
+    Lies hiding the crime itself stay flagged; cracking those would be a confession."""
+    sealed = sealed_facts(case)
+    sol = case["solution"]
+    solution_facts = {sol["motiveFact"], sol["meansFact"], sol["opportunityFact"]}
+    opened = []
+    for lie in case["lies"]:
+        fact = lie["contradicts"]
+        if fact not in sealed or (lie["suspectId"] == sol["culprit"] and fact not in solution_facts):
+            continue
+        rows = [k for k in case["knowledge"] if k["suspectId"] == lie["suspectId"] and k["factId"] == fact]
+        if not rows:
+            rows = [{"suspectId": lie["suspectId"], "factId": fact}]
+            case["knowledge"].append(rows[0])
+        rows[0]["tier"] = "locked"
+        rows[0]["unlock"] = [{"kind": "lie_broken", "lieId": lie["id"]}]
+        opened.append(lie["id"])
+    return opened
+
+
 def structural_issues(case: dict) -> list[dict]:
     """Design mistakes the solver does not see but play would expose."""
     sealed = sealed_facts(case)
@@ -93,6 +115,9 @@ def run(draft: Draft, deps: PipelineDeps) -> dict:
     case = draft.case or {}
     if drop_short_fingerprints(case):
         draft.notes.append("dropped fingerprints shorter than three words")
+    opened = open_cracks(case)
+    if opened:
+        draft.notes.append(f"let {', '.join(opened)} admit the fact they hide once broken")
     issues = check(case, deps)
     if issues and draft.attempts >= MAX_COMPILES and drop_colliding_fingerprints(case, issues):
         draft.notes.append("dropped colliding fingerprints on the final attempt")

@@ -51,6 +51,26 @@ def test_lie_that_contradicts_a_sealed_fact_is_flagged(tiny):
     assert "l_clara" in issues[0]["detail"]
 
 
+def test_crack_that_should_admit_a_solution_fact_is_opened(tiny):
+    from alibi_casegen.stages.prove import open_cracks, structural_issues
+
+    row = next(k for k in tiny["knowledge"] if k["suspectId"] == "clara" and k["factId"] == "f_clara_study")
+    row["tier"] = "never"
+    row.pop("unlock")
+    assert [i["code"] for i in structural_issues(tiny)] == ["lie_reveals_secret"]
+
+    assert open_cracks(tiny) == ["l_clara"]
+    assert row == {"suspectId": "clara", "factId": "f_clara_study", "tier": "locked", "unlock": [{"kind": "lie_broken", "lieId": "l_clara"}]}
+    assert structural_issues(tiny) == []
+
+
+def test_crack_that_would_confess_the_crime_is_not_opened(tiny):
+    from alibi_casegen.stages.prove import open_cracks
+
+    tiny["lies"][1]["contradicts"] = "f_clara_took"
+    assert open_cracks(tiny) == []
+
+
 def test_another_suspects_lie_is_not_a_source(tiny):
     harold = sources_for(tiny, "harold")
     clara = sources_for(tiny, "clara")
