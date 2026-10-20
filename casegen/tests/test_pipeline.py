@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from alibi_casegen.pipeline import JobFailed, JobInput, PipelineDeps, generate
+from alibi_casegen.pipeline import record_failure, JobFailed, JobInput, PipelineDeps, generate
 from alibi_casegen.progress import MemoryProgress
 from alibi_casegen.prover import prove
 from alibi_casegen.replay import ReplayLlm
@@ -104,6 +104,10 @@ def test_compile_gives_up_after_three_attempts(tmp_path):
     assert "not_unique" in str(err.value)
     assert deps.progress.jobs["job-0001"]["status"] == "failed"
     assert deps.storage.inbox("hh-demo")[-1]["kind"] == "custom_failed"
+    # the household gets its custom-case credit back, once
+    assert deps.storage.refunds("hh-demo") == ["job-0001"]
+    record_failure(deps, JOB, "moderate", "again")
+    assert deps.storage.refunds("hh-demo") == ["job-0001"]
 
 
 def test_anchor_with_unsupported_claim_is_dropped(tmp_path):

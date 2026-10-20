@@ -164,10 +164,11 @@ def record_failure(deps: PipelineDeps, job: JobInput, stage: str, message: str) 
         {
             "id": f"job-{job.job_id}",
             "kind": "custom_failed",
-            "text": "Your custom case could not be finished. Try asking for one with different details.",
+            "text": "Your custom case could not be finished, so your credit is back. Try asking for one with different details.",
             "at": deps.clock(),
         },
     )
+    deps.storage.refund_credit(job.household_id, job.job_id)
 
 
 def generate(job: JobInput, deps: PipelineDeps) -> GeneratedCase:

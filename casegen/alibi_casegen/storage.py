@@ -32,6 +32,7 @@ class Storage(Protocol):
     def save_case(self, case: dict) -> None: ...
     def save_custom_case(self, household_id: str, case: dict) -> None: ...
     def add_inbox(self, household_id: str, item: dict) -> None: ...
+    def refund_credit(self, household_id: str, job_id: str) -> None: ...
     def save_draft(self, job_id: str, text: str) -> None: ...
     def load_draft(self, job_id: str) -> str: ...
 
@@ -65,6 +66,18 @@ class LocalStorage:
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(item) + "\n")
+
+    def refund_credit(self, household_id: str, job_id: str) -> None:
+        if job_id in self.refunds(household_id):
+            return
+        path = self.root / f"households/{household_id}/refunds.jsonl"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as fh:
+            fh.write(json.dumps(job_id) + "\n")
+
+    def refunds(self, household_id: str) -> list[str]:
+        path = self.root / f"households/{household_id}/refunds.jsonl"
+        return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()] if path.exists() else []
 
     def inbox(self, household_id: str) -> list[dict]:
         path = self.root / f"households/{household_id}/inbox.jsonl"
@@ -102,6 +115,31 @@ class AwsStorage:
 
     def add_inbox(self, household_id: str, item: dict) -> None:
         self.table.put_item(Item={"pk": f"HH#{household_id}", "sk": inbox_sort_key(item), "item": _dynamo(item)})
+
+    def refund_credit(self, household_id: str, job_id: str) -> None:
+        """Gives back the custom-case credit a failed job used; once per job, like the server's grants."""
+        try:
+            self.table.meta.client.transact_write_items(
+                TransactItems=[
+                    {
+                        "Put": {
+                            "TableName": self.table.name,
+                            "Item": {"pk": f"ORDER#refund-{job_id}", "sk": "GRANT", "householdId": household_id, "sku": "custom-case"},
+                            "ConditionExpression": "attribute_not_exists(pk)",
+                        }
+                    },
+                    {
+                        "Update": {
+                            "TableName": self.table.name,
+                            "Key": {"pk": f"HH#{household_id}", "sk": "ENT#custom-case"},
+                            "UpdateExpression": "ADD credits :one SET lastOrder = :o",
+                            "ExpressionAttributeValues": {":one": 1, ":o": f"refund-{job_id}"},
+                        }
+                    },
+                ]
+            )
+        except self.table.meta.client.exceptions.TransactionCanceledException:
+            pass  # already refunded
 
     def save_draft(self, job_id: str, text: str) -> None:
         self.s3.put_object(Bucket=self.bucket, Key=f"casegen/jobs/{job_id}/draft.json", Body=text.encode(), ContentType="application/json")
