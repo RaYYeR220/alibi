@@ -16,6 +16,7 @@ class ProgressSink(Protocol):
     def update(self, job_id: str, stage: str, percent: int) -> None: ...
     def done(self, job_id: str, case_id: str) -> None: ...
     def failed(self, job_id: str, stage: str, error: str) -> None: ...
+    def is_done(self, job_id: str) -> bool: ...
 
 
 class MemoryProgress:
@@ -37,6 +38,9 @@ class MemoryProgress:
 
     def failed(self, job_id: str, stage: str, error: str) -> None:
         self._job(job_id).update(status="failed", stage=stage, error=error)
+
+    def is_done(self, job_id: str) -> bool:
+        return self.jobs.get(job_id, {}).get("status") == "done"
 
 
 class PrintProgress(MemoryProgress):
@@ -88,3 +92,6 @@ class DynamoJobs:
 
     def failed(self, job_id: str, stage: str, error: str) -> None:
         self._patch(job_id, status="failed", stage=stage, error=error[:1000])
+
+    def is_done(self, job_id: str) -> bool:
+        return (self.get(job_id) or {}).get("status") == "done"

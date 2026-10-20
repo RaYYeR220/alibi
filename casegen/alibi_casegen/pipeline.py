@@ -158,17 +158,27 @@ def run_stage(name: str, draft: Draft, deps: PipelineDeps) -> Draft:
 
 
 def record_failure(deps: PipelineDeps, job: JobInput, stage: str, message: str) -> None:
+    """Marks the job failed and tells the household. The custom-case credit comes back unless the
+    case was already delivered or the details themselves were refused at moderation."""
+    if deps.progress.is_done(job.job_id):
+        return
+    refund = stage != "moderate"
+    if refund:
+        deps.storage.refund_credit(job.household_id, job.job_id)
     deps.progress.failed(job.job_id, stage, message)
     deps.storage.add_inbox(
         job.household_id,
         {
             "id": f"job-{job.job_id}",
             "kind": "custom_failed",
-            "text": "Your custom case could not be finished, so your credit is back. Try asking for one with different details.",
+            "text": (
+                "Your custom case could not be finished, so your credit is back. Try asking again."
+                if refund
+                else "Your custom case could not be written with those details. Try different names or a different occasion."
+            ),
             "at": deps.clock(),
         },
     )
-    deps.storage.refund_credit(job.household_id, job.job_id)
 
 
 def generate(job: JobInput, deps: PipelineDeps) -> GeneratedCase:

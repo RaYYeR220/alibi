@@ -133,6 +133,8 @@ def test_moderation_reject_marks_job_failed(tmp_path):
     assert job["error"].startswith("moderation:")
     assert deps.llm.calls() == ["moderate"]  # nothing else ran
     assert deps.storage.inbox("hh-demo")[-1]["kind"] == "custom_failed"
+    # a refusal the household caused does not give the credit back
+    assert deps.storage.refunds("hh-demo") == []
 
 
 def test_art_and_voices_can_be_skipped(tmp_path):
@@ -187,3 +189,11 @@ def test_draft_round_trips_as_json(tmp_path):
     again = Draft.model_validate_json(d.model_dump_json())
     assert again.plot == {"title": "x"} and again.job.names == JOB.names
     assert json.loads(d.model_dump_json())["job"]["job_id"] == "job-0001"
+
+
+def test_a_failure_after_publishing_does_not_refund(tmp_path):
+    deps = make_deps(tmp_path, "base", images=None, tts=None)
+    generate(JOB, deps)
+    assert deps.progress.jobs["job-0001"]["status"] == "done"
+    record_failure(deps, JOB, "publish", "late error")
+    assert deps.storage.refunds("hh-demo") == []

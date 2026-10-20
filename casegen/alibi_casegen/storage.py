@@ -138,8 +138,11 @@ class AwsStorage:
                     },
                 ]
             )
-        except self.table.meta.client.exceptions.TransactionCanceledException:
-            pass  # already refunded
+        except self.table.meta.client.exceptions.TransactionCanceledException as err:
+            reasons = err.response.get("CancellationReasons") or []
+            if not reasons or reasons[0].get("Code") != "ConditionalCheckFailed":
+                raise  # a real failure: let Step Functions retry
+            # the refund marker already exists: this job was refunded before
 
     def save_draft(self, job_id: str, text: str) -> None:
         self.s3.put_object(Bucket=self.bucket, Key=f"casegen/jobs/{job_id}/draft.json", Body=text.encode(), ContentType="application/json")
