@@ -22,8 +22,8 @@ const MAX_FACTS = 5;
 
 /** The statements worth pinning: anything already caught first, then the latest. */
 function pinned(s: Suspect): Statement[] {
-  const caught = s.statements.filter((x) => x.kind === 'claim' && x.contradicted);
-  const rest = s.statements.filter((x) => !(x.kind === 'claim' && x.contradicted));
+  const caught = s.statements.filter((x) => x.contradicted);
+  const rest = s.statements.filter((x) => !x.contradicted);
   return [...caught, ...rest.slice(-MAX_SLIPS)].slice(0, MAX_SLIPS);
 }
 
@@ -149,7 +149,7 @@ export function BoardScreen({ view, host, app }: ViewProps<BoardView>) {
             </div>
             <ul class="board-slips">
               {pinned(s).map((st) => {
-                const caught = st.kind === 'claim' && st.contradicted;
+                const caught = st.contradicted;
                 return (
                   <li
                     key={st.text}

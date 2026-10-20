@@ -124,8 +124,8 @@ describe('interrogation', () => {
     const view: InterrogationView = {
       ...fixtures.interrogation,
       statements: [
-        { text: 'I was in the library.', kind: 'claim', contradicted: false },
-        { text: 'I always wear lily perfume.', kind: 'fact', contradicted: false },
+        { text: 'I was in the library.', contradicted: false },
+        { text: 'I always wear lily perfume.', contradicted: false },
       ],
     };
     const { container } = render(<InterrogationCard view={view} host={showHost()} app={fakeApp()} />);

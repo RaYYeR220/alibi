@@ -152,7 +152,7 @@ describe('board', () => {
     s = ask(c, s, { suspectId: 'clara', topicId: 't_whereabouts' }, 0).state;
     let view = board(c, s, 0);
     const clara = view.suspects.find((x) => x.id === 'clara')!;
-    expect(clara.statements.map((x) => x.kind)).toContain('claim');
+    expect(clara.statements.map((x) => x.text)).toContain('I was curled up in the library with a novel all evening.');
     expect(view.evidence.map((e) => e.id)).toEqual(expect.arrayContaining(['e_handkerchief', 'e_muddy_prints']));
     expect(view.contradictions).toEqual([]);
     s = present(c, s, { suspectId: 'clara', evidenceId: 'e_handkerchief' }, 0).state;

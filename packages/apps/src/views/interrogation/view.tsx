@@ -5,12 +5,11 @@ import { AnchorVoice, Polaroid, Polygraph, Say, Sheet, Stamp } from '../../lib/u
 import './interrogation.css';
 
 /*
- * Facts and claims render identically: a claim is a lie the player has not
- * caught yet, and the card must not give that away. Only a claim the player
- * can already disprove gets the red pen.
+ * Every line renders the same: the card never learns which lines are lies.
+ * Only a line the player can already disprove gets the red pen.
  */
 function StatementLine({ s }: { s: Statement }) {
-  const caught = s.kind === 'claim' && s.contradicted;
+  const caught = s.contradicted;
   return (
     <li class="statement" data-contradicted={caught ? 'true' : undefined}>
       <span class="statement-text">“{s.text}”</span>
@@ -21,7 +20,7 @@ function StatementLine({ s }: { s: Statement }) {
 
 function nextLine(view: InterrogationView): string {
   const who = spokenName(view.suspect.name);
-  if (view.statements.some((s) => s.kind === 'claim' && s.contradicted)) return `show ${who} …`;
+  if (view.statements.some((s) => s.contradicted)) return `show ${who} …`;
   if (view.deflected || !view.topic) return 'show me the board';
   return `press ${who} on ${view.topic.label}`;
 }

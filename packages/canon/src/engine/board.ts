@@ -38,13 +38,13 @@ export function statementsBy(c: Case, s: GameState, suspectId: string): Statemen
     for (const f of turn.factIds) {
       if (seen.has(f)) continue;
       seen.add(f);
-      out.push({ text: l.fact.get(f)!.text, kind: 'fact', contradicted: false });
+      out.push({ text: l.fact.get(f)!.text, contradicted: false });
     }
     for (const lieId of turn.lieIds) {
       if (seen.has(lieId)) continue;
       seen.add(lieId);
       const lie = l.lie.get(lieId)!;
-      out.push({ text: lie.claim, kind: 'claim', contradicted: s.knownFacts.includes(lie.contradicts) || s.brokenLies.includes(lie.id) });
+      out.push({ text: lie.claim, contradicted: s.knownFacts.includes(lie.contradicts) || s.brokenLies.includes(lie.id) });
     }
   }
   return out;

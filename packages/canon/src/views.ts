@@ -26,10 +26,13 @@ export interface TopicRef {
   label: string;
 }
 
+/**
+ * A line a suspect has said. Lies and truths look the same here on purpose: this object
+ * reaches the host, and only a lie the player has already caught is marked.
+ */
 export interface Statement {
   text: string;
-  kind: 'fact' | 'claim';
-  /** True when a claim is contradicted by something the player already knows. */
+  /** True when the player already knows something that contradicts this line. */
   contradicted: boolean;
 }
 

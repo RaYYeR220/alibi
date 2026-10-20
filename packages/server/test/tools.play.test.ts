@@ -110,6 +110,16 @@ describe('play tools', () => {
     }
   });
 
+  it('statements never tell the host which lines are lies', async () => {
+    const client = await connect(testDeps());
+    const { gameId } = await startGame(client);
+    const ask = await client.callTool({ name: 'ask_suspect', arguments: { game_id: gameId, suspect: 'clara', question: 'Where were you at nine?' } });
+    const board = await client.callTool({ name: 'get_case_board', arguments: { game_id: gameId } });
+    const statements = [...view(ask).statements, ...view(board).suspects.flatMap((x: { statements: unknown[] }) => x.statements)];
+    expect(statements.length).toBeGreaterThan(0);
+    for (const st of statements) expect(Object.keys(st as object).sort()).toEqual(['contradicted', 'text']);
+  });
+
   it('list_cases shows the catalog', async () => {
     const client = await connect(testDeps());
     const r = await client.callTool({ name: 'list_cases', arguments: {} });

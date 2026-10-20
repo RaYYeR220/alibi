@@ -64,12 +64,8 @@ export function registerInterrogationTools(server: McpServer, ctx: Ctx): void {
             suspect: cardWithAssets(ctx.deps, c.meta.id, suspectCard(c, state, who.id)),
             topic: packet.topicId ? { id: packet.topicId, label: l.topic.get(packet.topicId)!.label } : null,
             statements: [
-              ...packet.says.map((x) => ({ text: x.text, kind: 'fact' as const, contradicted: false })),
-              ...packet.claims.map((x) => ({
-                text: x.text,
-                kind: 'claim' as const,
-                contradicted: state.knownFacts.includes(l.lie.get(x.lieId)!.contradicts),
-              })),
+              ...packet.says.map((x) => ({ text: x.text, contradicted: false })),
+              ...packet.claims.map((x) => ({ text: x.text, contradicted: state.knownFacts.includes(l.lie.get(x.lieId)!.contradicts) })),
             ],
             deflected: packet.deflect,
             ...(packet.anchor ? { anchor: anchorRef(ctx.deps, c.meta.id, packet.anchor) } : {}),

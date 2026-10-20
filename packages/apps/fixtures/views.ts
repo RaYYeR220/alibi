@@ -153,8 +153,8 @@ const interrogation: InterrogationView = {
   suspect: suspects.clara,
   topic: { id: 't_whereabouts', label: 'where they were around nine' },
   statements: [
-    { text: 'I was curled up in the library with a novel all evening.', kind: 'claim', contradicted: true },
-    { text: 'Clara always wears lily perfume.', kind: 'fact', contradicted: false },
+    { text: 'I was curled up in the library with a novel all evening.', contradicted: true },
+    { text: 'Clara always wears lily perfume.', contradicted: false },
   ],
   deflected: false,
 };
@@ -190,23 +190,23 @@ const board: BoardView = {
     {
       ...suspects.harold,
       statements: [
-        { text: 'I never set foot in the house tonight. I was out in the greenhouse the whole evening.', kind: 'claim', contradicted: true },
-        { text: 'The study desk is always kept locked, and only a small brass key opens it.', kind: 'fact', contradicted: false },
+        { text: 'I never set foot in the house tonight. I was out in the greenhouse the whole evening.', contradicted: true },
+        { text: 'The study desk is always kept locked, and only a small brass key opens it.', contradicted: false },
       ],
     },
     {
       ...suspects.clara,
       demeanor: 'broken',
       statements: [
-        { text: 'I was curled up in the library with a novel all evening.', kind: 'claim', contradicted: true },
-        { text: 'Clara always wears lily perfume.', kind: 'fact', contradicted: false },
+        { text: 'I was curled up in the library with a novel all evening.', contradicted: true },
+        { text: 'Clara always wears lily perfume.', contradicted: false },
       ],
     },
     {
       ...suspects.perkins,
       statements: [
-        { text: 'Perkins carries the house keys, including a spare for the study desk.', kind: 'fact', contradicted: false },
-        { text: 'Perkins was polishing silver in the pantry from nine until ten.', kind: 'fact', contradicted: false },
+        { text: 'Perkins carries the house keys, including a spare for the study desk.', contradicted: false },
+        { text: 'Perkins was polishing silver in the pantry from nine until ten.', contradicted: false },
       ],
     },
   ],
