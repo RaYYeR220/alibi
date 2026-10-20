@@ -66,6 +66,40 @@ describe('http auth gate', () => {
     expect(res.status).toBe(200);
   });
 
+  it('a tool call without any token is 401', async () => {
+    const app = createApp(testDeps(), cfg);
+    const res = await app.fetch(rpc(call('list_cases')));
+    expect(res.status).toBe(401);
+    expect(res.headers.get('www-authenticate')).toBeNull();
+  });
+
+  it('reading a resource without a token is 401', async () => {
+    const app = createApp(testDeps(), cfg);
+    const res = await app.fetch(rpc({ method: 'resources/read', params: { uri: 'ui://alibi/board.html' } }));
+    expect(res.status).toBe(401);
+  });
+
+  it('the household inbox needs a household token', async () => {
+    const app = createApp(testDeps(), cfg);
+    const res = await app.fetch(rpc({ method: 'resources/read', params: { uri: 'alibi://household/inbox' } }, 'service'));
+    expect(res.status).toBe(401);
+  });
+
+  it('a token without the needed scope is 401', async () => {
+    const app = createApp(testDeps(), {
+      ...cfg,
+      verify: async () => ({ ...serviceAuth, scopes: ['something-else'] }),
+    });
+    const res = await app.fetch(rpc(call('list_cases'), 'service'));
+    expect(res.status).toBe(401);
+  });
+
+  it('tools/list works without a token for discovery', async () => {
+    const app = createApp(testDeps(), cfg);
+    const res = await app.fetch(rpc({ method: 'tools/list', params: {} }));
+    expect(res.status).toBe(200);
+  });
+
   it('PRM document has resource and authorization_servers', async () => {
     const app = createApp(testDeps(), cfg);
     for (const path of ['/.well-known/oauth-protected-resource', '/.well-known/oauth-protected-resource/mcp']) {
