@@ -16,6 +16,8 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      # workspace packages resolve each other through dist/
+      - run: pnpm build
       - run: pnpm lint
       - run: pnpm test
 
