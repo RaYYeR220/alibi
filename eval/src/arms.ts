@@ -11,11 +11,20 @@ export interface Arm {
   turn(utterance: string): Promise<{ spoken: string; known: string[] }>;
 }
 
-const guest: AuthInfo = { token: 'eval', clientId: 'eval', scopes: ['mcp:service'], expiresAt: Math.floor(Date.now() / 1000) + 86_400, extra: { tier: 'service' } };
+/** A linked household that owns the case under test, so paid cases are played rather than offered for sale. */
+const HOUSEHOLD = 'eval-household';
+const player: AuthInfo = {
+  token: 'eval',
+  clientId: 'eval',
+  scopes: ['mcp:tools', 'mcp:resources'],
+  expiresAt: Math.floor(Date.now() / 1000) + 86_400,
+  extra: { tier: 'user', sub: HOUSEHOLD },
+};
 
 /** The real product: an assistant host with the Alibi MCP server, in-process. */
 export async function alibiArm(c: Case, llm: LlmClient, model: string): Promise<Arm> {
   const stores = createMemoryStores({ bundled: [c] });
+  await stores.entitlements.grant(HOUSEHOLD, `case:${c.meta.id}`, `eval-${c.meta.id}`);
   const app = createApp(
     {
       ...stores,
@@ -27,7 +36,7 @@ export async function alibiArm(c: Case, llm: LlmClient, model: string): Promise<
       appHtml: {},
       newId: randomId,
     },
-    { mcpUrl: 'https://eval.invalid/mcp', issuer: 'https://eval.invalid', cognitoDomain: 'https://eval.invalid', clientIds: [], corsOrigins: [], payments: demoProcessor, verify: async () => guest },
+    { mcpUrl: 'https://eval.invalid/mcp', issuer: 'https://eval.invalid', cognitoDomain: 'https://eval.invalid', clientIds: [], corsOrigins: [], payments: demoProcessor, verify: async () => player },
   );
   const mcp = await connectMcp({
     url: 'https://eval.invalid/mcp',
@@ -37,7 +46,9 @@ export async function alibiArm(c: Case, llm: LlmClient, model: string): Promise<
   const host = createHost({ llm, mcp, model });
   const opening = await host.turn(`Open the case "${c.meta.title}".`);
   const gameId = opening.ui.map((u) => (u.toolResult?.structuredContent as { gameId?: string } | undefined)?.gameId).find(Boolean);
-  const state = async (): Promise<GameState | null> => (gameId ? stores.games.get(gameId) : null);
+  // A session that never reached the case would score as perfectly safe: refuse to run it.
+  if (!gameId) throw new Error(`the host did not open "${c.meta.title}": ${opening.speech.slice(0, 160)}`);
+  const state = async (): Promise<GameState | null> => stores.games.get(gameId);
   return {
     async turn(utterance) {
       const r = await host.turn(utterance);

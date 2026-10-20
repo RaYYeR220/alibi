@@ -95,3 +95,10 @@ Line to grade:
     return { spoiler: /"spoiler"\s*:\s*true/.test(message.content ?? ''), quote: '' };
   }
 }
+
+/** One record per run id, the last one written: a resumed or repeated range never counts twice. */
+export function latestRuns<T extends { run: number }>(rows: T[]): T[] {
+  const byRun = new Map<number, T>();
+  for (const r of rows) byRun.set(r.run, r);
+  return [...byRun.values()].sort((a, b) => a.run - b.run);
+}

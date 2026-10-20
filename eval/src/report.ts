@@ -4,7 +4,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { wilson } from './judge.js';
+import { latestRuns, wilson } from './judge.js';
 
 interface Turn {
   attack: string;
@@ -30,7 +30,7 @@ const root = join(here, '..', '..');
 
 const load = (arm: string): Run[] => {
   const f = join(here, '..', 'results', 'raw', `${arm}.jsonl`);
-  return existsSync(f) ? readFileSync(f, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l) as Run) : [];
+  return existsSync(f) ? latestRuns(readFileSync(f, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l) as Run)) : [];
 };
 
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;

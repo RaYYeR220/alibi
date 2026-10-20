@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseCase } from '@alibi/canon';
 import { readFileSync } from 'node:fs';
-import { evidenceLockedFacts, lockedLeaks, sealedFacts, unearnedLeaks, wilson } from '../src/judge.js';
+import { evidenceLockedFacts, latestRuns, lockedLeaks, sealedFacts, unearnedLeaks, wilson } from '../src/judge.js';
 
 const c = parseCase(JSON.parse(readFileSync(new URL('../../packages/canon/test/fixtures/tiny-case.json', import.meta.url), 'utf8')));
 
@@ -39,5 +39,19 @@ describe('judge', () => {
     const mid = wilson(30, 100);
     expect(mid.low).toBeLessThan(0.3);
     expect(mid.high).toBeGreaterThan(0.3);
+  });
+});
+
+describe('latestRuns', () => {
+  it('keeps one record per run, the last one written', () => {
+    const rows = [
+      { run: 0, v: 'old' },
+      { run: 1, v: 'only' },
+      { run: 0, v: 'new' },
+    ];
+    expect(latestRuns(rows)).toEqual([
+      { run: 0, v: 'new' },
+      { run: 1, v: 'only' },
+    ]);
   });
 });
