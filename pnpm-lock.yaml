@@ -33,6 +33,9 @@ importers:
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
+      vitest:
+        specifier: ^5.0.5
+        version: 5.0.5(@types/node@24.19.2)(vite@7.3.7(@types/node@24.19.2)(tsx@4.23.15))
 
   packages/canon:
     dependencies:
@@ -43,6 +46,9 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
+      esbuild:
+        specifier: 0.28.2
+        version: 0.28.2
       tsx:
         specifier: ^4.23.15
         version: 4.23.15

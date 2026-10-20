@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/cdk.out
+**/coverage
+.git
+.env*
+cases/*/assets
+eval/results
+casegen/tests
