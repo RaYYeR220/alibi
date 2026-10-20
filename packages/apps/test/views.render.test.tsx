@@ -10,6 +10,12 @@ import { CaseIntroCard } from '../src/views/case-intro/view.js';
 import { InterrogationCard } from '../src/views/interrogation/view.js';
 import { EvidenceCard } from '../src/views/evidence/view.js';
 import { ConfrontationCard } from '../src/views/confrontation/view.js';
+import { BoardScreen } from '../src/views/board/view.js';
+import { HintCard } from '../src/views/hint/view.js';
+import { VerdictCard } from '../src/views/verdict/view.js';
+import { LabCard } from '../src/views/lab/view.js';
+import { PurchaseCard } from '../src/views/purchase/view.js';
+import { ProgressCard } from '../src/views/progress/view.js';
 import { catalogItems, fixtures, FIXTURE_NOW } from '../fixtures/views.js';
 import { actionButtons, allCopy, fakeApp, showHost } from './helpers.js';
 
@@ -21,6 +27,13 @@ const VIEWS: [string, AnyCard, object, RegExp][] = [
   ['interrogation', InterrogationCard as AnyCard, fixtures.interrogation, /Clara Vance/],
   ['evidence', EvidenceCard as AnyCard, fixtures.evidence, /Found in the study/],
   ['confrontation', ConfrontationCard as AnyCard, fixtures.confrontation, /Clara's story breaks/],
+  ['board', BoardScreen as AnyCard, fixtures.board, /The Brooch at Ashby House/],
+  ['hint', HintCard as AnyCard, fixtures.hint, /Hint/],
+  ['verdict', VerdictCard as AnyCard, fixtures.verdict, /Case closed/],
+  ['lab (pending)', LabCard as AnyCard, fixtures.lab, /At the lab/],
+  ['lab (results)', LabCard as AnyCard, fixtures.labResults, /Lab report/],
+  ['purchase', PurchaseCard as AnyCard, fixtures.purchase, /The Last Train to Halden/],
+  ['progress', ProgressCard as AnyCard, fixtures.progress, /Your case files/],
 ];
 
 beforeEach(() => {
@@ -155,6 +168,17 @@ describe('anchor audio', () => {
     render(<ConfrontationCard view={fixtures.confrontation} host={showHost()} app={fakeApp()} />);
     await waitFor(() => expect(play).toHaveBeenCalled());
     expect((play.mock.contexts[0] as HTMLAudioElement).src).toBe(fixtures.confrontation.anchor!.audioUrl);
+  });
+
+  it('verdict autoplays the confession, then the ending', async () => {
+    const play = vi.mocked(HTMLMediaElement.prototype.play);
+    render(<VerdictCard view={fixtures.verdict} host={showHost()} app={fakeApp()} />);
+    await waitFor(() => expect(play).toHaveBeenCalled());
+    const first = play.mock.contexts[0] as HTMLAudioElement;
+    expect(first.src).toBe(fixtures.verdict.confession!.audioUrl);
+    first.dispatchEvent(new Event('ended'));
+    await waitFor(() => expect(play).toHaveBeenCalledTimes(2));
+    expect((play.mock.contexts[1] as HTMLAudioElement).src).toBe(fixtures.verdict.ending.audioUrl);
   });
 
   it('shows a play control when autoplay is refused', async () => {
