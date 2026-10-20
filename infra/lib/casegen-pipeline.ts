@@ -18,6 +18,18 @@ export interface CasegenPipelineProps {
   assetBaseUrl?: string;
   /** Random plays the red-team stage runs against each case. */
   redteamRuns?: number;
+  /**
+   * Fixed name, so a stack that dispatches jobs can build the ARN (stateMachineArnFor) without a
+   * reference back to this construct when this construct also needs that stack's bucket.
+   */
+  stateMachineName?: string;
+}
+
+export const DEFAULT_STATE_MACHINE_NAME = 'alibi-casegen';
+
+/** ARN of the workflow by name, for wiring the dispatcher without a cross-stack cycle. */
+export function stateMachineArnFor(stack: Stack, name = DEFAULT_STATE_MACHINE_NAME): string {
+  return `arn:${stack.partition}:states:${stack.region}:${stack.account}:stateMachine:${name}`;
 }
 
 const STAGES = ['moderate', 'plot', 'compile', 'prove', 'anchors', 'redteam', 'art', 'voices', 'publish'] as const;
@@ -102,6 +114,7 @@ export class CasegenPipeline extends Construct {
     const definition = stage('moderate').next(stage('plot')).next(compile).next(stage('prove')).next(proven);
 
     this.stateMachine = new sfn.StateMachine(this, 'Workflow', {
+      stateMachineName: props.stateMachineName ?? DEFAULT_STATE_MACHINE_NAME,
       stateMachineType: sfn.StateMachineType.STANDARD,
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
       timeout: Duration.hours(1),

@@ -3,7 +3,7 @@ import { Match, Template } from 'aws-cdk-lib/assertions';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { CasegenPipeline } from '../lib/casegen-pipeline.js';
+import { CasegenPipeline, stateMachineArnFor } from '../lib/casegen-pipeline.js';
 
 let template: Template;
 let definition: { StartAt: string; States: Record<string, any> };
@@ -46,6 +46,12 @@ describe('CasegenPipeline', () => {
     expect(task.Catch[0]).toMatchObject({ ErrorEquals: ['States.ALL'], ResultPath: '$.error', Next: 'MarkFailed' });
     expect(definition.States.MarkFailed.Parameters).toEqual({ op: 'fail', 'jobId.$': '$.jobId', 'error.$': '$.error' });
     expect(definition.States.MarkFailed.Next).toBe('JobFailed');
+  });
+
+  it('has a fixed name so a dispatcher can address it by ARN', () => {
+    template.hasResourceProperties('AWS::StepFunctions::StateMachine', { StateMachineName: 'alibi-casegen' });
+    const stack = new Stack(new App(), 'X', { env: { account: '123456789012', region: 'us-east-1' } });
+    expect(stateMachineArnFor(stack)).toBe(`arn:${stack.partition}:states:us-east-1:123456789012:stateMachine:alibi-casegen`);
   });
 
   it('configures the stage worker for the table, bucket and asset URL', () => {
