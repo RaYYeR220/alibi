@@ -278,8 +278,9 @@ export class Assistant {
     this.store.set({ heard: text, interim: '' });
 
     const w = this.wallet.state();
-    if (w.step === 'confirm' || w.step === 'pin') {
-      await this.wallet.hear(text);
+    if (w.step !== 'idle') {
+      // The payment phase owns the conversation until it finishes.
+      if (w.step === 'confirm' || w.step === 'pin') await this.wallet.hear(text);
       return;
     }
     if (this.offer && isPurchaseIntent(text)) return this.startPayment();
@@ -408,7 +409,7 @@ export class Assistant {
       void this.speakHost('To buy cases, link your Alibi account first.');
       return;
     }
-    this.store.set({ view: this.store.get().view, displayMode: 'inline' });
+    this.store.set({ displayMode: 'inline' });
     this.wallet.begin(this.offer);
   }
 
@@ -431,9 +432,14 @@ export class Assistant {
       this.offer = null;
       void this.speaking.then(() => {
         this.wallet.reset();
-        const next = offer.sku.startsWith('case:') ? `Open ${offer.title}` : 'I paid for the custom case. Please go ahead and write it.';
-        this.store.set({ heard: next });
-        return this.turn(next);
+        // The payment happened outside the conversation; the host hears about it the way it would from the wallet.
+        const isCase = offer.sku.startsWith('case:');
+        this.store.set({ heard: isCase ? `Open ${offer.title}` : 'Write my custom case' });
+        return this.turn(
+          isCase
+            ? `The purchase of ${offer.title} went through and it is mine now. Open ${offer.title}.`
+            : 'The custom case purchase went through. Please go ahead and write it.',
+        );
       });
     }
     if (w.step === 'failed' || w.step === 'canceled') {

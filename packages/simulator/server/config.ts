@@ -13,7 +13,7 @@ export function configFromEnv(env: Record<string, string | undefined>): SimConfi
     llmLimit: { max: num(env.LLM_CALLS_PER_WINDOW, 30), windowMs: num(env.LLM_WINDOW_MINUTES, 10) * 60_000 },
     ttsLimit: { max: num(env.TTS_CALLS_PER_WINDOW, 120), windowMs: 10 * 60_000 },
     ttsDailyChars: num(env.TTS_DAILY_CHARS, 400_000),
-    visitorLimit: { max: num(env.VISITORS_PER_HOUR_PER_IP, 5), windowMs: 3_600_000 },
+    visitorLimit: { max: num(env.VISITORS_PER_HOUR_PER_IP, 20), windowMs: 3_600_000 },
     visitorsPerDay: num(env.VISITORS_PER_DAY, 500),
     tokenLimit: { max: 60, windowMs: 10 * 60_000 },
     maxTokens: num(env.MAX_OUTPUT_TOKENS, 1024),

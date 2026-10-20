@@ -4,7 +4,7 @@ import { harness, llmRequest, post } from './helpers.js';
 describe('llm proxy', () => {
   it('only allows the host models', async () => {
     const h = harness();
-    const res = await h.app.fetch(llmRequest({ model: 'claude-opus-5-5' }));
+    const res = await h.app.fetch(llmRequest({ model: 'some-unlisted-model' }));
     expect(res.status).toBe(400);
     expect(await res.json()).toEqual({ reason: 'model_not_allowed' });
     expect(h.upstream).toHaveLength(0);
