@@ -81,6 +81,18 @@ export class AuthStack extends Stack {
       ...tokenValidity,
     });
 
+    // Managed login (version 2) shows "Login pages unavailable" until a client has a branding style.
+    for (const [name, client] of [
+      ['HouseholdLogin', householdClient],
+      ['SimulatorLogin', simulatorClient],
+    ] as const) {
+      new cognito.CfnManagedLoginBranding(this, name, {
+        userPoolId: this.userPool.userPoolId,
+        clientId: client.userPoolClientId,
+        useCognitoProvidedValues: true,
+      });
+    }
+
     this.issuerUrl = `https://cognito-idp.${this.region}.amazonaws.com/${this.userPool.userPoolId}`;
     this.cognitoDomain = domain.baseUrl();
     this.clientIds = [serviceClient.userPoolClientId, householdClient.userPoolClientId, simulatorClient.userPoolClientId];
