@@ -40,7 +40,12 @@ export interface VeniceOptions {
   /** Browser calls go through the simulator backend, which holds the key. */
   proxyUrl?: string;
   fetch?: typeof fetch;
+  /** Base delay for retries on 429 and 5xx; doubles each attempt. */
+  retryDelayMs?: number;
+  maxRetries?: number;
 }
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** OpenAI-compatible chat completions with tool calling, against Venice. */
 export function createVeniceClient(opts: VeniceOptions): LlmClient {
@@ -57,11 +62,18 @@ export function createVeniceClient(opts: VeniceOptions): LlmClient {
         // Venice otherwise prepends its own system prompt.
         venice_parameters: { include_venice_system_prompt: false },
       };
-      const res = await doFetch(url, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', ...(opts.apiKey ? { authorization: `Bearer ${opts.apiKey}` } : {}) },
-        body: JSON.stringify(body),
-      });
+      const maxRetries = opts.maxRetries ?? 4;
+      let res: Response;
+      for (let attempt = 0; ; attempt++) {
+        res = await doFetch(url, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', ...(opts.apiKey ? { authorization: `Bearer ${opts.apiKey}` } : {}) },
+          body: JSON.stringify(body),
+        });
+        const retryable = res.status === 429 || res.status >= 500;
+        if (!retryable || attempt >= maxRetries) break;
+        await sleep((opts.retryDelayMs ?? 800) * 2 ** attempt * (1 + Math.random() * 0.25));
+      }
       if (!res.ok) throw new Error(`LLM request failed: ${res.status} ${(await res.text()).slice(0, 300)}`);
       const json = (await res.json()) as {
         choices: { message: ChatMessage }[];
