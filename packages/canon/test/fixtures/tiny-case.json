@@ -66,7 +66,7 @@
     { "id": "f_clara_study", "text": "Clara slipped into the study at a quarter past nine.", "about": ["clara"], "kind": "opportunity", "place": "study", "fingerprints": ["slipped into the study", "quarter past nine"], "logic": { "suspectId": "clara", "attr": "opportunity", "holds": true } },
     { "id": "f_key_perfume", "text": "The brass desk key carries traces of lily perfume, the scent Clara wears.", "about": ["clara"], "kind": "means", "fingerprints": ["traces of lily perfume"], "logic": { "suspectId": "clara", "attr": "means", "holds": true } },
     { "id": "f_clara_lily", "text": "Clara always wears lily perfume.", "about": ["clara"], "kind": "state", "fingerprints": [] },
-    { "id": "f_clara_took", "text": "Clara took the brooch to pay her debts.", "about": ["clara"], "kind": "event", "fingerprints": ["took the brooch", "clara took"] }
+    { "id": "f_clara_took", "text": "Clara took the brooch to pay her debts.", "about": ["clara"], "kind": "event", "fingerprints": ["took the brooch"] }
   ],
   "topics": [
     { "id": "t_whereabouts", "label": "where they were around nine", "aliases": ["where were you", "at nine", "alibi", "this evening", "after dinner", "whereabouts", "nine o'clock", "doing at nine"], "factIds": ["f_harold_twine", "f_harold_greenhouse", "f_perkins_pantry", "f_clara_study"] },

@@ -14,3 +14,6 @@ export * from './engine/lab.js';
 export * from './engine/hint.js';
 export * from './engine/accuse.js';
 export * from './engine/board.js';
+export * from './guard.js';
+export * from './brief.js';
+export * from './lint.js';
