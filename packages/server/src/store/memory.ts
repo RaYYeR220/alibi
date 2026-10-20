@@ -78,6 +78,15 @@ export function createMemoryStores(opts: { bundled: Case[]; clock?: () => number
       async get(id) {
         return clone(sessions.get(id) ?? null);
       },
+      async claim(id, from, to, now, staleMs) {
+        const s = sessions.get(id);
+        if (!s) return null;
+        const stale = s.status === to && s.updatedAt < now - staleMs;
+        if (!from.includes(s.status) && !stale) return null;
+        const next = { ...s, status: to, updatedAt: now };
+        sessions.set(id, next);
+        return clone(next);
+      },
       async getIdem(owner, key) {
         return clone(idem.get(`${owner}|${key}`) ?? null);
       },

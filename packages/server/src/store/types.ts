@@ -29,7 +29,7 @@ export interface CheckoutSession {
   id: string;
   householdId: string | null;
   sku: string;
-  status: 'incomplete' | 'ready_for_complete' | 'completed' | 'canceled';
+  status: 'incomplete' | 'ready_for_complete' | 'complete_in_progress' | 'completed' | 'canceled';
   currency: 'USD';
   amountCents: number;
   title: string;
@@ -47,6 +47,11 @@ export interface IdempotencyRecord {
 export interface CheckoutStore {
   put(session: CheckoutSession): Promise<void>;
   get(id: string): Promise<CheckoutSession | null>;
+  /**
+   * Atomically moves a session from one of `from` to `to` (a lock held longer than `staleMs`
+   * may be taken over). Returns the updated session, or null when another request holds it.
+   */
+  claim(id: string, from: CheckoutSession['status'][], to: CheckoutSession['status'], now: number, staleMs: number): Promise<CheckoutSession | null>;
   /** Idempotency keys are scoped to the caller (OAuth client or household) that used them. */
   getIdem(owner: string, key: string): Promise<IdempotencyRecord | null>;
   putIdem(owner: string, key: string, record: IdempotencyRecord): Promise<void>;

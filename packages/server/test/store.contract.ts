@@ -52,6 +52,16 @@ export function storeContract(name: string, make: () => Promise<Harness>) {
       expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(false);
     });
 
+    it('only one of two simultaneous claims on a checkout session wins', async () => {
+      const { stores, clock } = await make();
+      const id = uid('cs');
+      await stores.checkouts.put({ id, householdId: 'hh', sku: 'case:x', status: 'ready_for_complete', currency: 'USD', amountCents: 499, title: 'X', createdAt: clock.now, updatedAt: clock.now });
+      const results = await Promise.all([1, 2].map(() => stores.checkouts.claim(id, ['ready_for_complete'], 'complete_in_progress', clock.now, 60_000)));
+      expect(results.filter(Boolean)).toHaveLength(1);
+      expect((await stores.checkouts.get(id))?.status).toBe('complete_in_progress');
+      expect(await stores.checkouts.claim(id, ['ready_for_complete'], 'complete_in_progress', clock.now + 120_000, 60_000)).not.toBeNull();
+    });
+
     it('guest game has ttl set', async () => {
       const { stores, clock } = await make();
       const guest = newGameState(tinyCase, uid('g'), null, clock.now);

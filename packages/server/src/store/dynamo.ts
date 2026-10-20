@@ -171,6 +171,27 @@ export function createDynamoStores(opts: { table: string; bundled: Case[]; clock
       async get(id) {
         return ((await getItem(`CHK#${id}`, 'SESSION'))?.session as CheckoutSession | undefined) ?? null;
       },
+      async claim(id, from, to, now, staleMs) {
+        const values: Record<string, unknown> = { ':to': to, ':now': now, ':stale': now - staleMs };
+        from.forEach((f, i) => (values[`:f${i}`] = f));
+        try {
+          const res = await db.send(
+            new UpdateCommand({
+              TableName,
+              Key: { pk: `CHK#${id}`, sk: 'SESSION' },
+              UpdateExpression: 'SET #s.#st = :to, #s.updatedAt = :now',
+              ConditionExpression: `#s.#st IN (${from.map((_, i) => `:f${i}`).join(', ')}) OR (#s.#st = :to AND #s.updatedAt < :stale)`,
+              ExpressionAttributeNames: { '#s': 'session', '#st': 'status' },
+              ExpressionAttributeValues: values,
+              ReturnValues: 'ALL_NEW',
+            }),
+          );
+          return (res.Attributes?.session as CheckoutSession | undefined) ?? null;
+        } catch (err) {
+          if (err instanceof ConditionalCheckFailedException) return null;
+          throw err;
+        }
+      },
       async getIdem(owner, key) {
         const item = await getItem(`IDEM#${owner}#${key}`, 'IDEM');
         if (!item || Number(item.ttl) < seconds(clock())) return null;

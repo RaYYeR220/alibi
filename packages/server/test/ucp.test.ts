@@ -119,6 +119,19 @@ describe('UCP merchant', () => {
     expect(await deps.entitlements.consume('alice', 'case:tiny-paid')).toBe(false);
   });
 
+  it('two simultaneous completes of one session grant one credit, with the same or different keys', async () => {
+    for (const keys of [['k-same', 'k-same'], ['k-a', 'k-b']]) {
+      const { deps, ucp } = setup();
+      const s = await (await ucp('POST', '/checkout-sessions', 'hh-alice', createBody, `create-${keys[1]}`)).json();
+      const replies = await Promise.all(keys.map((k) => ucp('POST', `/checkout-sessions/${s.id}/complete`, 'hh-alice', demoCard(), k)));
+      const bodies = await Promise.all(replies.map((r) => r.json()));
+      expect(bodies.filter((b) => b.status === 'completed').length).toBeGreaterThanOrEqual(1);
+      expect(new Set(bodies.filter((b) => b.order).map((b) => b.order.id)).size).toBe(1);
+      expect(await deps.entitlements.consume('alice', 'case:tiny-paid')).toBe(true);
+      expect(await deps.entitlements.consume('alice', 'case:tiny-paid')).toBe(false);
+    }
+  });
+
   it('same Idempotency-Key different body is 409', async () => {
     const { ucp } = setup();
     await ucp('POST', '/checkout-sessions', 'hh-alice', createBody, 'k6');

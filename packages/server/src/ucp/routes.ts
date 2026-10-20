@@ -108,9 +108,9 @@ export function ucpRoutes(deps: Deps, opts: UcpOptions): Hono {
     if (!authInfo) return new Response(null, { status: 401 });
     const raw = await c.req.text();
     return idempotent(c, authInfo, raw, async () => {
-      const s = await ownSession(authInfo, c.req.param('id'));
-      if (!s) return notFound;
-      if (s.status === 'completed' || s.status === 'canceled') return { status: 200, body: ucpSession(s, opts.linksBase) };
+      const current = await ownSession(authInfo, c.req.param('id'));
+      if (!current) return notFound;
+      if (current.status === 'completed' || current.status === 'canceled') return { status: 200, body: ucpSession(current, opts.linksBase) };
       let instrument: PaymentInstrument | undefined;
       try {
         instrument = (JSON.parse(raw || '{}') as { payment?: { instruments?: PaymentInstrument[] } }).payment?.instruments?.[0];
@@ -118,7 +118,14 @@ export function ucpRoutes(deps: Deps, opts: UcpOptions): Hono {
         instrument = undefined;
       }
       if (!instrument) {
-        return { status: 200, body: ucpSession(s, opts.linksBase, [{ type: 'error', code: 'missing', content: 'A payment instrument is required', severity: 'recoverable', path: '$.payment.instruments' }]) };
+        return { status: 200, body: ucpSession(current, opts.linksBase, [{ type: 'error', code: 'missing', content: 'A payment instrument is required', severity: 'recoverable', path: '$.payment.instruments' }]) };
+      }
+      // Only one complete may charge a session: take it over atomically, or report who has it.
+      const s = await deps.checkouts.claim(current.id, ['ready_for_complete', 'incomplete'], 'complete_in_progress', deps.clock(), 60_000);
+      if (!s) {
+        const latest = (await deps.checkouts.get(current.id)) ?? current;
+        if (latest.status === 'completed') return { status: 200, body: ucpSession(latest, opts.linksBase) };
+        return { status: 409, body: { code: 'request_in_progress', content: 'This checkout is already being completed' } };
       }
       const charge = await processor.charge({ sessionId: s.id, amountCents: s.amountCents, instrument }, deps.newId);
       if (!charge.ok) {
@@ -126,8 +133,9 @@ export function ucpRoutes(deps: Deps, opts: UcpOptions): Hono {
         await deps.checkouts.put(declined);
         return { status: 200, body: ucpSession(declined, opts.linksBase, [{ type: 'error', code: charge.code, content: charge.content, severity: 'recoverable' }]) };
       }
+      // One entitlement per session, whatever happens after this line.
+      await deps.entitlements.grant(s.householdId!, s.sku, `session-${s.id}`);
       const done = { ...s, status: 'completed' as const, orderId: charge.orderId, updatedAt: deps.clock() };
-      await deps.entitlements.grant(s.householdId!, s.sku, charge.orderId);
       await deps.checkouts.put(done);
       return { status: 200, body: ucpSession(done, opts.linksBase) };
     });
