@@ -14,9 +14,12 @@ const ASK_NAMES = 'Who should be in it? Tell me up to five first names, and the 
 
 /** What a 2026-07-28 client is asked for when the names are missing (flat, elicitation-safe schema). */
 const DETAILS = z.object({
-  names: z.string().meta({ title: 'First names, separated by commas (up to five)' }),
-  occasion: z.string().optional().meta({ title: 'Occasion' }),
+  names: z.string().max(160).meta({ title: 'First names, separated by commas (up to five)' }),
+  occasion: z.string().max(80).optional().meta({ title: 'Occasion' }),
 });
+
+/** Elicited names must meet the same limits as the tool's own `names` argument. */
+const NAMES = z.array(z.string().min(1).max(30)).min(1).max(5);
 
 type RequestCtx = { mcpReq: { envelope?: Record<string, unknown>; inputResponses?: unknown } };
 
@@ -73,7 +76,9 @@ export function registerCustomTools(server: McpServer, ctx: Ctx): void {
         const req = reqCtx as unknown as RequestCtx;
         const details = acceptedContent(req.mcpReq.inputResponses as never, 'details', DETAILS);
         if (details) {
-          names = details.names.split(',').map((n) => n.trim()).filter(Boolean).slice(0, 5);
+          const parsed = NAMES.safeParse(details.names.split(',').map((n) => n.trim()).filter(Boolean));
+          if (!parsed.success) return say('Please give up to five first names, each under 30 characters.');
+          names = parsed.data;
           occasion ??= details.occasion;
         } else if (canElicit(req)) {
           // 2026-07-28: ask the client to collect the details, then the call is retried with the answers.

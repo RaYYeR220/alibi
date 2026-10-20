@@ -48,6 +48,15 @@ describe('2026-07-28 era', () => {
     expect(await deps.jobs.get(v.jobs[0]!.jobId)).toMatchObject({ input: expect.objectContaining({ names: ['Ada', 'Tunde', 'Chioma'] }) });
   });
 
+  it('elicited details get the same limits as direct arguments', async () => {
+    const deps = testDeps();
+    await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');
+    const client = await modernClient(deps, { elicit: () => ({ names: `Ada, ${'x'.repeat(40)}`, occasion: 'party' }) });
+    const r = await client.callTool({ name: 'create_custom_case', arguments: { names: [] } });
+    expect(text(r)).toMatch(/30 characters/);
+    expect(await deps.entitlements.has('okafor', 'custom-case')).toBe(true);
+  });
+
   it('a 2026 client without elicitation gets the question as text', async () => {
     const deps = testDeps();
     await deps.entitlements.grant('okafor', 'custom-case', 'ord-1');
