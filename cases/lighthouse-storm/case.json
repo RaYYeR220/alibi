@@ -10,7 +10,10 @@
     "cover": "cover.png",
     "artStyle": "ink-gouache",
     "setting": "Gull Rock lighthouse, a mile and a half off the Cornish coast, November 1931. A south-westerly gale has kept the relief boat away for three days. At a quarter to six in the morning, Principal Keeper Silas Penhallow is found dead at the foot of the lantern stairs, and the five people left on the rock all have something to hide.",
-    "startingFacts": ["f_gale", "f_body"]
+    "startingFacts": [
+      "f_gale",
+      "f_body"
+    ]
   },
   "victim": {
     "id": "penhallow",
@@ -20,21 +23,107 @@
     "portrait": "penhallow.png"
   },
   "places": [
-    { "id": "lantern_room", "name": "the lantern room", "aliases": ["lantern room", "lantern", "the lamp", "lamp room", "watch room", "the light", "top of the tower", "gallery"] },
-    { "id": "lantern_stairs", "name": "the lantern stairs", "aliases": ["stairs", "lantern stairs", "staircase", "the stair", "foot of the stairs", "bottom of the stairs", "the body", "where he fell"] },
-    { "id": "oil_store", "name": "the oil store", "aliases": ["oil store", "oil room", "store", "store room", "storeroom", "oil drums", "drums", "paraffin store"] },
-    { "id": "kitchen", "name": "the kitchen", "aliases": ["kitchen", "range", "stove", "larder", "kitchen table", "galley"] },
-    { "id": "bunkroom", "name": "the bunkroom", "aliases": ["bunkroom", "bunk room", "bunks", "bunk", "sleeping quarters", "dormitory", "bedroom"] },
-    { "id": "office", "name": "the Principal Keeper's office", "aliases": ["office", "principal keeper's office", "keeper's office", "penhallow's office", "desk", "his desk", "study"] }
+    {
+      "id": "lantern_room",
+      "name": "the lantern room",
+      "aliases": [
+        "lantern room",
+        "lantern",
+        "the lamp",
+        "lamp room",
+        "watch room",
+        "the light",
+        "top of the tower",
+        "gallery"
+      ]
+    },
+    {
+      "id": "lantern_stairs",
+      "name": "the lantern stairs",
+      "aliases": [
+        "stairs",
+        "lantern stairs",
+        "staircase",
+        "the stair",
+        "foot of the stairs",
+        "bottom of the stairs",
+        "the body",
+        "where he fell"
+      ]
+    },
+    {
+      "id": "oil_store",
+      "name": "the oil store",
+      "aliases": [
+        "oil store",
+        "oil room",
+        "store",
+        "store room",
+        "storeroom",
+        "oil drums",
+        "drums",
+        "paraffin store"
+      ]
+    },
+    {
+      "id": "kitchen",
+      "name": "the kitchen",
+      "aliases": [
+        "kitchen",
+        "range",
+        "stove",
+        "larder",
+        "kitchen table",
+        "galley"
+      ]
+    },
+    {
+      "id": "bunkroom",
+      "name": "the bunkroom",
+      "aliases": [
+        "bunkroom",
+        "bunk room",
+        "bunks",
+        "bunk",
+        "sleeping quarters",
+        "dormitory",
+        "bedroom"
+      ]
+    },
+    {
+      "id": "office",
+      "name": "the Principal Keeper's office",
+      "aliases": [
+        "office",
+        "principal keeper's office",
+        "keeper's office",
+        "penhallow's office",
+        "desk",
+        "his desk",
+        "study"
+      ]
+    }
   ],
   "suspects": [
     {
       "id": "trevanion",
       "name": "Edmund Trevanion",
       "role": "first assistant keeper",
-      "aliases": ["edmund", "trevanion", "mr trevanion", "edmund trevanion", "first assistant", "the first assistant", "first assistant keeper"],
+      "aliases": [
+        "edmund",
+        "trevanion",
+        "mr trevanion",
+        "edmund trevanion",
+        "first assistant",
+        "the first assistant",
+        "first assistant keeper"
+      ],
       "persona": {
-        "traits": ["methodical", "resentful", "proud"],
+        "traits": [
+          "methodical",
+          "resentful",
+          "proud"
+        ],
         "speech": "Clipped and correct. Reports rather than talks, gives times to the minute, and ends his sentences with 'as per the book'.",
         "demeanor": "stiff"
       },
@@ -45,9 +134,23 @@
       "id": "pascoe",
       "name": "Jory Pascoe",
       "role": "second assistant keeper",
-      "aliases": ["jory", "pascoe", "mr pascoe", "jory pascoe", "second assistant", "the second assistant", "young pascoe", "the young keeper", "the boy"],
+      "aliases": [
+        "jory",
+        "pascoe",
+        "mr pascoe",
+        "jory pascoe",
+        "second assistant",
+        "the second assistant",
+        "young pascoe",
+        "the young keeper",
+        "the boy"
+      ],
       "persona": {
-        "traits": ["nervous", "eager", "soft-hearted"],
+        "traits": [
+          "nervous",
+          "eager",
+          "soft-hearted"
+        ],
         "speech": "Twenty-two and new to the rock. Talks in a rush, says 'honest to God' far too often, and 'mind' when he really means it.",
         "demeanor": "jumpy"
       },
@@ -58,9 +161,21 @@
       "id": "hester",
       "name": "Hester Penhallow",
       "role": "keeper's wife",
-      "aliases": ["hester", "mrs penhallow", "hester penhallow", "the wife", "the widow", "penhallow's wife", "mrs p"],
+      "aliases": [
+        "hester",
+        "mrs penhallow",
+        "hester penhallow",
+        "the wife",
+        "the widow",
+        "penhallow's wife",
+        "mrs p"
+      ],
       "persona": {
-        "traits": ["dry", "watchful", "loyal"],
+        "traits": [
+          "dry",
+          "watchful",
+          "loyal"
+        ],
         "speech": "Thirty years a keeper's wife. Answers a question with a question, wastes no words, and says 'so they tell me' when she doesn't believe a thing.",
         "demeanor": "still"
       },
@@ -71,9 +186,22 @@
       "id": "alleyne",
       "name": "Dr Rupert Alleyne",
       "role": "Trinity House medical officer",
-      "aliases": ["rupert", "alleyne", "dr alleyne", "doctor alleyne", "rupert alleyne", "the doctor", "doctor", "the medical officer"],
+      "aliases": [
+        "rupert",
+        "alleyne",
+        "dr alleyne",
+        "doctor alleyne",
+        "rupert alleyne",
+        "the doctor",
+        "doctor",
+        "the medical officer"
+      ],
       "persona": {
-        "traits": ["pompous", "anxious", "evasive"],
+        "traits": [
+          "pompous",
+          "anxious",
+          "evasive"
+        ],
         "speech": "Booming and over-formal. Opens with 'frankly speaking', hides behind Latin when cornered, and mops his brow with a silk handkerchief.",
         "demeanor": "flustered"
       },
@@ -84,9 +212,21 @@
       "id": "tamsin",
       "name": "Tamsin Rowe",
       "role": "station cook",
-      "aliases": ["tamsin", "rowe", "miss rowe", "tamsin rowe", "the cook", "cook", "the maid"],
+      "aliases": [
+        "tamsin",
+        "rowe",
+        "miss rowe",
+        "tamsin rowe",
+        "the cook",
+        "cook",
+        "the maid"
+      ],
       "persona": {
-        "traits": ["blunt", "shrewd", "funny"],
+        "traits": [
+          "blunt",
+          "shrewd",
+          "funny"
+        ],
         "speech": "Born in a fishing town and proud of it. Quick and sharp, calls everyone 'my lover' the Cornish way, and laughs at her own jokes before anyone else can.",
         "demeanor": "cheeky"
       },
@@ -95,147 +235,896 @@
     }
   ],
   "facts": [
-    { "id": "f_gale", "text": "A south-westerly gale has kept the relief boat off Gull Rock for three days, and no one can leave.", "about": ["penhallow"], "kind": "state", "fingerprints": [] },
-    { "id": "f_body", "text": "Silas Penhallow was found dead at the foot of the lantern stairs at a quarter to six in the morning.", "about": ["penhallow", "lantern_stairs"], "kind": "event", "place": "lantern_stairs", "time": "5:45 am", "fingerprints": [] },
-    { "id": "f_watch", "text": "Trevanion had the middle watch in the lantern room, from midnight until four.", "about": ["trevanion", "lantern_room"], "kind": "state", "place": "lantern_room", "time": "12:00 am", "fingerprints": [] },
-    { "id": "f_telltale_rule", "text": "The keeper on watch must press the tell-tale clock every half hour to prove he is awake at the lamp.", "about": ["lantern_room"], "kind": "state", "place": "lantern_room", "fingerprints": [] },
-    { "id": "f_telltale_gap", "text": "The tell-tale clock was pressed every half hour from midnight, except between three o'clock and a quarter to four.", "about": ["trevanion", "lantern_room"], "kind": "event", "place": "lantern_room", "time": "3:00 am", "fingerprints": ["except between three o'clock and a quarter to four"] },
-    { "id": "f_supper", "text": "At supper Penhallow said he would go through the oil accounts with Trevanion in the morning.", "about": ["penhallow", "trevanion"], "kind": "event", "place": "kitchen", "time": "8:30 pm", "fingerprints": [] },
-    { "id": "f_found_by", "text": "Mrs Penhallow found her husband when she went to wake him for the morning watch.", "about": ["hester", "penhallow"], "kind": "event", "place": "lantern_stairs", "time": "5:45 am", "fingerprints": [] },
-    { "id": "f_fall_verdict", "text": "Dr Alleyne pronounced it a fall within five minutes of seeing the body.", "about": ["alleyne", "penhallow"], "kind": "event", "place": "lantern_stairs", "time": "5:50 am", "fingerprints": [] },
-    { "id": "f_wound", "text": "The wound is on the back of Penhallow's head, though he lay face up at the foot of the stairs.", "about": ["penhallow", "lantern_stairs"], "kind": "state", "place": "lantern_stairs", "fingerprints": ["wound is on the back of"] },
-    { "id": "f_lamp_neat", "text": "Penhallow's hand lamp stood upright on the bottom step, still burning, as if someone had set it down.", "about": ["penhallow", "lantern_stairs"], "kind": "state", "place": "lantern_stairs", "fingerprints": [] },
-    { "id": "f_trev_motive", "text": "Penhallow had found forty gallons of lamp oil missing over six months and meant to make Trevanion explain it on Thursday.", "about": ["trevanion", "penhallow"], "kind": "motive", "fingerprints": ["forty gallons of lamp oil", "make trevanion explain"], "logic": { "suspectId": "trevanion", "attr": "motive", "holds": true } },
-    { "id": "f_trev_opp", "text": "Trevanion left the lantern room at three o'clock and was gone for three-quarters of an hour.", "about": ["trevanion", "lantern_room"], "kind": "opportunity", "place": "lantern_stairs", "time": "3:00 am", "fingerprints": ["left the lantern room at three", "gone for three quarters of an hour"], "logic": { "suspectId": "trevanion", "attr": "opportunity", "holds": true } },
-    { "id": "f_trev_means", "text": "The police surgeon finds Penhallow's hair in the dent of the brass oil measure and Trevanion's thumbprint in lamp-black on its handle.", "about": ["trevanion", "penhallow"], "kind": "means", "fingerprints": ["thumbprint in lamp black", "hair in the dent"], "logic": { "suspectId": "trevanion", "attr": "means", "holds": true } },
-    { "id": "f_trev_struck", "text": "Trevanion struck Penhallow with the oil measure on the stairs, laid him out as if he had fallen, and hid the measure in an empty drum.", "about": ["trevanion", "penhallow"], "kind": "event", "fingerprints": ["struck penhallow with the oil measure"] },
-    { "id": "f_pascoe_saw_cans", "text": "On calm nights Pascoe has seen Trevanion handing oil cans down to a fishing boat from the landing stage.", "about": ["pascoe", "trevanion"], "kind": "event", "fingerprints": [] },
-    { "id": "f_pascoe_transfer", "text": "Penhallow refused to forward Pascoe's request for a transfer ashore, and they quarrelled about it at supper.", "about": ["pascoe", "penhallow"], "kind": "motive", "place": "kitchen", "time": "8:30 pm", "fingerprints": ["refused to forward pascoe's request"], "logic": { "suspectId": "pascoe", "attr": "motive", "holds": true } },
-    { "id": "f_pascoe_hand", "text": "Pascoe burned his right hand on the kitchen range at ten and cannot close his fingers around so much as a teacup.", "about": ["pascoe"], "kind": "means", "place": "kitchen", "time": "10:00 pm", "fingerprints": ["cannot close his fingers"], "logic": { "suspectId": "pascoe", "attr": "means", "holds": false } },
-    { "id": "f_pascoe_stairs", "text": "At three o'clock Pascoe crept to the foot of the lantern stairs, heard two men arguing above, and went back to his bunk.", "about": ["pascoe", "lantern_stairs"], "kind": "event", "place": "lantern_stairs", "time": "3:00 am", "fingerprints": ["heard two men arguing above"] },
-    { "id": "f_alleyne_complaint", "text": "Penhallow had written to Trinity House accusing Dr Alleyne of passing a half-blind keeper fit for duty.", "about": ["alleyne", "penhallow"], "kind": "motive", "fingerprints": ["passing a half blind keeper"], "logic": { "suspectId": "alleyne", "attr": "motive", "holds": true } },
-    { "id": "f_alleyne_draught", "text": "Dr Alleyne took a sleeping draught at eleven and went to the visitors' bunk.", "about": ["alleyne", "bunkroom"], "kind": "event", "place": "bunkroom", "time": "11:00 pm", "fingerprints": [] },
-    { "id": "f_alleyne_asleep", "text": "Dr Alleyne snored in the visitors' bunk from midnight until six, loud enough to be heard through the partition all night.", "about": ["alleyne", "bunkroom"], "kind": "opportunity", "place": "bunkroom", "fingerprints": ["snored in the visitors bunk"], "logic": { "suspectId": "alleyne", "attr": "opportunity", "holds": false } },
-    { "id": "f_hester_pension", "text": "As his widow, Hester will draw Penhallow's Trinity House pension of two hundred pounds a year.", "about": ["hester", "penhallow"], "kind": "motive", "fingerprints": ["two hundred pounds a year"], "logic": { "suspectId": "hester", "attr": "motive", "holds": true } },
-    { "id": "f_hester_kitchen", "text": "Mrs Penhallow sat in the kitchen mending from two o'clock until she went to wake her husband.", "about": ["hester", "kitchen"], "kind": "opportunity", "place": "kitchen", "time": "2:00 am", "fingerprints": ["sat in the kitchen mending"], "logic": { "suspectId": "hester", "attr": "opportunity", "holds": false } },
-    { "id": "f_tamsin_kitchen", "text": "Tamsin sat up in the kitchen from ten until five with the doctor's brandy and never went near the stairs.", "about": ["tamsin", "kitchen"], "kind": "opportunity", "place": "kitchen", "time": "10:00 pm", "fingerprints": ["sat up in the kitchen from ten"], "logic": { "suspectId": "tamsin", "attr": "opportunity", "holds": false } },
-    { "id": "f_tamsin_brandy", "text": "Someone took a half-bottle of brandy from Dr Alleyne's bag and hid it in the kitchen flour bin.", "about": ["alleyne", "kitchen"], "kind": "event", "place": "kitchen", "fingerprints": [] },
-    { "id": "f_tamsin_heard_steps", "text": "Around three, Tamsin heard boots go down the lantern stairs and, a long while later, come back up.", "about": ["tamsin", "lantern_stairs"], "kind": "event", "place": "lantern_stairs", "time": "3:00 am", "fingerprints": ["boots go down the lantern stairs"] }
+    {
+      "id": "f_gale",
+      "text": "A south-westerly gale has kept the relief boat off Gull Rock for three days, and no one can leave.",
+      "about": [
+        "penhallow"
+      ],
+      "kind": "state",
+      "fingerprints": []
+    },
+    {
+      "id": "f_body",
+      "text": "Silas Penhallow was found dead at the foot of the lantern stairs at a quarter to six in the morning.",
+      "about": [
+        "penhallow",
+        "lantern_stairs"
+      ],
+      "kind": "event",
+      "place": "lantern_stairs",
+      "time": "5:45 am",
+      "fingerprints": []
+    },
+    {
+      "id": "f_watch",
+      "text": "Trevanion had the middle watch in the lantern room, from midnight until four.",
+      "about": [
+        "trevanion",
+        "lantern_room"
+      ],
+      "kind": "state",
+      "place": "lantern_room",
+      "time": "12:00 am",
+      "fingerprints": []
+    },
+    {
+      "id": "f_telltale_rule",
+      "text": "The keeper on watch must press the tell-tale clock every half hour to prove he is awake at the lamp.",
+      "about": [
+        "lantern_room"
+      ],
+      "kind": "state",
+      "place": "lantern_room",
+      "fingerprints": []
+    },
+    {
+      "id": "f_telltale_gap",
+      "text": "The tell-tale clock was pressed every half hour from midnight, except between three o'clock and a quarter to four.",
+      "about": [
+        "trevanion",
+        "lantern_room"
+      ],
+      "kind": "event",
+      "place": "lantern_room",
+      "time": "3:00 am",
+      "fingerprints": [
+        "except between three o'clock and a quarter to four"
+      ]
+    },
+    {
+      "id": "f_supper",
+      "text": "At supper Penhallow said he would go through the oil accounts with Trevanion in the morning.",
+      "about": [
+        "penhallow",
+        "trevanion"
+      ],
+      "kind": "event",
+      "place": "kitchen",
+      "time": "8:30 pm",
+      "fingerprints": []
+    },
+    {
+      "id": "f_found_by",
+      "text": "Mrs Penhallow found her husband when she went to wake him for the morning watch.",
+      "about": [
+        "hester",
+        "penhallow"
+      ],
+      "kind": "event",
+      "place": "lantern_stairs",
+      "time": "5:45 am",
+      "fingerprints": []
+    },
+    {
+      "id": "f_fall_verdict",
+      "text": "Dr Alleyne pronounced it a fall within five minutes of seeing the body.",
+      "about": [
+        "alleyne",
+        "penhallow"
+      ],
+      "kind": "event",
+      "place": "lantern_stairs",
+      "time": "5:50 am",
+      "fingerprints": []
+    },
+    {
+      "id": "f_wound",
+      "text": "The wound is on the back of Penhallow's head, though he lay face up at the foot of the stairs.",
+      "about": [
+        "penhallow",
+        "lantern_stairs"
+      ],
+      "kind": "state",
+      "place": "lantern_stairs",
+      "fingerprints": [
+        "wound is on the back of"
+      ]
+    },
+    {
+      "id": "f_lamp_neat",
+      "text": "Penhallow's hand lamp stood upright on the bottom step, still burning, as if someone had set it down.",
+      "about": [
+        "penhallow",
+        "lantern_stairs"
+      ],
+      "kind": "state",
+      "place": "lantern_stairs",
+      "fingerprints": []
+    },
+    {
+      "id": "f_trev_motive",
+      "text": "Penhallow had found forty gallons of lamp oil missing over six months and meant to make Trevanion explain it on Thursday.",
+      "about": [
+        "trevanion",
+        "penhallow"
+      ],
+      "kind": "motive",
+      "fingerprints": [
+        "forty gallons of lamp oil",
+        "make trevanion explain"
+      ],
+      "logic": {
+        "suspectId": "trevanion",
+        "attr": "motive",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_trev_opp",
+      "text": "Trevanion left the lantern room at three o'clock and was gone for three-quarters of an hour.",
+      "about": [
+        "trevanion",
+        "lantern_room"
+      ],
+      "kind": "opportunity",
+      "place": "lantern_stairs",
+      "time": "3:00 am",
+      "fingerprints": [
+        "left the lantern room at three",
+        "gone for three quarters of an hour"
+      ],
+      "logic": {
+        "suspectId": "trevanion",
+        "attr": "opportunity",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_trev_means",
+      "text": "The police surgeon finds Penhallow's hair in the dent of the brass oil measure and Trevanion's thumbprint in lamp-black on its handle.",
+      "about": [
+        "trevanion",
+        "penhallow"
+      ],
+      "kind": "means",
+      "fingerprints": [
+        "thumbprint in lamp black",
+        "hair in the dent"
+      ],
+      "logic": {
+        "suspectId": "trevanion",
+        "attr": "means",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_trev_struck",
+      "text": "Trevanion struck Penhallow with the oil measure on the stairs, laid him out as if he had fallen, and hid the measure in an empty drum.",
+      "about": [
+        "trevanion",
+        "penhallow"
+      ],
+      "kind": "event",
+      "fingerprints": [
+        "struck penhallow with the oil measure"
+      ]
+    },
+    {
+      "id": "f_pascoe_saw_cans",
+      "text": "On calm nights Pascoe has seen Trevanion handing oil cans down to a fishing boat from the landing stage.",
+      "about": [
+        "pascoe",
+        "trevanion"
+      ],
+      "kind": "event",
+      "fingerprints": []
+    },
+    {
+      "id": "f_pascoe_transfer",
+      "text": "Penhallow refused to forward Pascoe's request for a transfer ashore, and they quarrelled about it at supper.",
+      "about": [
+        "pascoe",
+        "penhallow"
+      ],
+      "kind": "motive",
+      "place": "kitchen",
+      "time": "8:30 pm",
+      "fingerprints": [
+        "refused to forward pascoe's request"
+      ],
+      "logic": {
+        "suspectId": "pascoe",
+        "attr": "motive",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_pascoe_hand",
+      "text": "Pascoe burned his right hand on the kitchen range at ten and cannot close his fingers around so much as a teacup.",
+      "about": [
+        "pascoe"
+      ],
+      "kind": "means",
+      "place": "kitchen",
+      "time": "10:00 pm",
+      "fingerprints": [
+        "cannot close his fingers"
+      ],
+      "logic": {
+        "suspectId": "pascoe",
+        "attr": "means",
+        "holds": false
+      }
+    },
+    {
+      "id": "f_pascoe_stairs",
+      "text": "At three o'clock Pascoe crept to the foot of the lantern stairs, heard two men arguing above, and went back to his bunk.",
+      "about": [
+        "pascoe",
+        "lantern_stairs"
+      ],
+      "kind": "event",
+      "place": "lantern_stairs",
+      "time": "3:00 am",
+      "fingerprints": [
+        "heard two men arguing above"
+      ]
+    },
+    {
+      "id": "f_alleyne_complaint",
+      "text": "Penhallow had written to Trinity House accusing Dr Alleyne of passing a half-blind keeper fit for duty.",
+      "about": [
+        "alleyne",
+        "penhallow"
+      ],
+      "kind": "motive",
+      "fingerprints": [
+        "passing a half blind keeper"
+      ],
+      "logic": {
+        "suspectId": "alleyne",
+        "attr": "motive",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_alleyne_draught",
+      "text": "Dr Alleyne took a sleeping draught at eleven and went to the visitors' bunk.",
+      "about": [
+        "alleyne",
+        "bunkroom"
+      ],
+      "kind": "event",
+      "place": "bunkroom",
+      "time": "11:00 pm",
+      "fingerprints": []
+    },
+    {
+      "id": "f_alleyne_asleep",
+      "text": "Dr Alleyne snored in the visitors' bunk from midnight until six, loud enough to be heard through the partition all night.",
+      "about": [
+        "alleyne",
+        "bunkroom"
+      ],
+      "kind": "opportunity",
+      "place": "bunkroom",
+      "fingerprints": [
+        "snored in the visitors bunk"
+      ],
+      "logic": {
+        "suspectId": "alleyne",
+        "attr": "opportunity",
+        "holds": false
+      }
+    },
+    {
+      "id": "f_hester_pension",
+      "text": "As his widow, Hester will draw Penhallow's Trinity House pension of two hundred pounds a year.",
+      "about": [
+        "hester",
+        "penhallow"
+      ],
+      "kind": "motive",
+      "fingerprints": [
+        "two hundred pounds a year"
+      ],
+      "logic": {
+        "suspectId": "hester",
+        "attr": "motive",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_hester_kitchen",
+      "text": "Mrs Penhallow sat in the kitchen mending from two o'clock until she went to wake her husband.",
+      "about": [
+        "hester",
+        "kitchen"
+      ],
+      "kind": "opportunity",
+      "place": "kitchen",
+      "time": "2:00 am",
+      "fingerprints": [
+        "sat in the kitchen mending"
+      ],
+      "logic": {
+        "suspectId": "hester",
+        "attr": "opportunity",
+        "holds": false
+      }
+    },
+    {
+      "id": "f_tamsin_kitchen",
+      "text": "Tamsin sat up in the kitchen from ten until five with the doctor's brandy and never went near the stairs.",
+      "about": [
+        "tamsin",
+        "kitchen"
+      ],
+      "kind": "opportunity",
+      "place": "kitchen",
+      "time": "10:00 pm",
+      "fingerprints": [
+        "sat up in the kitchen from ten"
+      ],
+      "logic": {
+        "suspectId": "tamsin",
+        "attr": "opportunity",
+        "holds": false
+      }
+    },
+    {
+      "id": "f_tamsin_brandy",
+      "text": "Someone took a half-bottle of brandy from Dr Alleyne's bag and hid it in the kitchen flour bin.",
+      "about": [
+        "alleyne",
+        "kitchen"
+      ],
+      "kind": "event",
+      "place": "kitchen",
+      "fingerprints": []
+    },
+    {
+      "id": "f_tamsin_heard_steps",
+      "text": "Around three, Tamsin heard boots go down the lantern stairs and, a long while later, come back up.",
+      "about": [
+        "tamsin",
+        "lantern_stairs"
+      ],
+      "kind": "event",
+      "place": "lantern_stairs",
+      "time": "3:00 am",
+      "fingerprints": [
+        "boots go down the lantern stairs"
+      ]
+    }
   ],
   "topics": [
     {
       "id": "t_whereabouts",
       "label": "where they were in the night",
-      "aliases": ["where were you", "whereabouts", "alibi", "last night", "in the night", "leave the room", "left the room", "go to bed", "bed", "during the night", "at three", "three o'clock", "after midnight", "were you asleep", "your movements", "what were you doing", "where did you go"],
-      "factIds": ["f_watch", "f_trev_opp", "f_pascoe_stairs", "f_tamsin_kitchen", "f_hester_kitchen", "f_alleyne_draught"]
+      "aliases": [
+        "where were you",
+        "whereabouts",
+        "alibi",
+        "last night",
+        "in the night",
+        "leave the room",
+        "left the room",
+        "go to bed",
+        "bed",
+        "during the night",
+        "at three",
+        "three o'clock",
+        "after midnight",
+        "were you asleep",
+        "your movements",
+        "what were you doing",
+        "where did you go"
+      ],
+      "factIds": [
+        "f_watch",
+        "f_trev_opp",
+        "f_pascoe_stairs",
+        "f_tamsin_kitchen",
+        "f_hester_kitchen",
+        "f_alleyne_draught"
+      ]
     },
     {
       "id": "t_death",
       "label": "Penhallow's death",
-      "aliases": ["the death", "death", "dead", "body", "the body", "the fall", "fell", "murder", "killed", "what happened", "how did he die", "the principal", "found him", "wound", "his head"],
-      "factIds": ["f_body", "f_found_by", "f_fall_verdict", "f_wound", "f_lamp_neat", "f_trev_struck"]
+      "aliases": [
+        "the death",
+        "death",
+        "dead",
+        "body",
+        "the body",
+        "the fall",
+        "fell",
+        "murder",
+        "killed",
+        "what happened",
+        "how did he die",
+        "the principal",
+        "found him",
+        "wound",
+        "his head"
+      ],
+      "factIds": [
+        "f_body",
+        "f_found_by",
+        "f_fall_verdict",
+        "f_wound",
+        "f_lamp_neat",
+        "f_trev_struck"
+      ]
     },
     {
       "id": "t_oil",
       "label": "the lamp oil and the accounts",
-      "aliases": ["oil", "lamp oil", "paraffin", "accounts", "oil accounts", "stock book", "figures", "missing oil", "oil cans", "cans", "fishing boat", "stealing", "thursday"],
-      "factIds": ["f_supper", "f_trev_motive", "f_pascoe_saw_cans"]
+      "aliases": [
+        "oil",
+        "lamp oil",
+        "paraffin",
+        "accounts",
+        "oil accounts",
+        "stock book",
+        "figures",
+        "missing oil",
+        "oil cans",
+        "cans",
+        "fishing boat",
+        "stealing",
+        "thursday"
+      ],
+      "factIds": [
+        "f_supper",
+        "f_trev_motive",
+        "f_pascoe_saw_cans"
+      ]
     },
     {
       "id": "t_clock",
       "label": "the tell-tale clock and the watch",
-      "aliases": ["tell-tale", "telltale", "tell tale clock", "clock", "the dial", "half hour", "middle watch", "the watch", "on watch", "keeping watch", "the lamp"],
-      "factIds": ["f_watch", "f_telltale_rule", "f_telltale_gap"]
+      "aliases": [
+        "tell-tale",
+        "telltale",
+        "tell tale clock",
+        "clock",
+        "the dial",
+        "half hour",
+        "middle watch",
+        "the watch",
+        "on watch",
+        "keeping watch",
+        "the lamp"
+      ],
+      "factIds": [
+        "f_watch",
+        "f_telltale_rule",
+        "f_telltale_gap"
+      ]
     },
     {
       "id": "t_transfer",
       "label": "Pascoe's transfer and the quarrel",
-      "aliases": ["transfer", "quarrel", "argument", "row", "shouting at supper", "request", "falling out", "ashore", "off the rock"],
-      "factIds": ["f_pascoe_transfer"]
+      "aliases": [
+        "transfer",
+        "quarrel",
+        "argument",
+        "row",
+        "shouting at supper",
+        "request",
+        "falling out",
+        "ashore",
+        "off the rock"
+      ],
+      "factIds": [
+        "f_pascoe_transfer"
+      ]
     },
     {
       "id": "t_hand",
       "label": "Pascoe's bandaged hand",
-      "aliases": ["hand", "bandage", "bandaged", "burn", "burned", "burnt", "injury", "dressing", "your hand", "his hand"],
-      "factIds": ["f_pascoe_hand"]
+      "aliases": [
+        "hand",
+        "bandage",
+        "bandaged",
+        "burn",
+        "burned",
+        "burnt",
+        "injury",
+        "dressing",
+        "your hand",
+        "his hand"
+      ],
+      "factIds": [
+        "f_pascoe_hand"
+      ]
     },
     {
       "id": "t_doctor",
       "label": "the doctor and his inspection",
-      "aliases": ["doctor", "dr alleyne", "alleyne", "inspection", "medical", "complaint", "trinity house", "sleeping draught", "draught", "fit for duty", "half blind", "examination"],
-      "factIds": ["f_alleyne_complaint", "f_alleyne_draught", "f_fall_verdict", "f_alleyne_asleep"]
+      "aliases": [
+        "doctor",
+        "dr alleyne",
+        "alleyne",
+        "inspection",
+        "medical",
+        "complaint",
+        "trinity house",
+        "sleeping draught",
+        "draught",
+        "fit for duty",
+        "half blind",
+        "examination"
+      ],
+      "factIds": [
+        "f_alleyne_complaint",
+        "f_alleyne_draught",
+        "f_fall_verdict",
+        "f_alleyne_asleep"
+      ]
     },
     {
       "id": "t_money",
       "label": "money and the pension",
-      "aliases": ["money", "pension", "inheritance", "will", "widow", "two hundred", "pounds", "wages", "debt", "who benefits"],
-      "factIds": ["f_hester_pension"]
+      "aliases": [
+        "money",
+        "pension",
+        "inheritance",
+        "will",
+        "widow",
+        "two hundred",
+        "pounds",
+        "wages",
+        "debt",
+        "who benefits"
+      ],
+      "factIds": [
+        "f_hester_pension"
+      ]
     },
     {
       "id": "t_kitchen",
       "label": "the kitchen in the night",
-      "aliases": ["kitchen", "brandy", "bottle", "flour bin", "drinking", "mending", "the range", "range", "cup of tea", "tea"],
-      "factIds": ["f_tamsin_brandy", "f_hester_kitchen", "f_tamsin_kitchen"]
+      "aliases": [
+        "kitchen",
+        "brandy",
+        "bottle",
+        "flour bin",
+        "drinking",
+        "mending",
+        "the range",
+        "range",
+        "cup of tea",
+        "tea"
+      ],
+      "factIds": [
+        "f_tamsin_brandy",
+        "f_hester_kitchen",
+        "f_tamsin_kitchen"
+      ]
     },
     {
       "id": "t_noises",
       "label": "what they heard in the night",
-      "aliases": ["heard", "hear anything", "did you hear", "noise", "noises", "footsteps", "boots", "voices", "arguing", "sounds", "snoring", "see anything", "notice anything", "anything strange", "weird", "suspicious"],
-      "factIds": ["f_tamsin_heard_steps", "f_pascoe_stairs", "f_alleyne_asleep"]
+      "aliases": [
+        "heard",
+        "hear anything",
+        "did you hear",
+        "noise",
+        "noises",
+        "footsteps",
+        "boots",
+        "voices",
+        "arguing",
+        "sounds",
+        "snoring",
+        "see anything",
+        "notice anything",
+        "anything strange",
+        "weird",
+        "suspicious"
+      ],
+      "factIds": [
+        "f_tamsin_heard_steps",
+        "f_pascoe_stairs",
+        "f_alleyne_asleep"
+      ]
     },
     {
       "id": "t_storm",
       "label": "the gale and the relief boat",
-      "aliases": ["gale", "storm", "weather", "wind", "relief boat", "boat", "cut off", "the sea", "waves", "mainland"],
-      "factIds": ["f_gale"]
+      "aliases": [
+        "gale",
+        "storm",
+        "weather",
+        "wind",
+        "relief boat",
+        "boat",
+        "cut off",
+        "the sea",
+        "waves",
+        "mainland"
+      ],
+      "factIds": [
+        "f_gale"
+      ]
     }
   ],
   "knowledge": [
-    { "suspectId": "trevanion", "factId": "f_gale", "tier": "open" },
-    { "suspectId": "trevanion", "factId": "f_body", "tier": "open" },
-    { "suspectId": "trevanion", "factId": "f_watch", "tier": "open" },
-    { "suspectId": "trevanion", "factId": "f_telltale_rule", "tier": "open" },
-    { "suspectId": "trevanion", "factId": "f_fall_verdict", "tier": "open" },
-    { "suspectId": "trevanion", "factId": "f_pascoe_transfer", "tier": "open" },
-    { "suspectId": "trevanion", "factId": "f_trev_opp", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_trev" }] },
-    { "suspectId": "trevanion", "factId": "f_trev_motive", "tier": "never" },
-    { "suspectId": "trevanion", "factId": "f_trev_struck", "tier": "never" },
-
-    { "suspectId": "pascoe", "factId": "f_gale", "tier": "open" },
-    { "suspectId": "pascoe", "factId": "f_body", "tier": "open" },
-    { "suspectId": "pascoe", "factId": "f_watch", "tier": "open" },
-    { "suspectId": "pascoe", "factId": "f_pascoe_transfer", "tier": "open" },
-    { "suspectId": "pascoe", "factId": "f_pascoe_saw_cans", "tier": "guarded" },
-    { "suspectId": "pascoe", "factId": "f_pascoe_stairs", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_pascoe" }] },
-    { "suspectId": "pascoe", "factId": "f_pascoe_hand", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_pascoe" }] },
-    { "suspectId": "pascoe", "factId": "f_alleyne_asleep", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_pascoe" }] },
-
-    { "suspectId": "hester", "factId": "f_gale", "tier": "open" },
-    { "suspectId": "hester", "factId": "f_body", "tier": "open" },
-    { "suspectId": "hester", "factId": "f_found_by", "tier": "open" },
-    { "suspectId": "hester", "factId": "f_supper", "tier": "open" },
-    { "suspectId": "hester", "factId": "f_fall_verdict", "tier": "open" },
-    { "suspectId": "hester", "factId": "f_hester_kitchen", "tier": "guarded" },
-    { "suspectId": "hester", "factId": "f_wound", "tier": "guarded" },
-    { "suspectId": "hester", "factId": "f_pascoe_transfer", "tier": "guarded" },
-    { "suspectId": "hester", "factId": "f_alleyne_complaint", "tier": "guarded" },
-
-    { "suspectId": "alleyne", "factId": "f_gale", "tier": "open" },
-    { "suspectId": "alleyne", "factId": "f_body", "tier": "open" },
-    { "suspectId": "alleyne", "factId": "f_fall_verdict", "tier": "open" },
-    { "suspectId": "alleyne", "factId": "f_alleyne_draught", "tier": "open" },
-    { "suspectId": "alleyne", "factId": "f_supper", "tier": "open" },
-    { "suspectId": "alleyne", "factId": "f_hester_pension", "tier": "guarded" },
-    { "suspectId": "alleyne", "factId": "f_wound", "tier": "locked", "unlock": [{ "kind": "evidence_presented", "evidenceId": "e_hand_lamp", "suspectId": "alleyne" }] },
-
-    { "suspectId": "tamsin", "factId": "f_gale", "tier": "open" },
-    { "suspectId": "tamsin", "factId": "f_body", "tier": "open" },
-    { "suspectId": "tamsin", "factId": "f_supper", "tier": "open" },
-    { "suspectId": "tamsin", "factId": "f_pascoe_transfer", "tier": "open" },
-    { "suspectId": "tamsin", "factId": "f_tamsin_kitchen", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_tamsin" }] },
-    { "suspectId": "tamsin", "factId": "f_hester_kitchen", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_tamsin" }] },
-    { "suspectId": "tamsin", "factId": "f_pascoe_hand", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_tamsin" }] },
-    { "suspectId": "tamsin", "factId": "f_tamsin_heard_steps", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_tamsin" }] }
+    {
+      "suspectId": "trevanion",
+      "factId": "f_gale",
+      "tier": "open"
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_body",
+      "tier": "open"
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_watch",
+      "tier": "open"
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_telltale_rule",
+      "tier": "open"
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_fall_verdict",
+      "tier": "open"
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_pascoe_transfer",
+      "tier": "open"
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_trev_opp",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_trev"
+        }
+      ]
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_trev_motive",
+      "tier": "never"
+    },
+    {
+      "suspectId": "trevanion",
+      "factId": "f_trev_struck",
+      "tier": "never"
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_gale",
+      "tier": "open"
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_body",
+      "tier": "open"
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_watch",
+      "tier": "open"
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_pascoe_transfer",
+      "tier": "open"
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_pascoe_saw_cans",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_pascoe_stairs",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_pascoe"
+        }
+      ]
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_pascoe_hand",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_pascoe"
+        }
+      ]
+    },
+    {
+      "suspectId": "pascoe",
+      "factId": "f_alleyne_asleep",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_pascoe"
+        }
+      ]
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_gale",
+      "tier": "open"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_body",
+      "tier": "open"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_found_by",
+      "tier": "open"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_supper",
+      "tier": "open"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_fall_verdict",
+      "tier": "open"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_hester_kitchen",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_wound",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_pascoe_transfer",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "hester",
+      "factId": "f_alleyne_complaint",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "alleyne",
+      "factId": "f_gale",
+      "tier": "open"
+    },
+    {
+      "suspectId": "alleyne",
+      "factId": "f_body",
+      "tier": "open"
+    },
+    {
+      "suspectId": "alleyne",
+      "factId": "f_fall_verdict",
+      "tier": "open"
+    },
+    {
+      "suspectId": "alleyne",
+      "factId": "f_alleyne_draught",
+      "tier": "open"
+    },
+    {
+      "suspectId": "alleyne",
+      "factId": "f_supper",
+      "tier": "open"
+    },
+    {
+      "suspectId": "alleyne",
+      "factId": "f_hester_pension",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "alleyne",
+      "factId": "f_wound",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "evidence_presented",
+          "evidenceId": "e_hand_lamp",
+          "suspectId": "alleyne"
+        }
+      ]
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_gale",
+      "tier": "open"
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_body",
+      "tier": "open"
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_supper",
+      "tier": "open"
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_pascoe_transfer",
+      "tier": "open"
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_tamsin_kitchen",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_tamsin"
+        }
+      ]
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_hester_kitchen",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_tamsin"
+        }
+      ]
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_pascoe_hand",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_tamsin"
+        }
+      ]
+    },
+    {
+      "suspectId": "tamsin",
+      "factId": "f_tamsin_heard_steps",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_tamsin"
+        }
+      ]
+    }
   ],
   "lies": [
     {
@@ -244,7 +1133,9 @@
       "topicId": "t_whereabouts",
       "claim": "I was at the lamp from midnight to four and pressed the tell-tale on every half hour, as per the book.",
       "contradicts": "f_trev_opp",
-      "exposedBy": ["e_telltale"],
+      "exposedBy": [
+        "e_telltale"
+      ],
       "crackAnchorId": "a_trev_crack"
     },
     {
@@ -253,7 +1144,9 @@
       "topicId": "t_whereabouts",
       "claim": "Asleep in my bunk from midnight till the screaming started, honest to God. Never stirred.",
       "contradicts": "f_pascoe_stairs",
-      "exposedBy": ["e_letter"],
+      "exposedBy": [
+        "e_letter"
+      ],
       "crackAnchorId": "a_pascoe_crack"
     },
     {
@@ -262,7 +1155,9 @@
       "topicId": "t_whereabouts",
       "claim": "Never touched the doctor's bag, my lover. I was tucked up in bed by ten and slept like a baby.",
       "contradicts": "f_tamsin_kitchen",
-      "exposedBy": ["e_brandy"],
+      "exposedBy": [
+        "e_brandy"
+      ],
       "crackAnchorId": "a_tamsin_crack"
     }
   ],
@@ -270,44 +1165,96 @@
     {
       "id": "e_telltale",
       "name": "tell-tale clock dial",
-      "aliases": ["tell-tale clock", "telltale clock", "tell tale clock", "telltale", "tell-tale", "clock dial", "the dial", "paper dial", "the clock"],
+      "aliases": [
+        "tell-tale clock",
+        "telltale clock",
+        "tell tale clock",
+        "telltale",
+        "tell-tale",
+        "clock dial",
+        "the dial",
+        "paper dial",
+        "the clock"
+      ],
       "description": "The paper dial from the tell-tale clock in the lantern room, pricked every half hour since midnight. Between three o'clock and a quarter to four there are no marks at all.",
       "image": "telltale-dial.png",
       "foundAt": "lantern_room",
-      "implies": ["f_telltale_gap"]
+      "implies": [
+        "f_telltale_gap"
+      ]
     },
     {
       "id": "e_oil_measure",
       "name": "dented oil measure",
-      "aliases": ["oil measure", "brass measure", "the measure", "measure", "dented measure", "brass jug", "jug", "empty drum"],
+      "aliases": [
+        "oil measure",
+        "brass measure",
+        "the measure",
+        "measure",
+        "dented measure",
+        "brass jug",
+        "jug",
+        "empty drum"
+      ],
       "description": "A brass half-gallon oil measure stuffed inside an empty drum in the oil store. The rim has a fresh dent, and the handle is smeared with lamp-black.",
       "image": "oil-measure.png",
       "foundAt": "oil_store",
       "implies": [],
-      "lab": { "resultFactIds": ["f_trev_means"], "delayHours": 14 }
+      "lab": {
+        "resultFactIds": [
+          "f_trev_means"
+        ],
+        "delayHours": 14
+      }
     },
     {
       "id": "e_stock_book",
       "name": "Penhallow's stock book",
-      "aliases": ["stock book", "the stock book", "ledger", "oil accounts", "accounts", "account book", "the figures"],
+      "aliases": [
+        "stock book",
+        "the stock book",
+        "ledger",
+        "oil accounts",
+        "accounts",
+        "account book",
+        "the figures"
+      ],
       "description": "Penhallow's stock book, open on his desk. The oil column is ringed in pencil, and a note in the margin reads 'E.T. to explain, Thursday.'",
       "image": "stock-book.png",
       "foundAt": "office",
-      "implies": ["f_trev_motive"]
+      "implies": [
+        "f_trev_motive"
+      ]
     },
     {
       "id": "e_complaint",
       "name": "carbon copy of a complaint",
-      "aliases": ["complaint", "the complaint", "carbon copy", "copy", "letter to trinity house", "complaint letter"],
+      "aliases": [
+        "complaint",
+        "the complaint",
+        "carbon copy",
+        "copy",
+        "letter to trinity house",
+        "complaint letter"
+      ],
       "description": "A carbon copy in Penhallow's desk drawer of a letter to the Elder Brethren of Trinity House, about Dr Alleyne's last medical inspection of the keepers.",
       "image": "complaint.png",
       "foundAt": "office",
-      "implies": ["f_alleyne_complaint"]
+      "implies": [
+        "f_alleyne_complaint"
+      ]
     },
     {
       "id": "e_letter",
       "name": "Pascoe's unfinished letter",
-      "aliases": ["letter", "the letter", "pascoe's letter", "unfinished letter", "transfer letter", "pillow"],
+      "aliases": [
+        "letter",
+        "the letter",
+        "pascoe's letter",
+        "unfinished letter",
+        "transfer letter",
+        "pillow"
+      ],
       "description": "A half-written letter under Pascoe's pillow, asking Trinity House for a transfer ashore. It is headed 'Gull Rock, 3 a.m.' and written in a clumsy, left-handed scrawl.",
       "image": "pascoe-letter.png",
       "foundAt": "bunkroom",
@@ -316,20 +1263,38 @@
     {
       "id": "e_brandy",
       "name": "brandy bottle",
-      "aliases": ["brandy", "bottle", "the bottle", "brandy bottle", "half bottle", "flour bin"],
+      "aliases": [
+        "brandy",
+        "bottle",
+        "the bottle",
+        "brandy bottle",
+        "half bottle",
+        "flour bin"
+      ],
       "description": "A half-empty bottle of brandy with a chemist's label in Dr Alleyne's name, pushed down into the kitchen flour bin.",
       "image": "brandy.png",
       "foundAt": "kitchen",
-      "implies": ["f_tamsin_brandy"]
+      "implies": [
+        "f_tamsin_brandy"
+      ]
     },
     {
       "id": "e_hand_lamp",
       "name": "Penhallow's hand lamp",
-      "aliases": ["hand lamp", "lamp", "the hand lamp", "his lamp", "lantern on the step", "bottom step"],
+      "aliases": [
+        "hand lamp",
+        "lamp",
+        "the hand lamp",
+        "his lamp",
+        "lantern on the step",
+        "bottom step"
+      ],
       "description": "Penhallow's brass hand lamp, standing upright on the bottom step of the lantern stairs and still burning.",
       "image": "hand-lamp.png",
       "foundAt": "lantern_stairs",
-      "implies": ["f_lamp_neat"]
+      "implies": [
+        "f_lamp_neat"
+      ]
     }
   ],
   "solution": {
@@ -337,59 +1302,70 @@
     "motiveFact": "f_trev_motive",
     "meansFact": "f_trev_means",
     "opportunityFact": "f_trev_opp",
-    "minimalProof": ["e_telltale", "e_oil_measure"]
+    "minimalProof": [
+      "e_telltale",
+      "e_oil_measure"
+    ]
   },
   "anchors": [
     {
       "id": "a_cold_open",
       "speakerId": "narrator",
       "trigger": "cold_open",
-      "text": "Gull Rock lighthouse, a mile and a half off the Cornish coast, November 1931. A south-westerly gale has kept the relief boat away for three days. At a quarter to six this morning, Principal Keeper Silas Penhallow was found dead at the foot of the lantern stairs. Five people are on the rock with you, and the sea isn't letting anyone off."
+      "text": "Gull Rock lighthouse, a mile and a half off the Cornish coast, November 1931. A south-westerly gale has kept the relief boat away for three days. At a quarter to six this morning, Principal Keeper Silas Penhallow was found dead at the foot of the lantern stairs. Five people are on the rock with you, and the sea isn't letting anyone off.",
+      "audioUrl": "audio/a_cold_open.mp3"
     },
     {
       "id": "a_trev_crack",
       "speakerId": "trevanion",
       "trigger": "crack",
       "lieId": "l_trev",
-      "text": "Very well. I left the lantern room at three. The Principal called me down to the stairs about his figures. We spoke, I went back up, and the clock went unpressed for three-quarters of an hour. He was alive when I left him. As per the book."
+      "text": "Very well. I left the lantern room at three. The Principal called me down to the stairs about his figures. We spoke, I went back up, and the clock went unpressed for three-quarters of an hour. He was alive when I left him. As per the book.",
+      "audioUrl": "audio/a_trev_crack.mp3"
     },
     {
       "id": "a_pascoe_crack",
       "speakerId": "pascoe",
       "trigger": "crack",
       "lieId": "l_pascoe",
-      "text": "All right. Mind, I wasn't asleep. I was up writing for my transfer, and at three I crept to the foot of the stairs to catch the Principal alone. I heard two men arguing above and lost my nerve. And look at this hand. I couldn't hold a spoon, never mind hurt a man. The doctor snored through the partition the whole night, if you want to know."
+      "text": "All right. Mind, I wasn't asleep. I was up writing for my transfer, and at three I crept to the foot of the stairs to catch the Principal alone. I heard two men arguing above and lost my nerve. And look at this hand. I couldn't hold a spoon, never mind hurt a man. The doctor snored through the partition the whole night, if you want to know.",
+      "audioUrl": "audio/a_pascoe_crack.mp3"
     },
     {
       "id": "a_tamsin_crack",
       "speakerId": "tamsin",
       "trigger": "crack",
       "lieId": "l_tamsin",
-      "text": "Oh, my lover, you've caught me fair. I had a drop of the doctor's brandy and sat up in the kitchen from ten. I dressed young Jory's burned hand, and Mrs Penhallow came down at two and mended till morning. And around three I heard boots go down the lantern stairs, and a long while after, come back up."
+      "text": "Oh, my lover, you've caught me fair. I had a drop of the doctor's brandy and sat up in the kitchen from ten. I dressed young Jory's burned hand, and Mrs Penhallow came down at two and mended till morning. And around three I heard boots go down the lantern stairs, and a long while after, come back up.",
+      "audioUrl": "audio/a_tamsin_crack.mp3"
     },
     {
       "id": "a_confession",
       "speakerId": "trevanion",
       "trigger": "confession",
-      "text": "Forty gallons. He had every drop of it in pencil, and on Thursday he'd have had my ticket. I took the oil measure down to reason with him and he turned his back on me. That was his mistake. Everything after it was mine."
+      "text": "Forty gallons. He had every drop of it in pencil, and on Thursday he'd have had my ticket. I took the oil measure down to reason with him and he turned his back on me. That was his mistake. Everything after it was mine.",
+      "audioUrl": "audio/a_confession.mp3"
     },
     {
       "id": "a_end_correct",
       "speakerId": "narrator",
       "trigger": "ending_correct",
-      "text": "A tell-tale dial with three-quarters of an hour missing. A dented brass measure with the Principal's hair in it and Edmund Trevanion's thumbprint on the handle. And forty gallons of lamp oil that never reached the lamp. When the relief boat finally lands, it takes Trevanion ashore in handcuffs, and the light on Gull Rock keeps turning."
+      "text": "A tell-tale dial with three-quarters of an hour missing. A dented brass measure with the Principal's hair in it and Edmund Trevanion's thumbprint on the handle. And forty gallons of lamp oil that never reached the lamp. When the relief boat finally lands, it takes Trevanion ashore in handcuffs, and the light on Gull Rock keeps turning.",
+      "audioUrl": "audio/a_end_correct.mp3"
     },
     {
       "id": "a_end_partial",
       "speakerId": "narrator",
       "trigger": "ending_partial",
-      "text": "You may have the right person in your sights. But a hunch won't stand up in a Penzance courtroom, and you haven't shown anyone a thing that would."
+      "text": "You may have the right person in your sights. But a hunch won't stand up in a Penzance courtroom, and you haven't shown anyone a thing that would.",
+      "audioUrl": "audio/a_end_partial.mp3"
     },
     {
       "id": "a_end_wrong",
       "speakerId": "narrator",
       "trigger": "ending_wrong",
-      "text": "The accusation won't hold water, and on Gull Rock there is plenty of water to test it. Somewhere in the tower, someone sleeps a little easier tonight."
+      "text": "The accusation won't hold water, and on Gull Rock there is plenty of water to test it. Somewhere in the tower, someone sleeps a little easier tonight.",
+      "audioUrl": "audio/a_end_wrong.mp3"
     }
   ]
 }
