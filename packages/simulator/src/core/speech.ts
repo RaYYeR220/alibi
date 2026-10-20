@@ -12,6 +12,33 @@ export interface SpeechPlayer {
   readonly speaking: boolean;
 }
 
+/**
+ * Long replies are synthesized in short pieces at sentence breaks: the first
+ * piece is ready sooner, and no request comes near the synthesis limit.
+ */
+export function splitForSpeech(segments: Segment[], max = 320): Segment[] {
+  return segments.flatMap((s) => {
+    if ('audioUrl' in s || s.text.length <= max) return [s];
+    const sentences = s.text.match(/[^.!?…]+[.!?…]+["'”’)]*\s*|[^.!?…]+$/g) ?? [s.text];
+    const pieces: string[] = [];
+    let cur = '';
+    for (const sentence of sentences) {
+      if (cur && (cur + sentence).length > max) {
+        pieces.push(cur.trim());
+        cur = '';
+      }
+      cur += sentence;
+      while (cur.length > max * 2) {
+        const cut = cur.lastIndexOf(' ', max) > 0 ? cur.lastIndexOf(' ', max) : max;
+        pieces.push(cur.slice(0, cut).trim());
+        cur = cur.slice(cut);
+      }
+    }
+    if (cur.trim()) pieces.push(cur.trim());
+    return pieces.map((text) => ({ text, voice: s.voice }));
+  });
+}
+
 export function createSpeechPlayer(opts: {
   ttsUrl: string;
   onSpeaking: (speaking: boolean, segment?: Segment) => void;
@@ -92,7 +119,8 @@ export function createSpeechPlayer(opts: {
       audio.pause();
       setSpeaking(false);
     },
-    async play(segments) {
+    async play(input) {
+      const segments = splitForSpeech(input);
       const gen = ++generation;
       audio.pause();
       if (!segments.length) return;

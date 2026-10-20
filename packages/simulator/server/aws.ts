@@ -31,8 +31,9 @@ const WORDS = [
 
 /** Easy to read aloud and type, and still meets the pool's policy (upper, lower, digits, 10+). */
 export function demoPassword(): string {
-  const word = () => WORDS[randomInt(WORDS.length)]!;
-  return `${word()}-${word()}-${word()}-${String(randomInt(10_000)).padStart(4, '0')}`;
+  const words = new Set<string>();
+  while (words.size < 3) words.add(WORDS[randomInt(WORDS.length)]!);
+  return `${[...words].join('-')}-${String(randomInt(10_000)).padStart(4, '0')}`;
 }
 
 export const visitorName = () => `visitor-${randomBytes(6).toString('hex')}`;

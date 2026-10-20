@@ -1,9 +1,9 @@
-import { connectMcp, createHost, createVeniceClient, type Host, type LlmClient, type McpConn, type TurnResult, type UiFrame } from '@alibi/host';
+import { connectMcp, createHost, createVeniceClient, HOST_PROMPT, type Host, type LlmClient, type McpConn, type TurnResult, type UiFrame } from '@alibi/host';
 import type { DisplayMode, ViewSpec } from '../bridge/view-frame.js';
 import type { UiMessage } from '../bridge/messages.js';
 import { finishRedirect, linkInPopup } from '../linking/flow.js';
 import { createWallet, type Offer, type Wallet, type WalletState } from '../wallet/wallet.js';
-import { hoursUntilMorning, labsReady, type LabTicket } from './clock.js';
+import { labsReady, morningTarget, type LabTicket } from './clock.js';
 import { isPurchaseIntent } from './intent.js';
 import { planSpeech, type Segment, type SpeechFrame } from './segments.js';
 import { createSpeechPlayer, type SpeechPlayer } from './speech.js';
@@ -71,6 +71,12 @@ export const DEMO_PIN = '2468';
 export const INBOX_URI = 'alibi://household/inbox';
 const INBOX_EVERY_MS = 30_000;
 
+/** What this host adds to the shared host rules: how guests and linked households differ here. */
+export const SIMULATOR_NOTES = `
+On this device:
+- Without a linked account the player can browse the cases and play the free one. Lab tests, purchases, custom cases and saved progress need a linked account.
+- When the player opens Alibi or asks what there is to play, call list_cases. Call my_progress only when they ask about their progress, lab results or notifications.`;
+
 const structured = (f: UiFrame) => ((f.toolResult as { structuredContent?: Record<string, unknown> } | undefined)?.structuredContent ?? {}) as SpeechFrame['view'];
 
 function failureReason(err: unknown): string {
@@ -101,6 +107,7 @@ export class Assistant {
   private inboxTimer: ReturnType<typeof setInterval> | null = null;
   private toastTimer: ReturnType<typeof setTimeout> | null = null;
   private seenInbox = new Set<string>();
+  private linkAbort: AbortController | null = null;
 
   constructor(readonly cfg: PublicConfig) {
     this.tokens = new TokenStore(cfg, (linked) => {
@@ -186,7 +193,7 @@ export class Assistant {
         getToken: () => this.tokens.get(),
         fetch: tracedFetch((input, init) => fetch(input, init), (e) => this.log(e)),
       });
-      this.host = createHost({ llm: this.timedLlm(), mcp: this.mcp, model: this.cfg.defaultModel });
+      this.host = createHost({ llm: this.timedLlm(), mcp: this.mcp, model: this.cfg.defaultModel, systemPrompt: HOST_PROMPT + SIMULATOR_NOTES });
       this.store.set({ connected: true });
       if (this.tokens.linked) this.startInbox();
     } catch (err) {
@@ -457,7 +464,9 @@ export class Assistant {
   link(): void {
     const v = this.tokens.visitor;
     this.store.set({ linking: 'working', linkError: null });
-    linkInPopup(this.cfg, v?.username).then(
+    this.linkAbort?.abort();
+    this.linkAbort = new AbortController();
+    linkInPopup(this.cfg, v?.username, this.linkAbort.signal).then(
       (t) => {
         this.tokens.setTokens(t);
         this.store.set({ linking: 'closed' });
@@ -465,16 +474,21 @@ export class Assistant {
         this.pendingUtterance = null;
         void this.speakHost('Your Alibi account is linked.').then(() => {
           if (retry) {
+            // The conversation still remembers the refusal; tell the host what changed, as a player would.
             this.store.set({ heard: retry });
-            return this.turn(retry);
+            return this.turn(`I've linked my Alibi account now. ${retry}`);
           }
         });
       },
-      (err: Error) => this.store.set({ linking: 'open', linkError: err.message === 'closed' ? 'The sign-in window was closed before it finished.' : err.message }),
+      (err: Error) => {
+        if (err.message !== 'canceled') this.store.set({ linking: 'open', linkError: err.message });
+      },
     );
   }
 
   closeLinking(): void {
+    this.linkAbort?.abort();
+    this.linkAbort = null;
     this.pendingUtterance = null;
     this.store.set({ linking: 'closed' });
   }
@@ -515,7 +529,9 @@ export class Assistant {
       return;
     }
     const skipped = this.store.get().skippedMs;
-    const hours = Math.round(hoursUntilMorning(Date.now() + skipped) * 100) / 100;
+    const deviceNow = Date.now() + skipped;
+    const target = morningTarget(deviceNow, this.tickets);
+    const hours = Math.min(72, Math.ceil(((target - deviceNow) / 3_600_000) * 100) / 100);
     const out = await this.mcp.call('set_demo_clock', { game_id: this.gameId, advance_hours: hours });
     if (out.status === 'needs_linking') {
       void this.openLinking();
@@ -527,7 +543,8 @@ export class Assistant {
     }
     const nowSkipped = skipped + hours * 3_600_000;
     this.store.set({ skippedMs: nowSkipped });
-    this.notify('Next morning, 8:00');
+    const clock = new Date(Date.now() + nowSkipped).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    this.notify(`Next morning, ${clock}`);
 
     const fresh = labsReady(this.tickets, Date.now(), nowSkipped).map((t) => ({ id: `lab:${t.evidenceId}`, text: `Lab results are in for the ${t.name}. Say "check the lab".` }));
     const progress = await this.mcp.call('my_progress', {}).catch(() => null);
@@ -536,7 +553,7 @@ export class Assistant {
       text: `Lab results are in for the ${l.name}. Say "check the lab".`,
     }));
     const added = this.addNotices([...fresh, ...labs]);
-    await this.speakHost(added ? "Good morning, it's eight o'clock. You have a new notification." : "Good morning, it's eight o'clock.");
+    await this.speakHost(added ? `Good morning, it's ${clock}. You have a new notification.` : `Good morning, it's ${clock}.`);
   }
 
   private addNotices(items: { id: string; text: string }[]): number {

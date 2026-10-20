@@ -103,7 +103,7 @@ export function Controls(props: { assistant: Assistant; s: SimState }) {
       {s.micError ? <p class="mic-error">{s.micError}</p> : null}
       <div class="demo-row">
         <button type="button" class="chip" onClick={() => void assistant.skipToMorning()} disabled={!s.connected}>
-          Skip to tomorrow, 8:00
+          Skip to tomorrow morning
         </button>
         {s.linked ? (
           <span class="chip chip-static" title="This browser's demo household">

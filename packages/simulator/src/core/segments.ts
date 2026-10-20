@@ -60,6 +60,22 @@ function locate(text: string, line: string): { start: number; end: number } | nu
   return { start: m.index, end };
 }
 
+const QUOTED = /["“]([^"“”]+)["”]/g;
+
+/** A suspect's answer with narration around it: the quoted words are theirs, the rest is the host's. */
+function splitQuotes(text: string, quoteVoice: string, hostVoice: string): { text: string; voice: string }[] {
+  if (!QUOTED.test(text)) return [{ text, voice: quoteVoice }];
+  QUOTED.lastIndex = 0;
+  const out: { text: string; voice: string }[] = [];
+  let at = 0;
+  for (const m of text.matchAll(QUOTED)) {
+    out.push({ text: text.slice(at, m.index), voice: hostVoice }, { text: m[1]!, voice: quoteVoice });
+    at = m.index + m[0].length;
+  }
+  out.push({ text: text.slice(at), voice: hostVoice });
+  return out;
+}
+
 export function planSpeech(speech: string, frames: SpeechFrame[], hostVoice: string, known: Record<string, string> = {}): Segment[] {
   const voices: Record<string, string> = { ...known };
   for (const f of frames) {
@@ -103,8 +119,11 @@ export function planSpeech(speech: string, frames: SpeechFrame[], hostVoice: str
       out.push(p.cue.anchor.audioUrl ? { audioUrl: p.cue.anchor.audioUrl, text: p.cue.anchor.text } : { text: p.cue.anchor.text, voice: p.cue.voice });
       continue;
     }
-    const text = tidy(p.text);
-    if (/[\p{L}\p{N}]/u.test(text)) out.push({ text, voice: base });
+    const pieces = base === hostVoice ? [{ text: p.text, voice: base }] : splitQuotes(p.text, base, hostVoice);
+    for (const piece of pieces) {
+      const text = tidy(piece.text);
+      if (/[\p{L}\p{N}]/u.test(text)) out.push({ text, voice: piece.voice });
+    }
   }
   for (const cue of unplaced) out.push({ audioUrl: cue.anchor.audioUrl!, text: cue.anchor.text });
   return out;

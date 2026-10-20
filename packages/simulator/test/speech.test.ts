@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { planSpeech, type SpeechFrame } from '../src/core/segments.js';
+import { splitForSpeech } from '../src/core/speech.js';
 import { isPurchaseIntent, parseDigits, yesOrNo } from '../src/core/intent.js';
-import { hoursUntilMorning, labsReady } from '../src/core/clock.js';
+import { hoursUntilMorning, labsReady, morningTarget } from '../src/core/clock.js';
 import { p95 } from '../src/inspector/stats.js';
 import { authorizeUrl, challengeFor } from '../src/linking/pkce.js';
 
@@ -40,6 +41,16 @@ describe('speech plan', () => {
     expect(planSpeech('I was in the library all evening.', frames, 'Brian')).toEqual([{ text: 'I was in the library all evening.', voice: 'Ruth' }]);
   });
 
+  it('narration around a suspect answer stays with the host', () => {
+    const frames: SpeechFrame[] = [{ toolName: 'ask_suspect', view: { kind: 'interrogation', suspect: clara } }];
+    expect(planSpeech('Clara sets down her cup. "I was in the library," she says. "All evening."', frames, 'Brian')).toEqual([
+      { text: 'Clara sets down her cup.', voice: 'Brian' },
+      { text: 'I was in the library', voice: 'Ruth' },
+      { text: 'she says.', voice: 'Brian' },
+      { text: 'All evening.', voice: 'Ruth' },
+    ]);
+  });
+
   it('a recording the host paraphrased still plays after the reply', () => {
     const frames: SpeechFrame[] = [
       {
@@ -56,6 +67,18 @@ describe('speech plan', () => {
   it('everything else is the host voice', () => {
     expect(planSpeech('Here are the cases.', [], 'Brian')).toEqual([{ text: 'Here are the cases.', voice: 'Brian' }]);
     expect(planSpeech('   ', [], 'Brian')).toEqual([]);
+  });
+});
+
+describe('long replies', () => {
+  it('are synthesized in sentence-sized pieces that keep their voice', () => {
+    const text = Array.from({ length: 12 }, (_, i) => `Sentence number ${i + 1} is here.`).join(' ');
+    const pieces = splitForSpeech([{ text, voice: 'Brian' }, { audioUrl: 'a.mp3', text: 'x' }], 100);
+    expect(pieces.length).toBeGreaterThan(3);
+    expect(pieces.every((p) => p.text.length <= 100)).toBe(true);
+    expect(pieces.slice(0, -1).map((p) => p.text).join(' ')).toBe(text);
+    expect(pieces.slice(0, -1).every((p) => 'voice' in p && p.voice === 'Brian')).toBe(true);
+    expect(pieces.at(-1)).toEqual({ audioUrl: 'a.mp3', text: 'x' });
   });
 });
 
@@ -89,6 +112,15 @@ describe('demo clock', () => {
     expect(hoursUntilMorning(now)).toBeCloseTo(9.5, 5);
     const early = new Date(2026, 9, 21, 2, 0).getTime();
     expect(hoursUntilMorning(early)).toBeCloseTo(30, 5);
+  });
+
+  it('skips far enough for a lab ticket that runs past eight', () => {
+    const now = new Date(2026, 9, 21, 20, 15).getTime();
+    expect(new Date(morningTarget(now, [])).getHours()).toBe(8);
+    const ticket = { evidenceId: 'e_tin', name: 'sewing tin', readyAt: now + 14 * 3_600_000, skippedAtRequest: 0 };
+    const target = new Date(morningTarget(now, [ticket]));
+    expect([target.getHours(), target.getMinutes()]).toEqual([10, 15]);
+    expect(labsReady([ticket], now, target.getTime() - now)).toHaveLength(1);
   });
 
   it('knows when a lab ticket is ready after a skip', () => {

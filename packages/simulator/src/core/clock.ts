@@ -21,3 +21,16 @@ export interface LabTicket {
 export function labsReady(tickets: LabTicket[], realNow: number, skippedNow: number): LabTicket[] {
   return tickets.filter((t) => realNow + (skippedNow - t.skippedAtRequest) >= t.readyAt);
 }
+
+const QUARTER = 15 * 60_000;
+
+/**
+ * Where "skip to tomorrow morning" lands, in device time: 8:00 tomorrow, or
+ * later if a lab ticket would still be out then (overnight tests can take
+ * longer than the night), rounded up to the quarter hour.
+ */
+export function morningTarget(deviceNow: number, tickets: LabTicket[]): number {
+  const eight = deviceNow + hoursUntilMorning(deviceNow) * HOUR;
+  const lastReady = Math.max(0, ...tickets.map((t) => t.readyAt + t.skippedAtRequest));
+  return lastReady > eight ? Math.ceil(lastReady / QUARTER) * QUARTER : eight;
+}
