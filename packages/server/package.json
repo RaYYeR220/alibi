@@ -12,6 +12,7 @@
     "@alibi/canon": "workspace:^",
     "@aws-sdk/client-dynamodb": "^3.1153.0",
     "@aws-sdk/client-scheduler": "^3.1153.0",
+    "@aws-sdk/client-sfn": "^3.1153.0",
     "@aws-sdk/lib-dynamodb": "^3.1153.0",
     "@modelcontextprotocol/client": "2.3.1",
     "@modelcontextprotocol/ext-apps": "2.0.3",

@@ -4,6 +4,7 @@ import type { Deps } from '../deps.js';
 import { registerAccuseTool } from '../tools/accuse.js';
 import { registerBuyTool } from '../tools/buy.js';
 import { registerCatalogTools } from '../tools/catalog.js';
+import { registerCustomTools } from '../tools/custom.js';
 import { registerInterrogationTools } from '../tools/interrogate.js';
 import { registerInvestigationTools } from '../tools/investigate.js';
 import { registerLabTools } from '../tools/lab.js';
@@ -27,5 +28,6 @@ export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo }): McpServer
   registerLabTools(server, toolCtx);
   registerProgressTools(server, toolCtx);
   registerBuyTool(server, toolCtx);
+  registerCustomTools(server, toolCtx);
   return server;
 }
