@@ -1,0 +1,5 @@
+{
+  "anchors": [
+    { "id": "a_harold_crack", "text": "Fine. I came in at nine for the twine. There was a stranger in a red coat by the gate, mind." }
+  ]
+}

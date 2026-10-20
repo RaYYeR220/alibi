@@ -14,6 +14,9 @@ Role = Literal["writer", "checker"]
 
 _CONFIG_PATH = Path(__file__).resolve().parent.parent / "config.json"
 
+# A full case file runs to roughly 15k output tokens; leave room for a long one.
+MAX_TOKENS: dict[str, int] = {"writer": 32_000, "checker": 8_000}
+
 
 @cache
 def config() -> dict:
@@ -32,11 +35,40 @@ def get_venice_key() -> str:
     return key
 
 
-def make_model(role: Role) -> OpenAIModel:
+@cache
+def _key() -> str:
+    return get_venice_key()
+
+
+def model_params(role: Role, key: str | None = None) -> dict:
+    """Request parameters per call site. Extended thinking is off unless config names an effort for the call
+    (it is slow: a plot spent two minutes thinking before writing a word)."""
+    params: dict = {"temperature": 0.8 if role == "writer" else 0.0, "max_tokens": MAX_TOKENS[role]}
+    effort = config().get("reasoningEffort", {}).get(key or "")
+    if effort:
+        params["reasoning_effort"] = effort
+    else:
+        params["extra_body"] = {"venice_parameters": {"disable_thinking": True}}
+    return params
+
+
+def model_id_for(role: Role) -> str:
+    """Config model per role; ALIBI_WRITER_MODEL / ALIBI_CHECKER_MODEL override it (e.g. a cheaper writer)."""
+    if role == "writer":
+        return os.environ.get("ALIBI_WRITER_MODEL") or config()["writerModel"]
+    return os.environ.get("ALIBI_CHECKER_MODEL") or config()["checkerModel"]
+
+
+def make_model(role: Role, *, key: str | None = None, api_key: str | None = None) -> OpenAIModel:
     cfg = config()
-    model_id = cfg["writerModel"] if role == "writer" else cfg["checkerModel"]
+    model_id = model_id_for(role)
     return OpenAIModel(
-        client_args={"api_key": get_venice_key(), "base_url": cfg["veniceBaseUrl"]},
+        client_args={"api_key": api_key or get_venice_key(), "base_url": cfg["veniceBaseUrl"], "timeout": 900},
         model_id=model_id,
-        params={"temperature": 0.8 if role == "writer" else 0.0},
+        params=model_params(role, key),
     )
+
+
+def venice_llm(role: str, key: str) -> OpenAIModel:
+    """Pipeline model factory; `key` names the call site (stage), which picks its reasoning effort."""
+    return make_model("writer" if role == "writer" else "checker", key=key, api_key=_key())

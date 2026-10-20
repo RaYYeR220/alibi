@@ -1,0 +1,26 @@
+```json
+{"claims": [
+{"anchor": "a_cold_open", "claim": "At half past five, Grandma Ada walked into her kitchen and found the party jollof and the four-tier pineapple-coconut cake gone.", "source": "f_feast_gone"},
+{"anchor": "a_cold_open", "claim": "The guests are due within the hour.", "source": "f_guests_due"},
+{"anchor": "a_cold_open", "claim": "The setting is Enugu, on a rainy Saturday.", "source": "setting"},
+{"anchor": "a_cold_open", "claim": "Four people were in or near the bungalow.", "source": "cast"},
+{"anchor": "a_ngozi_crack", "claim": "Ngozi went round to the kitchen side door at about twenty past five.", "source": "f_ngozi_kitchen_door"},
+{"anchor": "a_ngozi_crack", "claim": "Ngozi loaded the pot and cake onto her trolley.", "source": "f_ngozi_kitchen_door"},
+{"anchor": "a_chidi_crack", "claim": "Chidi was not hanging any banner.", "source": "f_chidi_shed"},
+{"anchor": "a_chidi_crack", "claim": "Chidi was in the garden shed on a video call with friends from 5:15 until after 5:45 pm.", "source": "f_chidi_shed"},
+{"anchor": "a_chidi_crack", "claim": "Chidi's video call in the shed is recorded in a screen log.", "source": "evidence:e_headset"},
+{"anchor": "a_eze_crack", "claim": "Mr. Eze was not on the porch.", "source": "lie:l_eze"},
+{"anchor": "a_eze_crack", "claim": "Mr. Eze was in Ada's bedroom from 5:10 pm giving her a guitar lesson.", "source": "f_eze_lesson"},
+{"anchor": "a_eze_crack", "claim": "The guitar lesson was for a surprise performance at the party.", "source": "f_eze_guitar_secret"},
+{"anchor": "a_eze_crack", "claim": "Mr. Eze was sworn to silence.", "source": null},
+{"anchor": "a_confession", "claim": "Ngozi feared Grandma Ada's feast would run late and shame the family in front of the guests.", "source": "f_ngozi_motive"},
+{"anchor": "a_confession", "claim": "Ngozi loaded the pot and cake onto her trolley at the kitchen side door at about twenty past five.", "source": "f_ngozi_kitchen_door"},
+{"anchor": "a_confession", "claim": "Ngozi used the warming cabinet in her catering van to keep the stolen jollof hot.", "source": "f_cabinet"},
+{"anchor": "a_confession", "claim": "Ngozi is sorry to Grandma Ada.", "source": null},
+{"anchor": "a_end_correct", "claim": "The key tag, the cabinet and the box under the tarp all point to Ngozi.", "source": "evidence:e_key_tag"},
+{"anchor": "a_end_correct", "claim": "Ngozi feared Grandma Ada's feast would run late and embarrass the family in front of the guests.", "source": "f_ngozi_motive"},
+{"anchor": "a_end_correct", "claim": "Ngozi went round to the kitchen side door at about twenty past five and loaded the pot and cake onto her trolley.", "source": "f_ngozi_kitchen_door"},
+{"anchor": "a_end_correct", "claim": "The warming cabinet in Ngozi's catering van kept the jollof hot.", "source": "f_cabinet"},
+{"anchor": "a_end_correct", "claim": "The pot is recovered still steaming, with the cake behind it.", "source": null}
+]}
+```

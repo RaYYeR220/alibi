@@ -1,0 +1,336 @@
+{
+  "meta": {
+    "id": "lakeside-heirloom",
+    "title": "The Loon Lake Lure",
+    "tagline": "Seventy-five candles, one fish fry, and a gold lure that swam off.",
+    "rating": "family",
+    "minutes": 25,
+    "priceCents": 0,
+    "author": "Alibi",
+    "cover": "cover.png",
+    "artStyle": "ink-gouache",
+    "setting": "Loon Lake, Minnesota, a Saturday night in July. The Whitlocks are at the family cabin for Grandma June's seventy-fifth birthday. Somewhere between the fish fry and the fireworks, Old Goldie, the gold-leaf lure Great-Grandpa Earl carved in 1936, went missing from its glass case over the fireplace.",
+    "startingFacts": ["f_party", "f_lure_gone", "f_sparklers"]
+  },
+  "victim": {
+    "id": "june",
+    "name": "Grandma June Whitlock",
+    "role": "the birthday girl",
+    "description": "Seventy-five today, sharp as a fillet knife, and not about to let this slide.",
+    "portrait": "june.png"
+  },
+  "places": [
+    { "id": "great_room", "name": "the great room", "aliases": ["great room", "living room", "front room", "fireplace", "mantel", "mantelpiece", "glass case", "display case", "case", "shadow box", "hinge", "cabin", "inside"] },
+    { "id": "kitchen", "name": "the kitchen", "aliases": ["kitchen", "windowsill", "window sill", "sink", "counter", "fridge", "cupboards", "pantry"] },
+    { "id": "dock", "name": "the dock", "aliases": ["dock", "pier", "jetty", "end of the dock", "the lake", "lake", "shore", "bench", "waterfront"] },
+    { "id": "boathouse", "name": "the boathouse", "aliases": ["boathouse", "boat house", "boat shed", "shed", "boathouse door"] },
+    { "id": "screen_porch", "name": "the screen porch", "aliases": ["screen porch", "porch", "deck", "picnic table", "fish fry", "fryer"] }
+  ],
+  "suspects": [
+    {
+      "id": "lorraine",
+      "name": "Lorraine Hagen",
+      "role": "younger sister",
+      "aliases": ["lorraine", "aunt lorraine", "great aunt lorraine", "auntie lorraine", "hagen", "mrs hagen", "the sister", "june's sister", "the aunt"],
+      "persona": {
+        "traits": ["sweet", "exact", "stubborn"],
+        "speech": "Retired school librarian. Soft-spoken and precise, quotes dates down to the day, calls everyone 'dear', and never stops knitting while she talks.",
+        "demeanor": "serene"
+      },
+      "voiceId": "Joanna",
+      "portrait": "lorraine.png"
+    },
+    {
+      "id": "dale",
+      "name": "Dale Whitlock",
+      "role": "son",
+      "aliases": ["dale", "whitlock", "mr whitlock", "dale whitlock", "uncle dale", "the son", "june's son", "tess's dad"],
+      "persona": {
+        "traits": ["loud", "generous", "cornered"],
+        "speech": "Runs the Ford lot in Brainerd and never stops selling. Calls everyone 'chief', opens with 'here's the deal', and leans in for 'between you and me'.",
+        "demeanor": "jovial"
+      },
+      "voiceId": "Matthew",
+      "portrait": "dale.png"
+    },
+    {
+      "id": "tess",
+      "name": "Tess Whitlock",
+      "role": "granddaughter",
+      "aliases": ["tess", "tessa", "tess whitlock", "the granddaughter", "granddaughter", "dale's daughter", "the kid"],
+      "persona": {
+        "traits": ["quick", "online", "loyal"],
+        "speech": "Nineteen, home from college, narrates her life for her vlog. Talks fast, says 'okay, so' and 'literally', and checks her phone mid-sentence.",
+        "demeanor": "bright"
+      },
+      "voiceId": "Salli",
+      "portrait": "tess.png"
+    },
+    {
+      "id": "marv",
+      "name": "Marv Kowalski",
+      "role": "neighbor across the bay",
+      "aliases": ["marv", "marvin", "kowalski", "mr kowalski", "marv kowalski", "the neighbor", "the neighbour", "neighbor", "old marv"],
+      "persona": {
+        "traits": ["boastful", "nosy", "soft-hearted"],
+        "speech": "Retired bait-shop owner. Answers in fish stories, rounds every number up, and drops a 'you betcha' or an 'ope' into most sentences.",
+        "demeanor": "chummy"
+      },
+      "voiceId": "Kenneth",
+      "portrait": "marv.png"
+    }
+  ],
+  "facts": [
+    { "id": "f_party", "text": "The Whitlocks are at the Loon Lake cabin for Grandma June's seventy-fifth birthday.", "about": ["june"], "kind": "event", "fingerprints": [] },
+    { "id": "f_lure_gone", "text": "Old Goldie went missing from its locked glass case over the fireplace between the fish fry and the fireworks.", "about": ["june", "great_room"], "kind": "event", "place": "great_room", "fingerprints": [] },
+    { "id": "f_sparklers", "text": "At nine o'clock the whole family walked down to the dock for sparklers and Dale's fireworks.", "about": ["dale", "dock"], "kind": "event", "place": "dock", "time": "9:00 pm", "fingerprints": [] },
+    { "id": "f_case_unbroken", "text": "Old Goldie's case was opened with a key: the glass is whole and the lock has no scratches.", "about": ["great_room"], "kind": "state", "place": "great_room", "fingerprints": [] },
+    { "id": "f_spare_key", "text": "The only spare key to the case is taped inside the lid of June's blue sewing tin in the kitchen.", "about": ["june", "kitchen"], "kind": "state", "place": "kitchen", "fingerprints": [] },
+    { "id": "f_june_retaped", "text": "June dusted the case on Saturday morning and taped the spare key back into her sewing tin with fresh tape.", "about": ["june"], "kind": "event", "time": "Saturday morning", "fingerprints": [] },
+    { "id": "f_june_found", "text": "Grandma June went up to the cabin at twenty to ten and found the case empty.", "about": ["june"], "kind": "event", "place": "great_room", "time": "9:40 pm", "fingerprints": [] },
+    { "id": "f_tess_filmed", "text": "Tess ran back up to the cabin at ten past nine for her phone charger and filmed the great room for her vlog.", "about": ["tess", "great_room"], "kind": "event", "place": "great_room", "time": "9:10 pm", "fingerprints": [] },
+    { "id": "f_video_910", "text": "Tess's ten-past-nine video shows Old Goldie still in its case.", "about": ["tess", "great_room"], "kind": "event", "place": "great_room", "time": "9:10 pm", "fingerprints": [] },
+    { "id": "f_tess_stream", "text": "Tess livestreamed the fireworks from the end of the dock from a quarter past nine until ten, with forty people watching.", "about": ["tess", "dock"], "kind": "opportunity", "place": "dock", "time": "9:15 pm", "fingerprints": ["livestreamed the fireworks from the end of the dock"], "logic": { "suspectId": "tess", "attr": "opportunity", "holds": false } },
+    { "id": "f_lorraine_knits", "text": "Lorraine has been knitting a cranberry-red mohair sweater for June all weekend.", "about": ["lorraine"], "kind": "state", "fingerprints": [] },
+    { "id": "f_lorraine_motive", "text": "Lorraine says their father promised Old Goldie to her, and she has brought it up every Christmas since 1979.", "about": ["lorraine", "june"], "kind": "motive", "fingerprints": ["promised old goldie to her", "every christmas since 1979"], "logic": { "suspectId": "lorraine", "attr": "motive", "holds": true } },
+    { "id": "f_lorraine_opp", "text": "Lorraine slipped back up to the cabin at twenty past nine and was alone in the great room.", "about": ["lorraine", "great_room"], "kind": "opportunity", "place": "great_room", "time": "9:20 pm", "fingerprints": ["slipped back up to the cabin", "alone in the great room"], "logic": { "suspectId": "lorraine", "attr": "opportunity", "holds": true } },
+    { "id": "f_lorraine_means", "text": "Lorraine's fingerprints are on the fresh tape inside June's sewing tin, so she handled the spare key.", "about": ["lorraine", "kitchen"], "kind": "means", "fingerprints": ["fingerprints are on the fresh tape", "she handled the spare key"], "logic": { "suspectId": "lorraine", "attr": "means", "holds": true } },
+    { "id": "f_lorraine_took", "text": "Lorraine took Old Goldie and hid it in the sleeve of the sweater she is knitting.", "about": ["lorraine"], "kind": "event", "fingerprints": ["hid it in the sleeve"] },
+    { "id": "f_lorraine_asked_tin", "text": "On Saturday morning Lorraine asked Tess whether June still keeps the spare key in her sewing tin.", "about": ["lorraine", "tess"], "kind": "event", "time": "Saturday morning", "fingerprints": ["asked tess whether june still keeps"] },
+    { "id": "f_dale_dealership", "text": "Dale's car dealership is behind on its bank loan this summer.", "about": ["dale"], "kind": "motive", "fingerprints": ["behind on its bank loan"], "logic": { "suspectId": "dale", "attr": "motive", "holds": true } },
+    { "id": "f_dale_phone", "text": "Tess overheard Dale on the phone saying 'eight thousand, cash, by Monday.'", "about": ["dale", "tess"], "kind": "event", "fingerprints": ["eight thousand cash by monday"] },
+    { "id": "f_dale_boathouse", "text": "Dale lit fireworks on the dock until twenty past nine, then spent twenty minutes in the boathouse on the phone with a buyer for his bass boat.", "about": ["dale", "boathouse"], "kind": "opportunity", "place": "boathouse", "time": "9:20 pm", "fingerprints": ["buyer for his bass boat", "twenty minutes in the boathouse"], "logic": { "suspectId": "dale", "attr": "opportunity", "holds": false } },
+    { "id": "f_marv_offer", "text": "Marv has offered to buy Old Goldie every summer for forty years, and he offered eight thousand dollars again at the party.", "about": ["marv"], "kind": "motive", "fingerprints": ["offered to buy old goldie every summer"], "logic": { "suspectId": "marv", "attr": "motive", "holds": true } },
+    { "id": "f_marv_pontoon", "text": "Marv stayed on his pontoon boat off the end of the dock from nine until ten and never came ashore.", "about": ["marv", "dock"], "kind": "opportunity", "place": "dock", "fingerprints": ["never came ashore"], "logic": { "suspectId": "marv", "attr": "opportunity", "holds": false } },
+    { "id": "f_marv_fools_goldie", "text": "Marv carved his own gold lure in 1990 to tease June's late husband, Walt, and he calls it Fool's Goldie.", "about": ["marv"], "kind": "state", "fingerprints": ["calls it fool's goldie"] },
+    { "id": "f_marv_light", "text": "From his pontoon, Marv saw a flashlight moving in the cabin's great room at about twenty past nine.", "about": ["marv", "great_room"], "kind": "event", "place": "great_room", "time": "9:20 pm", "fingerprints": ["flashlight moving in the cabin"] }
+  ],
+  "topics": [
+    {
+      "id": "t_whereabouts",
+      "label": "where they were during the fireworks",
+      "aliases": ["where were you", "whereabouts", "alibi", "during the fireworks", "during the sparklers", "at nine", "after nine", "nine thirty", "twenty past nine", "what were you doing", "where did you go", "did you leave", "go back up"],
+      "factIds": ["f_sparklers", "f_tess_stream", "f_lorraine_opp", "f_dale_boathouse", "f_marv_pontoon"]
+    },
+    {
+      "id": "t_lure",
+      "label": "Old Goldie",
+      "aliases": ["old goldie", "goldie", "the lure", "gold lure", "fishing lure", "heirloom", "the theft", "stolen", "missing", "what happened", "who took it", "gone"],
+      "factIds": ["f_lure_gone", "f_june_found", "f_video_910", "f_marv_fools_goldie", "f_lorraine_took"]
+    },
+    {
+      "id": "t_case",
+      "label": "the glass case and its key",
+      "aliases": ["glass case", "display case", "the case", "shadow box", "key", "spare key", "lock", "locked", "sewing tin", "tin", "tape", "how was it opened", "opened", "dusted"],
+      "factIds": ["f_case_unbroken", "f_spare_key", "f_june_retaped", "f_lorraine_asked_tin"]
+    },
+    {
+      "id": "t_money",
+      "label": "money troubles",
+      "aliases": ["money", "broke", "debt", "debts", "loan", "bank", "cash", "eight thousand", "selling", "sell", "buyer", "price", "offer", "dealership", "business", "worth"],
+      "factIds": ["f_dale_dealership", "f_dale_phone", "f_marv_offer"]
+    },
+    {
+      "id": "t_family",
+      "label": "who should have Old Goldie",
+      "aliases": ["who would want it", "who wanted it", "steal", "why would anyone", "family", "history", "great grandpa earl", "earl", "your father", "her father", "will", "inheritance", "promise", "promised", "who gets it", "whose is it", "sister", "feud", "christmas", "rivalry"],
+      "factIds": ["f_lorraine_motive", "f_marv_offer"]
+    },
+    {
+      "id": "t_others",
+      "label": "what they saw of the others",
+      "aliases": ["who else", "anyone else", "the others", "did you see anyone", "see anything", "notice anything", "anything strange", "suspicious", "weird", "hear anything", "heard anything", "what about dale", "what about lorraine", "what about marv", "what about tess", "everyone else"],
+      "factIds": ["f_marv_light", "f_dale_phone", "f_marv_pontoon", "f_tess_stream"]
+    },
+    {
+      "id": "t_party",
+      "label": "the birthday party",
+      "aliases": ["party", "birthday", "fish fry", "dinner", "supper", "cake", "presents", "grandma june", "june", "seventy fifth", "the evening"],
+      "factIds": ["f_party", "f_june_found"]
+    },
+    {
+      "id": "t_video",
+      "label": "Tess's video",
+      "aliases": ["video", "vlog", "filming", "film", "phone", "camera", "livestream", "stream", "footage", "recording", "clip", "charger"],
+      "factIds": ["f_tess_filmed", "f_video_910", "f_tess_stream"]
+    },
+    {
+      "id": "t_boats",
+      "label": "the boats and the boathouse",
+      "aliases": ["boat", "boats", "bass boat", "boathouse", "pontoon", "for sale", "the sign", "fishing boat", "the lund"],
+      "factIds": ["f_marv_pontoon", "f_dale_boathouse", "f_marv_light"]
+    },
+    {
+      "id": "t_knitting",
+      "label": "Lorraine's knitting",
+      "aliases": ["knitting", "yarn", "sweater", "mohair", "red yarn", "needles", "knitting bag", "wool", "shawl"],
+      "factIds": ["f_lorraine_knits"]
+    }
+  ],
+  "knowledge": [
+    { "suspectId": "lorraine", "factId": "f_party", "tier": "open" },
+    { "suspectId": "lorraine", "factId": "f_lure_gone", "tier": "open" },
+    { "suspectId": "lorraine", "factId": "f_sparklers", "tier": "open" },
+    { "suspectId": "lorraine", "factId": "f_lorraine_knits", "tier": "open" },
+    { "suspectId": "lorraine", "factId": "f_case_unbroken", "tier": "open" },
+    { "suspectId": "lorraine", "factId": "f_marv_offer", "tier": "open" },
+    { "suspectId": "lorraine", "factId": "f_spare_key", "tier": "guarded" },
+    { "suspectId": "lorraine", "factId": "f_lorraine_opp", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_lorraine" }] },
+    { "suspectId": "lorraine", "factId": "f_lorraine_motive", "tier": "never" },
+    { "suspectId": "lorraine", "factId": "f_lorraine_took", "tier": "never" },
+
+    { "suspectId": "dale", "factId": "f_party", "tier": "open" },
+    { "suspectId": "dale", "factId": "f_lure_gone", "tier": "open" },
+    { "suspectId": "dale", "factId": "f_sparklers", "tier": "open" },
+    { "suspectId": "dale", "factId": "f_case_unbroken", "tier": "open" },
+    { "suspectId": "dale", "factId": "f_marv_offer", "tier": "open" },
+    { "suspectId": "dale", "factId": "f_june_found", "tier": "open" },
+    { "suspectId": "dale", "factId": "f_spare_key", "tier": "guarded" },
+    { "suspectId": "dale", "factId": "f_lorraine_motive", "tier": "guarded" },
+    { "suspectId": "dale", "factId": "f_dale_boathouse", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_dale" }] },
+    { "suspectId": "dale", "factId": "f_dale_dealership", "tier": "locked", "unlock": [{ "kind": "lie_broken", "lieId": "l_dale" }] },
+
+    { "suspectId": "tess", "factId": "f_party", "tier": "open" },
+    { "suspectId": "tess", "factId": "f_sparklers", "tier": "open" },
+    { "suspectId": "tess", "factId": "f_tess_filmed", "tier": "open" },
+    { "suspectId": "tess", "factId": "f_tess_stream", "tier": "open" },
+    { "suspectId": "tess", "factId": "f_june_retaped", "tier": "open" },
+    { "suspectId": "tess", "factId": "f_lorraine_knits", "tier": "open" },
+    { "suspectId": "tess", "factId": "f_june_found", "tier": "open" },
+    { "suspectId": "tess", "factId": "f_marv_pontoon", "tier": "guarded" },
+    { "suspectId": "tess", "factId": "f_dale_phone", "tier": "guarded" },
+    { "suspectId": "tess", "factId": "f_dale_dealership", "tier": "guarded" },
+    { "suspectId": "tess", "factId": "f_lorraine_motive", "tier": "guarded" },
+    { "suspectId": "tess", "factId": "f_lorraine_asked_tin", "tier": "locked", "unlock": [{ "kind": "fact_known", "factId": "f_lorraine_means" }] },
+
+    { "suspectId": "marv", "factId": "f_party", "tier": "open" },
+    { "suspectId": "marv", "factId": "f_sparklers", "tier": "open" },
+    { "suspectId": "marv", "factId": "f_lure_gone", "tier": "open" },
+    { "suspectId": "marv", "factId": "f_marv_offer", "tier": "open" },
+    { "suspectId": "marv", "factId": "f_marv_pontoon", "tier": "guarded" },
+    { "suspectId": "marv", "factId": "f_marv_light", "tier": "guarded" },
+    { "suspectId": "marv", "factId": "f_lorraine_motive", "tier": "guarded" },
+    { "suspectId": "marv", "factId": "f_marv_fools_goldie", "tier": "locked", "unlock": [{ "kind": "evidence_presented", "evidenceId": "e_marv_lure", "suspectId": "marv" }] }
+  ],
+  "lies": [
+    {
+      "id": "l_lorraine",
+      "suspectId": "lorraine",
+      "topicId": "t_whereabouts",
+      "claim": "I never left the dock, dear. I sat on the bench with my knitting through every last sparkler.",
+      "contradicts": "f_lorraine_opp",
+      "exposedBy": ["e_yarn"],
+      "crackAnchorId": "a_lorraine_crack"
+    },
+    {
+      "id": "l_dale",
+      "suspectId": "dale",
+      "topicId": "t_whereabouts",
+      "claim": "Here's the deal, chief: I was on that dock all night. Lit every firework myself, start to finish.",
+      "contradicts": "f_dale_boathouse",
+      "exposedBy": ["e_for_sale_sign"],
+      "crackAnchorId": "a_dale_crack"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e_yarn",
+      "name": "tuft of red yarn",
+      "aliases": ["red yarn", "yarn", "tuft", "the tuft", "red fluff", "fluff", "wool", "mohair", "thread"],
+      "description": "A tuft of cranberry-red mohair caught on the brass hinge of Old Goldie's empty case.",
+      "image": "red-yarn.png",
+      "foundAt": "great_room",
+      "implies": []
+    },
+    {
+      "id": "e_sewing_tin",
+      "name": "blue sewing tin",
+      "aliases": ["sewing tin", "june's sewing tin", "tin", "the tin", "blue tin", "sewing box", "spare key", "tape", "the tape"],
+      "description": "June's blue sewing tin on the kitchen windowsill. The spare key to Old Goldie's case is taped inside the lid, and the tape has been peeled up and pressed back down crooked.",
+      "image": "sewing-tin.png",
+      "foundAt": "kitchen",
+      "implies": ["f_spare_key"],
+      "lab": { "resultFactIds": ["f_lorraine_means"], "delayHours": 14 }
+    },
+    {
+      "id": "e_for_sale_sign",
+      "name": "for-sale sign",
+      "aliases": ["sign", "the sign", "for sale sign", "for-sale sign", "boat sign", "cardboard sign", "poster"],
+      "description": "A hand-lettered cardboard sign propped behind the boathouse door: '1998 Lund bass boat, $8,000 firm. Call Dale.' The marker still smells fresh.",
+      "image": "for-sale-sign.png",
+      "foundAt": "boathouse",
+      "implies": []
+    },
+    {
+      "id": "e_marv_lure",
+      "name": "gold lure in Marv's tackle box",
+      "aliases": ["tackle box", "marv's tackle box", "the tackle box", "the gold lure", "marv's lure", "fake lure", "the copy", "painted lure"],
+      "description": "Marv's tackle box sits open at the end of the dock. On top lies a gold-painted wooden lure about the size of Old Goldie, under a fresh coat of varnish.",
+      "image": "marv-lure.png",
+      "foundAt": "dock",
+      "implies": []
+    },
+    {
+      "id": "e_video",
+      "name": "Tess's ten-past-nine video",
+      "aliases": ["video", "the video", "tess's video", "vlog clip", "clip", "the clip", "footage", "recording"],
+      "description": "Tess's vlog clip, stamped 9:10 pm: a slow pan across the great room, past the birthday cake, to the glass case over the fireplace.",
+      "image": "vlog-clip.png",
+      "givenBy": "f_tess_filmed",
+      "implies": ["f_video_910"]
+    }
+  ],
+  "solution": {
+    "culprit": "lorraine",
+    "motiveFact": "f_lorraine_motive",
+    "meansFact": "f_lorraine_means",
+    "opportunityFact": "f_lorraine_opp",
+    "minimalProof": ["e_yarn", "e_sewing_tin"]
+  },
+  "anchors": [
+    {
+      "id": "a_cold_open",
+      "speakerId": "narrator",
+      "trigger": "cold_open",
+      "text": "Loon Lake, Minnesota. Saturday night, and Grandma June is seventy-five. The walleye is fried, the cake is cut, and at nine o'clock the whole family walked down to the dock for sparklers and Dale's fireworks. When June came back up, Old Goldie, the gold-leaf lure her father carved in 1936, was gone from its locked glass case. Four people had the chance. June would like it back before the coffee gets cold."
+    },
+    {
+      "id": "a_lorraine_crack",
+      "speakerId": "lorraine",
+      "trigger": "crack",
+      "lieId": "l_lorraine",
+      "text": "Oh, fiddlesticks. Yes, dear, I slipped back up to the cabin at twenty past nine. My shoulders were cold and I wanted my shawl. I was alone in the great room for one minute, and a lady is allowed one minute."
+    },
+    {
+      "id": "a_dale_crack",
+      "speakerId": "dale",
+      "trigger": "crack",
+      "lieId": "l_dale",
+      "text": "Okay. Okay. Here's the deal. At twenty past nine I ducked into the boathouse and spent twenty minutes on the phone with a guy in Duluth who wants my bass boat. The dealership's had a rough summer, chief. I'm selling my boat, not Mom's lure."
+    },
+    {
+      "id": "a_confession",
+      "speakerId": "lorraine",
+      "trigger": "confession",
+      "text": "Daddy promised Old Goldie to me on the Fourth of July, 1979, on that very dock, and June knows it. So yes. I took the spare key out of her sewing tin, I took the lure, and it is tucked in the sleeve of her birthday sweater. I was going to give it back, dear. Eventually."
+    },
+    {
+      "id": "a_end_correct",
+      "speakerId": "narrator",
+      "trigger": "ending_correct",
+      "text": "A tuft of cranberry mohair on the hinge. Lorraine's fingerprints on the fresh tape in the sewing tin. And a promise from 1979 that only one sister remembers. Old Goldie turns up in the sleeve of a half-knit birthday sweater, and by midnight June and Lorraine have agreed to share custody: six months on each mantel, and Marv still can't have it."
+    },
+    {
+      "id": "a_end_partial",
+      "speakerId": "narrator",
+      "trigger": "ending_partial",
+      "text": "You might be onto something. But Grandma June wants proof she can wave across the table, and you haven't laid any down yet."
+    },
+    {
+      "id": "a_end_wrong",
+      "speakerId": "narrator",
+      "trigger": "ending_wrong",
+      "text": "The accused turns three shades of red, Grandma June sets down her coffee very slowly, and the real thief helps themselves to another slice of cake."
+    }
+  ]
+}

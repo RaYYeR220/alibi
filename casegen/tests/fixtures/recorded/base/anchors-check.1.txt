@@ -1,0 +1,12 @@
+{
+  "claims": [
+    { "anchor": "a_cold_open", "claim": "Aunt Margaret's sapphire brooch is gone from the study desk.", "source": "f_brooch_gone" },
+    { "anchor": "a_cold_open", "claim": "It is Aunt Margaret's birthday at Ashby House.", "source": "setting" },
+    { "anchor": "a_harold_crack", "claim": "Harold came in at nine to fetch garden twine.", "source": "f_harold_twine" },
+    { "anchor": "a_harold_crack", "claim": "The desk was locked when Harold left.", "source": "f_harold_twine" },
+    { "anchor": "a_clara_crack", "claim": "Clara slipped into the study at a quarter past nine.", "source": "f_clara_study" },
+    { "anchor": "a_confession", "claim": "Clara took the brooch.", "source": "f_clara_took" },
+    { "anchor": "a_end_correct", "claim": "The desk key smells of lily.", "source": "f_key_perfume" },
+    { "anchor": "a_end_correct", "claim": "Clara Vance took the brooch.", "source": "f_clara_took" }
+  ]
+}

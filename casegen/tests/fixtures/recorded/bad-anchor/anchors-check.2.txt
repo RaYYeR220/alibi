@@ -1,0 +1,6 @@
+{
+  "claims": [
+    { "anchor": "a_harold_crack", "claim": "Harold came in at nine for the twine.", "source": "f_harold_twine" },
+    { "anchor": "a_harold_crack", "claim": "A stranger in a red coat stood by the gate.", "source": "f_harold_greenhouse" }
+  ]
+}

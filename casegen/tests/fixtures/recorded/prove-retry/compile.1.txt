@@ -1,0 +1,643 @@
+```json
+{
+  "meta": {
+    "id": "tiny-brooch",
+    "title": "The Brooch at Ashby House",
+    "tagline": "A birthday, a locked desk, and a sapphire that walked away.",
+    "rating": "family",
+    "minutes": 10,
+    "setting": "A birthday dinner at Ashby House. Aunt Margaret's sapphire brooch vanished from the study desk between nine and ten.",
+    "startingFacts": [
+      "f_dinner",
+      "f_brooch_gone"
+    ]
+  },
+  "victim": {
+    "id": "margaret",
+    "name": "Aunt Margaret",
+    "role": "the host",
+    "description": "Turning seventy tonight, and furious."
+  },
+  "places": [
+    {
+      "id": "study",
+      "name": "the study",
+      "aliases": [
+        "study",
+        "office",
+        "desk"
+      ]
+    },
+    {
+      "id": "greenhouse",
+      "name": "the greenhouse",
+      "aliases": [
+        "greenhouse",
+        "garden"
+      ]
+    },
+    {
+      "id": "dining_room",
+      "name": "the dining room",
+      "aliases": [
+        "dining room",
+        "dining",
+        "table",
+        "plant pot"
+      ]
+    },
+    {
+      "id": "hall",
+      "name": "the hall",
+      "aliases": [
+        "hall",
+        "hallway",
+        "coats",
+        "coat rack"
+      ]
+    },
+    {
+      "id": "pantry",
+      "name": "the pantry",
+      "aliases": [
+        "pantry",
+        "kitchen"
+      ]
+    }
+  ],
+  "suspects": [
+    {
+      "id": "harold",
+      "name": "Harold Finch",
+      "role": "gardener",
+      "aliases": [
+        "harold",
+        "finch",
+        "mr finch",
+        "the gardener",
+        "gardener"
+      ],
+      "persona": {
+        "traits": [
+          "gruff",
+          "loyal",
+          "proud"
+        ],
+        "speech": "Short sentences, talks in gardening terms.",
+        "demeanor": "wary"
+      }
+    },
+    {
+      "id": "clara",
+      "name": "Clara Vance",
+      "role": "niece",
+      "aliases": [
+        "clara",
+        "vance",
+        "miss vance",
+        "the niece",
+        "niece"
+      ],
+      "persona": {
+        "traits": [
+          "charming",
+          "quick",
+          "evasive"
+        ],
+        "speech": "Bright and breezy, deflects with jokes.",
+        "demeanor": "breezy"
+      }
+    },
+    {
+      "id": "perkins",
+      "name": "Mr Perkins",
+      "role": "butler",
+      "aliases": [
+        "perkins",
+        "mr perkins",
+        "the butler",
+        "butler"
+      ],
+      "persona": {
+        "traits": [
+          "precise",
+          "discreet"
+        ],
+        "speech": "Formal; never gossips unless pressed.",
+        "demeanor": "composed"
+      }
+    }
+  ],
+  "facts": [
+    {
+      "id": "f_dinner",
+      "text": "Dinner was served in the dining room at eight.",
+      "about": [
+        "margaret"
+      ],
+      "kind": "event",
+      "place": "dining_room",
+      "fingerprints": []
+    },
+    {
+      "id": "f_brooch_gone",
+      "text": "Aunt Margaret's sapphire brooch went missing from the study desk between nine and ten.",
+      "about": [
+        "margaret"
+      ],
+      "kind": "event",
+      "place": "study",
+      "fingerprints": []
+    },
+    {
+      "id": "f_desk_locked",
+      "text": "The study desk is always kept locked, and only a small brass key opens it.",
+      "about": [
+        "margaret"
+      ],
+      "kind": "state",
+      "place": "study",
+      "fingerprints": []
+    },
+    {
+      "id": "f_perkins_keys",
+      "text": "Perkins carries the house keys, including a spare for the study desk.",
+      "about": [
+        "perkins"
+      ],
+      "kind": "means",
+      "fingerprints": [
+        "spare for the study desk"
+      ],
+      "logic": {
+        "suspectId": "perkins",
+        "attr": "means",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_perkins_pantry",
+      "text": "Perkins was polishing silver in the pantry from nine until ten.",
+      "about": [
+        "perkins"
+      ],
+      "kind": "opportunity",
+      "place": "pantry",
+      "fingerprints": [
+        "polishing silver in the pantry"
+      ]
+    },
+    {
+      "id": "f_harold_twine",
+      "text": "Harold came into the study at nine to fetch garden twine, and the desk was still locked.",
+      "about": [
+        "harold"
+      ],
+      "kind": "event",
+      "place": "study",
+      "fingerprints": [
+        "fetch garden twine"
+      ]
+    },
+    {
+      "id": "f_harold_greenhouse",
+      "text": "Harold was back in the greenhouse by five past nine and stayed until eleven.",
+      "about": [
+        "harold"
+      ],
+      "kind": "opportunity",
+      "place": "greenhouse",
+      "fingerprints": [
+        "back in the greenhouse by five past nine"
+      ],
+      "logic": {
+        "suspectId": "harold",
+        "attr": "opportunity",
+        "holds": false
+      }
+    },
+    {
+      "id": "f_clara_debts",
+      "text": "Clara owes a large sum to a pawnbroker in town.",
+      "about": [
+        "clara"
+      ],
+      "kind": "motive",
+      "fingerprints": [
+        "owes a large sum",
+        "pawnbroker in town"
+      ],
+      "logic": {
+        "suspectId": "clara",
+        "attr": "motive",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_clara_study",
+      "text": "Clara slipped into the study at a quarter past nine.",
+      "about": [
+        "clara"
+      ],
+      "kind": "opportunity",
+      "place": "study",
+      "fingerprints": [
+        "slipped into the study",
+        "quarter past nine"
+      ],
+      "logic": {
+        "suspectId": "clara",
+        "attr": "opportunity",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_key_perfume",
+      "text": "The brass desk key carries traces of lily perfume, the scent Clara wears.",
+      "about": [
+        "clara"
+      ],
+      "kind": "means",
+      "fingerprints": [
+        "traces of lily perfume"
+      ],
+      "logic": {
+        "suspectId": "clara",
+        "attr": "means",
+        "holds": true
+      }
+    },
+    {
+      "id": "f_clara_lily",
+      "text": "Clara always wears lily perfume.",
+      "about": [
+        "clara"
+      ],
+      "kind": "state",
+      "fingerprints": []
+    },
+    {
+      "id": "f_clara_took",
+      "text": "Clara took the brooch to pay her debts.",
+      "about": [
+        "clara"
+      ],
+      "kind": "event",
+      "fingerprints": [
+        "took the brooch"
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": "t_whereabouts",
+      "label": "where they were around nine",
+      "aliases": [
+        "where were you",
+        "at nine",
+        "alibi",
+        "this evening",
+        "after dinner",
+        "whereabouts",
+        "nine o'clock",
+        "doing at nine"
+      ],
+      "factIds": [
+        "f_harold_twine",
+        "f_harold_greenhouse",
+        "f_perkins_pantry",
+        "f_clara_study"
+      ]
+    },
+    {
+      "id": "t_brooch",
+      "label": "the brooch",
+      "aliases": [
+        "brooch",
+        "sapphire",
+        "jewel",
+        "missing",
+        "stolen",
+        "theft"
+      ],
+      "factIds": [
+        "f_brooch_gone",
+        "f_desk_locked",
+        "f_clara_took"
+      ]
+    },
+    {
+      "id": "t_keys",
+      "label": "the desk key",
+      "aliases": [
+        "key",
+        "keys",
+        "desk key",
+        "lock",
+        "locked"
+      ],
+      "factIds": [
+        "f_desk_locked",
+        "f_perkins_keys"
+      ]
+    },
+    {
+      "id": "t_money",
+      "label": "money troubles",
+      "aliases": [
+        "money",
+        "debts",
+        "owe",
+        "pawn",
+        "broke",
+        "loan",
+        "finances"
+      ],
+      "factIds": [
+        "f_clara_debts"
+      ]
+    },
+    {
+      "id": "t_others",
+      "label": "the other people in the house",
+      "aliases": [
+        "who else",
+        "anyone else",
+        "saw anyone",
+        "the others",
+        "everyone else",
+        "the butler",
+        "the gardener",
+        "the niece"
+      ],
+      "factIds": [
+        "f_perkins_pantry",
+        "f_harold_greenhouse",
+        "f_clara_lily"
+      ]
+    },
+    {
+      "id": "t_dinner",
+      "label": "the dinner",
+      "aliases": [
+        "dinner",
+        "dining room",
+        "eight o'clock",
+        "the meal"
+      ],
+      "factIds": [
+        "f_dinner"
+      ]
+    }
+  ],
+  "knowledge": [
+    {
+      "suspectId": "harold",
+      "factId": "f_dinner",
+      "tier": "open"
+    },
+    {
+      "suspectId": "harold",
+      "factId": "f_desk_locked",
+      "tier": "open"
+    },
+    {
+      "suspectId": "harold",
+      "factId": "f_harold_greenhouse",
+      "tier": "open"
+    },
+    {
+      "suspectId": "harold",
+      "factId": "f_perkins_pantry",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "harold",
+      "factId": "f_harold_twine",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_harold"
+        }
+      ]
+    },
+    {
+      "suspectId": "clara",
+      "factId": "f_dinner",
+      "tier": "open"
+    },
+    {
+      "suspectId": "clara",
+      "factId": "f_brooch_gone",
+      "tier": "open"
+    },
+    {
+      "suspectId": "clara",
+      "factId": "f_clara_lily",
+      "tier": "open"
+    },
+    {
+      "suspectId": "clara",
+      "factId": "f_clara_study",
+      "tier": "locked",
+      "unlock": [
+        {
+          "kind": "lie_broken",
+          "lieId": "l_clara"
+        }
+      ]
+    },
+    {
+      "suspectId": "clara",
+      "factId": "f_clara_debts",
+      "tier": "never"
+    },
+    {
+      "suspectId": "clara",
+      "factId": "f_clara_took",
+      "tier": "never"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_dinner",
+      "tier": "open"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_brooch_gone",
+      "tier": "open"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_desk_locked",
+      "tier": "open"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_perkins_keys",
+      "tier": "open"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_perkins_pantry",
+      "tier": "open"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_clara_lily",
+      "tier": "open"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_clara_debts",
+      "tier": "guarded"
+    },
+    {
+      "suspectId": "perkins",
+      "factId": "f_harold_greenhouse",
+      "tier": "guarded"
+    }
+  ],
+  "lies": [
+    {
+      "id": "l_harold",
+      "suspectId": "harold",
+      "topicId": "t_whereabouts",
+      "claim": "I never set foot in the house tonight. I was out in the greenhouse the whole evening.",
+      "contradicts": "f_harold_twine",
+      "exposedBy": [
+        "e_muddy_prints"
+      ],
+      "crackAnchorId": "a_harold_crack"
+    },
+    {
+      "id": "l_clara",
+      "suspectId": "clara",
+      "topicId": "t_whereabouts",
+      "claim": "I was curled up in the library with a novel all evening.",
+      "contradicts": "f_clara_study",
+      "exposedBy": [
+        "e_handkerchief"
+      ],
+      "crackAnchorId": "a_clara_crack"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e_muddy_prints",
+      "name": "muddy boot prints",
+      "aliases": [
+        "boot prints",
+        "muddy prints",
+        "footprints",
+        "boots",
+        "mud"
+      ],
+      "description": "Fresh muddy boot prints lead from the garden door to the study desk.",
+      "foundAt": "study",
+      "implies": []
+    },
+    {
+      "id": "e_handkerchief",
+      "name": "lace handkerchief",
+      "aliases": [
+        "handkerchief",
+        "hanky",
+        "lace"
+      ],
+      "description": "A lace handkerchief under the study desk, smelling faintly of lilies.",
+      "foundAt": "study",
+      "implies": []
+    },
+    {
+      "id": "e_desk_key",
+      "name": "brass desk key",
+      "aliases": [
+        "brass key",
+        "desk key",
+        "the key"
+      ],
+      "description": "The small brass key to the study desk, pushed deep into a plant pot in the dining room.",
+      "foundAt": "dining_room",
+      "implies": [],
+      "lab": {
+        "resultFactIds": [
+          "f_key_perfume"
+        ],
+        "delayHours": 14
+      }
+    },
+    {
+      "id": "e_pawn_ticket",
+      "name": "pawn ticket",
+      "aliases": [
+        "ticket",
+        "pawn ticket",
+        "receipt"
+      ],
+      "description": "A pawnbroker's ticket in Clara's coat pocket, dated last week.",
+      "foundAt": "hall",
+      "implies": [
+        "f_clara_debts"
+      ]
+    }
+  ],
+  "solution": {
+    "culprit": "clara",
+    "motiveFact": "f_clara_debts",
+    "meansFact": "f_key_perfume",
+    "opportunityFact": "f_clara_study",
+    "minimalProof": [
+      "e_handkerchief",
+      "e_desk_key"
+    ]
+  },
+  "anchors": [
+    {
+      "id": "a_cold_open",
+      "speakerId": "narrator",
+      "trigger": "cold_open",
+      "text": "Ashby House, half past ten. The birthday candles are out, and Aunt Margaret's sapphire brooch is gone from a locked desk. Three people were in the house. One of them is lying to you."
+    },
+    {
+      "id": "a_harold_crack",
+      "speakerId": "harold",
+      "trigger": "crack",
+      "lieId": "l_harold",
+      "text": "Fine. I came in at nine to fetch garden twine, muddy boots and all. But that desk was locked tight when I left. I swear it."
+    },
+    {
+      "id": "a_clara_crack",
+      "speakerId": "clara",
+      "trigger": "crack",
+      "lieId": "l_clara",
+      "text": "All right, I slipped into the study at a quarter past nine. I only wanted to look at Mother's portrait. That isn't a crime."
+    },
+    {
+      "id": "a_confession",
+      "speakerId": "clara",
+      "trigger": "confession",
+      "text": "I owed more than I could ever pay. Clara took the brooch, all right? I took it. I'm so sorry, Aunt Margaret."
+    },
+    {
+      "id": "a_end_correct",
+      "speakerId": "narrator",
+      "trigger": "ending_correct",
+      "text": "The lily scent on the key, the handkerchief under the desk, the debt she could not hide. Clara Vance took the brooch, and Aunt Margaret gets her sapphire back before midnight."
+    },
+    {
+      "id": "a_end_partial",
+      "speakerId": "narrator",
+      "trigger": "ending_partial",
+      "text": "You named the right person, but without the evidence in hand, the case would never stand."
+    },
+    {
+      "id": "a_end_wrong",
+      "speakerId": "narrator",
+      "trigger": "ending_wrong",
+      "text": "The accusation falls apart under questioning. Somewhere in Ashby House, the real thief breathes a little easier."
+    }
+  ]
+}
+```

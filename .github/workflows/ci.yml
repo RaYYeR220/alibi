@@ -26,7 +26,16 @@ jobs:
         working-directory: casegen
     steps:
       - uses: actions/checkout@v4
+      # the pipeline shells out to the canon CLI for lint and red team
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile && pnpm --filter @alibi/canon build
+        working-directory: .
       - uses: astral-sh/setup-uv@v6
       - run: uv sync
       - run: uv run pytest -q
       - run: shopt -s nullglob; files=(../cases/*/case.json); if [ ${#files[@]} -gt 0 ]; then uv run alibi-validate "${files[@]}"; fi
+      - run: shopt -s nullglob; for f in ../cases/*/case.json; do node ../packages/canon/dist/cli.js lint "$f" && node ../packages/canon/dist/cli.js redteam "$f" --runs 500 || exit 1; done
