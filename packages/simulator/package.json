@@ -1,0 +1,39 @@
+{
+  "name": "@alibi/simulator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:api": "tsx server/local.ts",
+    "build": "vite build",
+    "bundle": "tsx scripts/build-lambda.ts",
+    "test": "vitest run",
+    "lint": "tsc -p tsconfig.json --noEmit && tsc -p server/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-agentcore": "^3.1153.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.1153.0",
+    "@aws-sdk/client-dynamodb": "^3.1153.0",
+    "@aws-sdk/client-polly": "^3.1153.0",
+    "@aws-sdk/client-ssm": "^3.1153.0",
+    "@aws-sdk/lib-dynamodb": "^3.1153.0",
+    "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@fontsource/courier-prime": "^5.3.0",
+    "@fontsource/young-serif": "^5.3.0",
+    "@modelcontextprotocol/client": "2.3.1",
+    "@modelcontextprotocol/ext-apps": "2.0.3",
+    "hono": "^4.13.13",
+    "preact": "^11.0.1"
+  },
+  "devDependencies": {
+    "@alibi/canon": "workspace:^",
+    "@alibi/host": "workspace:^",
+    "@hono/node-server": "^2.1.5",
+    "@testing-library/preact": "^3.2.4",
+    "esbuild": "^0.28.2",
+    "happy-dom": "^21.0.3",
+    "tsx": "^4.23.15",
+    "vite": "^7.3.7"
+  }
+}

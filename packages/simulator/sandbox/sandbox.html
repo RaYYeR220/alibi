@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>View sandbox</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+      }
+      iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      /*
+       * MCP Apps sandbox proxy. It lives on its own origin, loads one view's
+       * HTML into an inner frame under the CSP the view's resource declares,
+       * and relays JSON-RPC between that frame and the host page.
+       */
+      (() => {
+        const HOSTS = /*HOST_ORIGINS*/ [];
+        const ancestor = window.location.ancestorOrigins && window.location.ancestorOrigins[0];
+        const referrer = document.referrer ? new URL(document.referrer).origin : '';
+        const hostOrigin = HOSTS.find((o) => o === ancestor || o === referrer);
+        if (!hostOrigin || window.parent === window) return;
+
+        const RESERVED = 'ui/notifications/sandbox-';
+        let inner = null;
+
+        const list = (xs) => (Array.isArray(xs) ? xs.filter((x) => typeof x === 'string' && /^https?:\/\/[^\s;'"]+$/.test(x)) : []);
+
+        function policy(csp) {
+          const res = list(csp && csp.resourceDomains).join(' ');
+          const connect = list(csp && csp.connectDomains).join(' ') || "'none'";
+          const frames = list(csp && csp.frameDomains).join(' ') || "'none'";
+          const base = list(csp && csp.baseUriDomains).join(' ') || "'self'";
+          return [
+            "default-src 'none'",
+            `script-src 'unsafe-inline' ${res}`,
+            `style-src 'unsafe-inline' ${res}`,
+            `img-src data: blob: ${res}`,
+            `media-src data: blob: ${res}`,
+            `font-src data: ${res}`,
+            `connect-src ${connect}`,
+            `frame-src ${frames}`,
+            `base-uri ${base}`,
+            "object-src 'none'",
+            "form-action 'none'",
+          ].join('; ');
+        }
+
+        function withPolicy(html, csp) {
+          const meta = `<meta http-equiv="Content-Security-Policy" content="${policy(csp).replace(/"/g, '&quot;')}">`;
+          return /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, (m) => m + meta) : meta + html;
+        }
+
+        const ALLOW = { camera: 'camera', microphone: 'microphone', geolocation: 'geolocation', clipboardWrite: 'clipboard-write' };
+
+        function load(params) {
+          const frame = document.createElement('iframe');
+          frame.setAttribute('sandbox', typeof params.sandbox === 'string' ? params.sandbox : 'allow-scripts allow-same-origin allow-forms');
+          const allow = Object.keys(params.permissions || {})
+            .map((k) => ALLOW[k])
+            .filter(Boolean)
+            .join('; ');
+          if (allow) frame.setAttribute('allow', allow);
+          frame.title = 'Add-on view';
+          frame.srcdoc = withPolicy(String(params.html || ''), params.csp);
+          inner = frame;
+          document.body.replaceChildren(frame);
+        }
+
+        window.addEventListener('message', (event) => {
+          const msg = event.data;
+          const method = msg && typeof msg.method === 'string' ? msg.method : '';
+          if (event.source === window.parent) {
+            if (event.origin !== hostOrigin) return;
+            if (method === RESERVED + 'resource-ready') return load(msg.params || {});
+            if (method.startsWith(RESERVED)) return;
+            if (inner && inner.contentWindow) inner.contentWindow.postMessage(msg, '*');
+          } else if (inner && event.source === inner.contentWindow) {
+            if (method.startsWith(RESERVED)) return;
+            window.parent.postMessage(msg, hostOrigin);
+          }
+        });
+
+        window.parent.postMessage({ jsonrpc: '2.0', method: RESERVED + 'proxy-ready', params: {} }, hostOrigin);
+      })();
+    </script>
+  </body>
+</html>
