@@ -1,0 +1,173 @@
+```json
+{
+  "meta": {
+    "id": "great-jollof-heist",
+    "title": "The Great Jollof Heist",
+    "tagline": "Someone stole Grandma Ada's 80th birthday feast, and the family has a theory.",
+    "rating": "family",
+    "minutes": 15,
+    "setting": "A rainy Saturday in October at Grandma Ada's cream-colored bungalow in Enugu. Her 80th birthday guests are due within the hour, and the great pot of jollof and the four-tier pineapple-coconut cake have vanished from the kitchen.",
+    "startingFacts": ["f_feast_gone", "f_guests_due"]
+  },
+  "victim": {
+    "id": "ada",
+    "name": "Grandma Ada Okafor",
+    "role": "birthday girl and head of the family",
+    "description": "A retired schoolteacher turning 80 who has cooked the family jollof every year since 1971 and refuses to let anyone else touch the pot."
+  },
+  "places": [
+    {"id": "kitchen", "name": "the kitchen", "aliases": ["kitchen", "stove", "cooker", "side door", "kitchen floor"]},
+    {"id": "veranda", "name": "the back veranda", "aliases": ["veranda", "back veranda", "porch", "back porch", "steps"]},
+    {"id": "garage", "name": "the garage", "aliases": ["garage", "car port", "tarp", "van"]},
+    {"id": "living_room", "name": "the living room", "aliases": ["living room", "lounge", "sitting room", "banner", "ladder"]},
+    {"id": "bedroom", "name": "Grandma Ada's bedroom", "aliases": ["bedroom", "grandma's room", "ada's room", "her room", "bedside"]},
+    {"id": "shed", "name": "the garden shed", "aliases": ["shed", "garden shed", "garden", "tool shed"]}
+  ],
+  "suspects": [
+    {
+      "id": "emeka",
+      "name": "Uncle Emeka Okafor",
+      "role": "bank manager",
+      "aliases": ["emeka", "okafor", "uncle emeka", "mr okafor", "the bank manager", "bank manager", "uncle"],
+      "persona": {
+        "traits": ["fussy", "proud", "secretly soft-hearted"],
+        "speech": "Speaks like he is reading minutes of a meeting and starts sentences with 'For the record'.",
+        "demeanor": "stiff"
+      }
+    },
+    {
+      "id": "ngozi",
+      "name": "Aunty Ngozi Okafor-Bello",
+      "role": "caterer",
+      "aliases": ["ngozi", "aunty ngozi", "auntie ngozi", "okafor-bello", "bello", "mrs bello", "the caterer", "caterer", "aunty"],
+      "persona": {
+        "traits": ["competitive", "generous", "dramatic"],
+        "speech": "Speaks in exclamations and calls everyone 'my dear', even when she is annoyed with them.",
+        "demeanor": "flustered"
+      }
+    },
+    {
+      "id": "chidi",
+      "name": "Chidi Okafor",
+      "role": "teenage grandson",
+      "aliases": ["chidi", "the grandson", "grandson", "the teenager", "teenager", "the gamer", "gamer", "the boy"],
+      "persona": {
+        "traits": ["sleepy", "sarcastic", "kind underneath"],
+        "speech": "Mumbles, says 'bro' constantly and answers questions with questions.",
+        "demeanor": "drowsy"
+      }
+    },
+    {
+      "id": "eze",
+      "name": "Mr. Tobenna Eze",
+      "role": "neighbor",
+      "aliases": ["eze", "tobenna", "mr eze", "mr tobenna", "the neighbor", "neighbor", "the mechanic", "old friend"],
+      "persona": {
+        "traits": ["gentle", "teasing", "loyal"],
+        "speech": "Chuckles before every sentence and tells long stories that start 'In 1983...'.",
+        "demeanor": "twinkly"
+      }
+    }
+  ],
+  "facts": [
+    {"id": "f_feast_gone", "text": "The party jollof and the four-tier pineapple-coconut cake vanished from the kitchen before half past five.", "about": ["ada"], "kind": "event", "place": "kitchen", "fingerprints": []},
+    {"id": "f_guests_due", "text": "The birthday guests were due to arrive within the hour.", "about": ["ada"], "kind": "state", "fingerprints": []},
+    {"id": "f_ada_cooked", "text": "Grandma Ada finished cooking the jollof at three o'clock and left the cake to cool in the kitchen.", "about": ["ada"], "kind": "event", "place": "kitchen", "fingerprints": []},
+    {"id": "f_ada_pot_rule", "text": "Grandma Ada lets nobody else touch her jollof pot.", "about": ["ada"], "kind": "state", "fingerprints": []},
+    {"id": "f_emeka_taste", "text": "Uncle Emeka sneaked a spoonful of jollof from the pot at half past four.", "about": ["emeka"], "kind": "event", "place": "kitchen", "fingerprints": ["spoonful of jollof from the pot"]},
+    {"id": "f_emeka_stains", "text": "Uncle Emeka has jollof stains on his shirt.", "about": ["emeka"], "kind": "state", "fingerprints": ["jollof stains on his shirt"]},
+    {"id": "f_emeka_ladder", "text": "Uncle Emeka was up a ladder hanging the banner in the living room from 4:45 until 5:35 pm.", "about": ["emeka"], "kind": "opportunity", "place": "living_room", "fingerprints": ["ladder hanging the banner"], "logic": {"suspectId": "emeka", "attr": "opportunity", "holds": false}},
+    {"id": "f_chidi_snacks", "text": "Chidi wandered into the kitchen at half past four looking for snacks and nearly caught Uncle Emeka at the pot.", "about": ["chidi", "emeka"], "kind": "event", "place": "kitchen", "fingerprints": ["looking for snacks"]},
+    {"id": "f_chidi_shed", "text": "Chidi was in the garden shed on a video call with friends from 5:15 until after 5:45 pm.", "about": ["chidi"], "kind": "opportunity", "place": "shed", "fingerprints": ["garden shed on a video call"], "logic": {"suspectId": "chidi", "attr": "opportunity", "holds": false}},
+    {"id": "f_eze_casserole", "text": "Mr. Eze brought a casserole dish to the party.", "about": ["eze"], "kind": "state", "fingerprints": []},
+    {"id": "f_eze_lesson", "text": "Mr. Eze was in Grandma Ada's bedroom giving her a guitar lesson from 5:10 pm.", "about": ["eze", "ada"], "kind": "opportunity", "place": "bedroom", "fingerprints": ["bedroom giving her a guitar lesson"], "logic": {"suspectId": "eze", "attr": "opportunity", "holds": false}},
+    {"id": "f_eze_guitar_secret", "text": "Mr. Eze is teaching Grandma Ada guitar for a surprise performance at the party.", "about": ["eze", "ada"], "kind": "state", "fingerprints": ["surprise performance at the party"]},
+    {"id": "f_ngozi_chairs", "text": "Ngozi announced at five o'clock that she was driving her catering van to fetch extra chairs.", "about": ["ngozi"], "kind": "event", "fingerprints": ["driving her catering van"]},
+    {"id": "f_van_keys", "text": "Ngozi carries the keys to her catering van.", "about": ["ngozi"], "kind": "state", "fingerprints": []},
+    {"id": "f_ngozi_strong", "text": "Ngozi routinely hauls full catering pots around on her trolley.", "about": ["ngozi"], "kind": "state", "fingerprints": ["hauls full catering pots"]},
+    {"id": "f_ngozi_dj", "text": "Ngozi was arguing with the DJ about the playlist when the empty kitchen was discovered.", "about": ["ngozi"], "kind": "event", "fingerprints": ["arguing with the DJ"]},
+    {"id": "f_ngozi_kitchen_door", "text": "Ngozi went round to the kitchen side door at about twenty past five and loaded the pot and cake onto her trolley.", "about": ["ngozi"], "kind": "opportunity", "place": "kitchen", "fingerprints": ["kitchen side door", "loaded the pot and cake"], "logic": {"suspectId": "ngozi", "attr": "opportunity", "holds": true}},
+    {"id": "f_cabinet", "text": "The warming cabinet in Ngozi's catering van was used to keep the stolen jollof hot.", "about": ["ngozi"], "kind": "means", "place": "garage", "fingerprints": ["keep the stolen jollof hot", "warming cabinet in Ngozi's"], "logic": {"suspectId": "ngozi", "attr": "means", "holds": true}},
+    {"id": "f_ngozi_motive", "text": "Ngozi feared Grandma Ada's feast would run late and embarrass the family in front of the guests.", "about": ["ngozi"], "kind": "motive", "fingerprints": ["feast would run late", "embarrass the family"], "logic": {"suspectId": "ngozi", "attr": "motive", "holds": true}},
+    {"id": "f_emergency_cake", "text": "Ngozi bought a backup bakery cake in case Grandma Ada's cake was not ready.", "about": ["ngozi"], "kind": "event", "place": "garage", "fingerprints": ["backup bakery cake"]},
+    {"id": "f_key_tag_found", "text": "A tag from Ngozi's van keys was found beside the empty stove in the kitchen.", "about": ["ngozi"], "kind": "event", "place": "kitchen", "fingerprints": ["beside the empty stove"]},
+    {"id": "f_trolley_wheel", "text": "Ngozi's catering trolley rolled a heavy load of jollof across the back veranda.", "about": ["ngozi"], "kind": "event", "place": "veranda", "fingerprints": ["trolley rolled a heavy load"]}
+  ],
+  "topics": [
+    {"id": "t_whereabouts", "label": "where they were this afternoon", "aliases": ["where were you", "alibi", "whereabouts", "this afternoon", "at five", "around five", "what were you doing", "doing at five", "before the party"], "factIds": ["f_emeka_ladder", "f_chidi_shed", "f_eze_lesson", "f_ngozi_chairs", "f_ngozi_kitchen_door", "f_ngozi_dj"]},
+    {"id": "t_feast", "label": "the missing feast", "aliases": ["jollof", "cake", "feast", "food", "missing", "stolen", "theft", "the pot", "pineapple cake", "vanished"], "factIds": ["f_feast_gone", "f_guests_due", "f_ada_cooked"]},
+    {"id": "t_van", "label": "the catering van", "aliases": ["van", "catering van", "keys", "van keys", "trolley", "warming cabinet", "cabinet", "drive", "car"], "factIds": ["f_van_keys", "f_ngozi_strong", "f_cabinet", "f_trolley_wheel"]},
+    {"id": "t_kitchen", "label": "the kitchen this afternoon", "aliases": ["kitchen", "the stove", "tasting", "taste", "snacks", "spoon", "stains", "shirt", "who was in the kitchen"], "factIds": ["f_emeka_taste", "f_chidi_snacks", "f_emeka_stains", "f_key_tag_found"]},
+    {"id": "t_prep", "label": "party preparations", "aliases": ["party", "preparations", "banner", "decorations", "chairs", "casserole", "the DJ", "dj", "playlist", "backup"], "factIds": ["f_eze_casserole", "f_ngozi_chairs", "f_ngozi_dj", "f_emergency_cake"]},
+    {"id": "t_ada", "label": "Grandma Ada", "aliases": ["grandma", "grandma ada", "ada", "the birthday girl", "birthday", "80th", "her pot", "guitar", "surprise", "music"], "factIds": ["f_ada_pot_rule", "f_ada_cooked", "f_eze_guitar_secret"]},
+    {"id": "t_others", "label": "the other people in the house", "aliases": ["who else", "anyone else", "saw anyone", "the others", "everyone else", "the family", "who did you see", "suspicious", "anyone strange"], "factIds": ["f_emeka_stains", "f_ngozi_chairs", "f_chidi_snacks", "f_eze_casserole"]}
+  ],
+  "knowledge": [
+    {"suspectId": "emeka", "factId": "f_feast_gone", "tier": "open"},
+    {"suspectId": "emeka", "factId": "f_ada_cooked", "tier": "open"},
+    {"suspectId": "emeka", "factId": "f_ada_pot_rule", "tier": "open"},
+    {"suspectId": "emeka", "factId": "f_emeka_ladder", "tier": "open"},
+    {"suspectId": "emeka", "factId": "f_ngozi_chairs", "tier": "open"},
+    {"suspectId": "emeka", "factId": "f_emeka_taste", "tier": "guarded"},
+    {"suspectId": "emeka", "factId": "f_emeka_stains", "tier": "guarded"},
+    {"suspectId": "emeka", "factId": "f_chidi_snacks", "tier": "guarded"},
+
+    {"suspectId": "ngozi", "factId": "f_feast_gone", "tier": "open"},
+    {"suspectId": "ngozi", "factId": "f_ngozi_chairs", "tier": "open"},
+    {"suspectId": "ngozi", "factId": "f_van_keys", "tier": "open"},
+    {"suspectId": "ngozi", "factId": "f_ada_pot_rule", "tier": "open"},
+    {"suspectId": "ngozi", "factId": "f_ngozi_dj", "tier": "guarded"},
+    {"suspectId": "ngozi", "factId": "f_ngozi_kitchen_door", "tier": "never"},
+    {"suspectId": "ngozi", "factId": "f_cabinet", "tier": "never"},
+    {"suspectId": "ngozi", "factId": "f_ngozi_motive", "tier": "never"},
+
+    {"suspectId": "chidi", "factId": "f_feast_gone", "tier": "open"},
+    {"suspectId": "chidi", "factId": "f_chidi_snacks", "tier": "open"},
+    {"suspectId": "chidi", "factId": "f_ngozi_chairs", "tier": "open"},
+    {"suspectId": "chidi", "factId": "f_eze_casserole", "tier": "open"},
+    {"suspectId": "chidi", "factId": "f_emeka_taste", "tier": "guarded"},
+    {"suspectId": "chidi", "factId": "f_ngozi_strong", "tier": "guarded"},
+    {"suspectId": "chidi", "factId": "f_chidi_shed", "tier": "locked", "unlock": [{"kind": "lie_broken", "lieId": "l_chidi"}]},
+
+    {"suspectId": "eze", "factId": "f_feast_gone", "tier": "open"},
+    {"suspectId": "eze", "factId": "f_eze_casserole", "tier": "open"},
+    {"suspectId": "eze", "factId": "f_ada_pot_rule", "tier": "open"},
+    {"suspectId": "eze", "factId": "f_emeka_stains", "tier": "guarded"},
+    {"suspectId": "eze", "factId": "f_ngozi_chairs", "tier": "guarded"},
+    {"suspectId": "eze", "factId": "f_van_keys", "tier": "guarded"},
+    {"suspectId": "eze", "factId": "f_eze_lesson", "tier": "locked", "unlock": [{"kind": "lie_broken", "lieId": "l_eze"}]},
+    {"suspectId": "eze", "factId": "f_eze_guitar_secret", "tier": "locked", "unlock": [{"kind": "lie_broken", "lieId": "l_eze"}]}
+  ],
+  "lies": [
+    {"id": "l_ngozi", "suspectId": "ngozi", "topicId": "t_whereabouts", "claim": "My dear, I drove straight to the party-rental shop for chairs and never went anywhere near that kitchen!", "contradicts": "f_ngozi_kitchen_door", "exposedBy": ["e_key_tag"], "crackAnchorId": "a_ngozi_crack"},
+    {"id": "l_chidi", "suspectId": "chidi", "topicId": "t_whereabouts", "claim": "I was helping Uncle Emeka hang the banner all afternoon, bro. Ask him.", "contradicts": "f_chidi_shed", "exposedBy": ["e_headset"], "crackAnchorId": "a_chidi_crack"},
+    {"id": "l_eze", "suspectId": "eze", "topicId": "t_whereabouts", "claim": "Hehe, I only came by to drop off a casserole dish and then sat on the front porch watching the rain.", "contradicts": "f_eze_lesson", "exposedBy": ["e_chord_sheet"], "crackAnchorId": "a_eze_crack"}
+  ],
+  "evidence": [
+    {"id": "e_key_tag", "name": "greasy key tag", "aliases": ["key tag", "tag", "keyring", "key ring", "thumbprint", "rice grain"], "description": "A plastic tag on a small ring, with a greasy thumbprint and a grain of rice stuck to it, lying on the kitchen floor by the stove.", "foundAt": "kitchen", "implies": ["f_key_tag_found"]},
+    {"id": "e_trolley_wheel", "name": "dented trolley wheel", "aliases": ["trolley wheel", "wheel", "dented wheel", "trolley", "orange residue"], "description": "A small dented wheel with orange smears on the rim, lying at the edge of the back veranda.", "foundAt": "veranda", "implies": ["f_trolley_wheel"]},
+    {"id": "e_cabinet", "name": "garage cabinet", "aliases": ["cabinet", "warming cabinet", "steel cabinet", "garage cabinet", "shelf", "smear"], "description": "A tall steel cabinet with a shelf and a door left slightly ajar, standing in the garage with a greasy smear along the bottom shelf.", "foundAt": "garage", "implies": [], "lab": {"resultFactIds": ["f_cabinet"], "delayHours": 10}},
+    {"id": "e_banner_tape", "name": "banner tape and receipt", "aliases": ["banner tape", "tape", "packing tape", "receipt", "timestamped receipt", "fingerprints", "ladder"], "description": "A roll of packing tape, a stepladder behind the banner, and a timestamped hardware-shop receipt tucked beside it in the living room.", "foundAt": "living_room", "implies": ["f_emeka_ladder"]},
+    {"id": "e_chord_sheet", "name": "chord sheet and guitar pick", "aliases": ["chord sheet", "guitar pick", "pick", "sheet music", "music sheet", "chords", "happy birthday ada"], "description": "A handwritten sheet titled 'Happy Birthday, Ada' and a plastic guitar pick, left on the bedside table in Grandma Ada's bedroom.", "foundAt": "bedroom", "implies": ["f_eze_lesson", "f_eze_guitar_secret"]},
+    {"id": "e_headset", "name": "headset and screen log", "aliases": ["headset", "controller", "game controller", "screen log", "laptop", "game", "receipt"], "description": "A game controller, a charging headset and a laptop with a screen log open, on an upturned crate in the garden shed.", "foundAt": "shed", "implies": ["f_chidi_shed"]},
+    {"id": "e_bakery_box", "name": "bakery box", "aliases": ["bakery box", "box", "cake box", "emergency cake", "backup cake", "tarp"], "description": "A sealed white bakery box with 'EMERGENCY CAKE' scrawled in marker on the lid, tucked under a tarp in the garage.", "foundAt": "garage", "implies": ["f_emergency_cake", "f_ngozi_motive"]}
+  ],
+  "solution": {
+    "culprit": "ngozi",
+    "motiveFact": "f_ngozi_motive",
+    "meansFact": "f_cabinet",
+    "opportunityFact": "f_ngozi_kitchen_door",
+    "minimalProof": ["e_key_tag", "e_cabinet"]
+  },
+  "anchors": [
+    {"id": "a_cold_open", "speakerId": "narrator", "trigger": "cold_open", "text": "Enugu, a rainy Saturday. At half past five, Grandma Ada walked into her kitchen and found the party jollof and the four-tier pineapple-coconut cake gone. The guests are due within the hour. Four people were in or near the bungalow, and one of them knows where the food went. Find it."},
+    {"id": "a_ngozi_crack", "speakerId": "ngozi", "trigger": "crack", "lieId": "l_ngozi", "text": "My dear, all right! I went round to the kitchen side door and loaded the pot and cake onto my trolley. I was only trying to save the party!"},
+    {"id": "a_chidi_crack", "speakerId": "chidi", "trigger": "crack", "lieId": "l_chidi", "text": "Okay, bro, okay. I ducked into the garden shed for a video call with my friends and lost track of time. Are you going to tell Uncle Emeka?"},
+    {"id": "a_eze_crack", "speakerId": "eze", "trigger": "crack", "lieId": "l_eze", "text": "Hehe, you have sharp eyes. In 1983 I would have fooled you. I was in Ada's bedroom giving her a guitar lesson, and I was sworn to silence."},
+    {"id": "a_confession", "speakerId": "ngozi", "trigger": "confession", "text": "My dear, I panicked! The feast looked late, the guests were coming, and I wanted everything perfect. I moved it to my van to reheat it, then the DJ started shouting and I forgot to tell anyone. I am so sorry, Mama."},
+    {"id": "a_end_correct", "speakerId": "narrator", "trigger": "ending_correct", "text": "The key tag, the cabinet and the box under the tarp all point one way. The pot comes back from the garage, still steaming, with the cake right behind it. Grandma Ada accepts the apology and demands a very large second helping."},
+    {"id": "a_end_partial", "speakerId": "narrator", "trigger": "ending_partial", "text": "You pointed at the right relative, but without the evidence to back it up, nobody at the party is convinced. The family shrugs, and the food stays missing a while longer."},
+    {"id": "a_end_wrong", "speakerId": "narrator", "trigger": "ending_wrong", "text": "The accusation collapses in a flurry of offended gasps. The guests are arriving, the plates are still empty, and the real culprit is busy looking helpful."}
+  ]
+}
+```

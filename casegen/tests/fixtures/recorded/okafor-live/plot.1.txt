@@ -1,0 +1,142 @@
+```json
+{
+  "title": "The Great Jollof Heist",
+  "tagline": "Someone stole Grandma Ada's 80th birthday feast, and the family has a theory.",
+  "setting": "It is a rainy Saturday in October, and the Okafor family has gathered at Grandma Ada's cream-colored bungalow in Enugu for her 80th birthday party. At 5:30 pm, forty minutes before the guests arrive, the great pot of party jollof rice and the famous four-tier pineapple-coconut cake have vanished from the kitchen. Only the plates, the candles and a lot of hungry relatives remain.",
+  "crime": "theft",
+  "victim": {
+    "name": "Grandma Ada Okafor",
+    "role": "birthday girl and head of the family",
+    "description": "A retired schoolteacher turning 80 who has cooked the family jollof every year since 1971 and refuses to let anyone else touch the pot."
+  },
+  "places": [
+    "the kitchen",
+    "the back veranda",
+    "the garage",
+    "the living room",
+    "Grandma Ada's bedroom",
+    "the garden shed"
+  ],
+  "suspects": [
+    {
+      "name": "Uncle Emeka Okafor",
+      "role": "Grandma Ada's eldest son, a bank manager",
+      "gender": "male",
+      "age": "50s",
+      "look": "Round glasses, a pressed shirt with a pen in the pocket, and a belt buckled one notch too tight.",
+      "personality": "fussy, proud, secretly soft-hearted",
+      "speech": "Speaks like he is reading minutes of a meeting and starts sentences with 'For the record'.",
+      "secret": "He has been sneaking jollof from the pot every Sunday for years and is terrified of being found out."
+    },
+    {
+      "name": "Aunty Ngozi Okafor-Bello",
+      "role": "Grandma Ada's daughter, a caterer with her own business",
+      "gender": "female",
+      "age": "40s",
+      "look": "Bright gele headwrap, gold hoop earrings, flour dusted on one sleeve.",
+      "personality": "competitive, generous, dramatic",
+      "speech": "Speaks in exclamations and calls everyone 'my dear', even when she is annoyed with them.",
+      "secret": "She secretly bought a fancy bakery cake as a backup because she feared Grandma's cake would not be ready in time."
+    },
+    {
+      "name": "Chidi Okafor",
+      "role": "Grandma Ada's teenage grandson, a gamer",
+      "gender": "male",
+      "age": "17",
+      "look": "Oversized hoodie, headphones around his neck, one sock missing.",
+      "personality": "sleepy, sarcastic, kind underneath",
+      "speech": "Mumbles, says 'bro' constantly and answers questions with questions.",
+      "secret": "He skipped the pre-party errands to play a video game and was caught on a video call with his friends."
+    },
+    {
+      "name": "Mr. Tobenna Eze",
+      "role": "Grandma Ada's neighbor and oldest friend, a retired mechanic",
+      "gender": "male",
+      "age": "70s",
+      "look": "Flat cap, cardigan with leather elbow patches, a toothpick in the corner of his mouth.",
+      "personality": "gentle, teasing, loyal",
+      "speech": "Chuckles before every sentence and tells long stories that start 'In 1983...'.",
+      "secret": "He has been secretly teaching Grandma Ada to play the guitar for a surprise performance at the party."
+    }
+  ],
+  "culprit": "Aunty Ngozi Okafor-Bello",
+  "motive": "Ngozi was desperate to make the party perfect and, convinced Grandma Ada's feast was running late and would embarrass the family in front of guests, secretly moved it to her catering van to reheat and present it dramatically. She then 'forgot' to tell anyone because she got caught up in an argument with the DJ.",
+  "means": "Ngozi has the keys to her catering van, which has a heated warming cabinet, and she is strong enough to carry the pot using her catering trolley. She knew the kitchen's layout and where the cake was stored.",
+  "opportunity": "At 5:00 pm, everyone else was busy; Ngozi told the family she was going to pick up extra chairs, a trip that took her past the kitchen's side door, giving her a clear window to remove the food unnoticed.",
+  "red_herring": "Uncle Emeka Okafor: he looks guilty because he has a known weakness for the jollof, was alone in the kitchen at 4:45 pm, and has jollof stains on his shirt. He is cleared when a clue shows he only tasted the rice before it left and was already in the living room hanging a banner when the pot disappeared.",
+  "timeline": [
+    {"time": "3:00 pm", "event": "Grandma Ada finishes cooking the jollof and places the pineapple-coconut cake in the kitchen to cool."},
+    {"time": "4:30 pm", "event": "Uncle Emeka sneaks a spoonful of jollof and is nearly caught by Chidi, who wanders in looking for snacks."},
+    {"time": "4:45 pm", "event": "Emeka leaves the kitchen to hang the birthday banner in the living room."},
+    {"time": "5:00 pm", "event": "Ngozi announces she is going to fetch extra chairs and leaves in her catering van."},
+    {"time": "5:10 pm", "event": "Mr. Eze arrives with a guitar case and slips into Grandma Ada's bedroom for a secret lesson."},
+    {"time": "5:15 pm", "event": "Chidi goes to the garage to join a video call with his friends and loses track of time."},
+    {"time": "5:30 pm", "event": "Grandma Ada walks into the kitchen and finds the pot and cake gone."},
+    {"time": "6:30 pm", "event": "Guests are due to arrive."}
+  ],
+  "clues": [
+    {
+      "name": "Smudged van key tag",
+      "where": "the kitchen",
+      "reveals": "A tag from Ngozi's catering van, dropped beside the empty stove, with a greasy thumbprint and a grain of rice stuck to it. It proves the van keys were in the kitchen after the food vanished.",
+      "lab": false
+    },
+    {
+      "name": "Dented trolley wheel",
+      "where": "the back veranda",
+      "reveals": "A small wheel with fresh orange jollof residue on it, matching the wheels of Ngozi's catering trolley. It shows a heavy food-laden trolley rolled across the veranda.",
+      "lab": false
+    },
+    {
+      "name": "Warm catering cabinet",
+      "where": "the garage",
+      "reveals": "A warming-cabinet door left slightly ajar, with warmth still radiating from inside and a smear of jollof along the shelf. It suggests the van was used to keep food hot.",
+      "lab": true
+    },
+    {
+      "name": "Rice-dusted banner tape",
+      "where": "the living room",
+      "reveals": "Packing tape and a ladder behind the banner, with Emeka's fingerprints and a timestamped receipt showing he was up the ladder from 4:45 until 5:35 pm. It clears Emeka.",
+      "lab": false
+    },
+    {
+      "name": "Guitar pick and chord sheet",
+      "where": "Grandma Ada's bedroom",
+      "reveals": "A handwritten chord sheet titled 'Happy Birthday, Ada' and a guitar pick tucked in Mr. Eze's cardigan pocket, proving he was giving a secret lesson in the bedroom at 5:10 pm and could not have taken the food.",
+      "lab": false
+    },
+    {
+      "name": "Video game headset receipt",
+      "where": "the garden shed",
+      "reveals": "A game controller, charging headset and a screen log showing Chidi's video call lasting from 5:15 pm until after 5:45 pm. It clears him.",
+      "lab": false
+    },
+    {
+      "name": "Bakery box",
+      "where": "the garage",
+      "reveals": "A sealed bakery cake box with Ngozi's handwriting on the lid saying 'EMERGENCY CAKE', tucked under a tarp. It shows Ngozi planned for a backup dessert and exposes her lie about where she was.",
+      "lab": false
+    }
+  ],
+  "lies": [
+    {
+      "suspect": "Aunty Ngozi Okafor-Bello",
+      "claim": "She says she drove straight to the party-rental shop for chairs and was never near the kitchen.",
+      "truth": "She went around to the kitchen side door to move the pot and cake into her catering van before driving off.",
+      "exposed_by": "Smudged van key tag"
+    },
+    {
+      "suspect": "Chidi Okafor",
+      "claim": "He says he was helping Uncle Emeka hang the banner all afternoon.",
+      "truth": "He ducked into the garden shed to play a video game and lost track of time.",
+      "exposed_by": "Video game headset receipt"
+    },
+    {
+      "suspect": "Mr. Tobenna Eze",
+      "claim": "He says he only came by to drop off a casserole dish and was sitting on the front porch.",
+      "truth": "He was in Grandma Ada's bedroom teaching her guitar for a surprise performance and did not want to ruin the secret.",
+      "exposed_by": "Guitar pick and chord sheet"
+    }
+  ]
+}
+```

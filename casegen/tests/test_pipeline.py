@@ -137,6 +137,28 @@ def test_art_and_voices_can_be_skipped(tmp_path):
     assert prove(result.case).ok
 
 
+def test_live_recording_replays_to_a_proven_case(tmp_path):
+    """Every reply from a real run (the Okafor family, Grandma Ada's 80th) played back through the pipeline."""
+    okafor = JobInput(
+        job_id="okafor-final",
+        household_id="hh-okafor",
+        names=["the Okafor family"],
+        occasion="Grandma Ada's 80th birthday",
+        tone="cozy",
+        rating="family",
+    )
+    deps = make_deps(tmp_path, "okafor-live")
+    deps.llm = ReplayLlm([RECORDED / "okafor-live"])
+    result = generate(okafor, deps)
+
+    report = prove(result.case)
+    assert report.ok, report.issues
+    assert result.case["meta"]["rating"] == "family"
+    assert result.redteam["violationCount"] == 0
+    assert all(a.get("audioUrl") for a in result.case["anchors"])
+    assert deps.progress.jobs["okafor-final"]["status"] == "done"
+
+
 def test_job_input_from_server_record():
     job = {
         "jobId": "j1",

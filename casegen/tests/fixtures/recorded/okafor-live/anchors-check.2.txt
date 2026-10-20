@@ -1,0 +1,15 @@
+```json
+{"claims": [
+{"anchor": "a_chidi_crack", "claim": "Chidi was not hanging any banner.", "source": "lie:l_chidi"},
+{"anchor": "a_chidi_crack", "claim": "Chidi was in the garden shed.", "source": "f_chidi_shed"},
+{"anchor": "a_chidi_crack", "claim": "Chidi was on a video call with friends from 5:15 until after 5:45 pm.", "source": "f_chidi_shed"},
+{"anchor": "a_eze_crack", "claim": "Mr. Eze was not on the porch.", "source": "lie:l_eze"},
+{"anchor": "a_eze_crack", "claim": "Mr. Eze was in Grandma Ada's bedroom from 5:10 pm.", "source": "f_eze_lesson"},
+{"anchor": "a_eze_crack", "claim": "Mr. Eze was giving Grandma Ada a guitar lesson.", "source": "f_eze_lesson"},
+{"anchor": "a_eze_crack", "claim": "The guitar lesson was for a surprise performance at the party.", "source": "f_eze_guitar_secret"},
+{"anchor": "a_end_correct", "claim": "Ngozi feared Grandma Ada's feast would run late and embarrass the family in front of the guests.", "source": "f_ngozi_motive"},
+{"anchor": "a_end_correct", "claim": "Ngozi went round to the kitchen side door at about twenty past five.", "source": "f_ngozi_kitchen_door"},
+{"anchor": "a_end_correct", "claim": "Ngozi loaded the pot and cake onto her trolley.", "source": "f_ngozi_kitchen_door"},
+{"anchor": "a_end_correct", "claim": "The warming cabinet in Ngozi's catering van kept the jollof hot.", "source": "f_cabinet"}
+]}
+```
