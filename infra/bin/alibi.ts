@@ -1,5 +1,6 @@
 import { App } from 'aws-cdk-lib';
 import { AuthStack } from '../lib/auth-stack.js';
+import { CasegenStack } from '../lib/casegen-stack.js';
 
 const app = new App();
 const env = { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION ?? 'us-east-1' };
@@ -14,3 +15,5 @@ new AuthStack(app, 'AlibiAuth', {
   ],
   simulatorCallbackUrls: ['http://localhost:5173/callback'],
 });
+
+new CasegenStack(app, 'AlibiCasegen', { env });

@@ -1,0 +1,10 @@
+FROM public.ecr.aws/lambda/python:3.12
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+WORKDIR ${LAMBDA_TASK_ROOT}
+COPY pyproject.toml uv.lock ./
+RUN uv export --frozen --no-dev --no-emit-project --no-hashes -o requirements.txt \
+ && uv pip install --system --target ${LAMBDA_TASK_ROOT} -r requirements.txt
+COPY config.json ./
+COPY alibi_casegen ./alibi_casegen
+ENV ALIBI_KEY_SOURCE=identity
+CMD ["alibi_casegen.lambda_handler.handler"]
