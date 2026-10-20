@@ -20,7 +20,7 @@ Keep the game_id from start_case and pass it to every later call. Keep narration
 export function buildServer(deps: Deps, ctx: { authInfo?: AuthInfo }): McpServer {
   const server = new McpServer(SERVER_INFO, { instructions: INSTRUCTIONS });
   const toolCtx = { deps, authInfo: ctx.authInfo };
-  registerViews(server, deps.appHtml);
+  registerViews(server, deps.appHtml, deps.assetsBaseUrl);
   registerCatalogTools(server, toolCtx);
   registerInterrogationTools(server, toolCtx);
   registerInvestigationTools(server, toolCtx);
