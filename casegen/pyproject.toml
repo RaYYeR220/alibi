@@ -18,7 +18,10 @@ dependencies = [
 alibi-validate = "alibi_casegen.cli:validate_main"
 
 [dependency-groups]
-dev = ["pytest>=8"]
+dev = [
+    "datamodel-code-generator>=0.86.0",
+    "pytest>=8",
+]
 
 [build-system]
 requires = ["hatchling"]

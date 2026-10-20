@@ -18,3 +18,15 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test
+
+  python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: casegen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync
+      - run: uv run pytest -q
+      - run: shopt -s nullglob; files=(../cases/*/case.json); if [ ${#files[@]} -gt 0 ]; then uv run alibi-validate "${files[@]}"; fi
