@@ -11,7 +11,8 @@ import { hint } from './engine/hint.js';
 import { collectLab, requestLab } from './engine/lab.js';
 import { present } from './engine/present.js';
 import { lintCase } from './lint.js';
-import { parseCase, type Case } from './schema.js';
+import { redteam } from './redteam.js';
+import { CaseFormatError, parseCase, type Case } from './schema.js';
 import { newGameState, type GameState } from './state.js';
 import { resolveEntity } from './topics.js';
 
@@ -21,8 +22,9 @@ export interface Io {
 }
 
 const USAGE = `usage:
-  alibi-canon lint <case.json>
-  alibi-canon playtest <case.json>`;
+  alibi-canon lint <case.json> [--json]
+  alibi-canon playtest <case.json>
+  alibi-canon redteam <case.json> [--runs N] [--seed S] [--json]`;
 
 const HELP = `commands: ask <suspect> <question> | examine <place or item> | present <suspect> <item> | lab <item> | wait <hours> | hint | board | accuse <suspect> <item...> | quit`;
 
@@ -30,11 +32,54 @@ function load(file: string): Case {
   return parseCase(JSON.parse(readFileSync(file, 'utf8')));
 }
 
-function lint(file: string, io: Io): number {
-  const issues = lintCase(load(file));
-  for (const i of issues) io.out(`${i.code}: ${i.detail}`);
-  io.out(`${issues.length} issues`);
+interface Flags {
+  json: boolean;
+  runs: number;
+  seed?: number;
+}
+
+function flags(args: string[]): Flags {
+  const value = (name: string) => {
+    const i = args.indexOf(name);
+    return i >= 0 ? Number(args[i + 1]) : undefined;
+  };
+  return { json: args.includes('--json'), runs: value('--runs') ?? 500, seed: value('--seed') };
+}
+
+function lint(file: string, f: Flags, io: Io): number {
+  let issues: { code: string; detail: string }[];
+  try {
+    issues = lintCase(load(file));
+  } catch (err) {
+    if (!(err instanceof CaseFormatError)) throw err;
+    issues = err.issues.map((detail) => ({ code: 'format', detail }));
+  }
+  if (f.json) {
+    io.out(JSON.stringify({ issues }));
+  } else {
+    for (const i of issues) io.out(`${i.code}: ${i.detail}`);
+    io.out(`${issues.length} issues`);
+  }
   return issues.length ? 1 : 0;
+}
+
+function attack(file: string, f: Flags, io: Io): number {
+  let c: Case;
+  try {
+    c = load(file);
+  } catch (err) {
+    if (!(err instanceof CaseFormatError)) throw err;
+    for (const i of err.issues) io.err(`format: ${i}`);
+    return 1;
+  }
+  const report = redteam(c, { runs: f.runs, seed: f.seed });
+  if (f.json) {
+    io.out(JSON.stringify(report, null, 2));
+  } else {
+    io.out(`${report.caseId}: ${report.runs} runs, ${report.steps} steps, ${report.violationCount} violations (seed ${report.seed})`);
+    for (const v of report.violations) io.out(`  run ${v.run} step ${v.step} ${v.kind}: ${v.leakedFactIds.join(', ')} after ${JSON.stringify(v.action)}`);
+  }
+  return report.violationCount ? 1 : 0;
 }
 
 /** Resolves a leading multi-word entity name ("lace handkerchief ...") and returns it with the remaining words. */
@@ -137,9 +182,10 @@ async function playtest(file: string, io: Io, script?: string[]): Promise<number
 }
 
 export async function runCli(argv: string[], io: Io, script?: string[]): Promise<number> {
-  const [cmd, file] = argv;
-  if (cmd === 'lint' && file) return lint(file, io);
+  const [cmd, file, ...rest] = argv;
+  if (cmd === 'lint' && file) return lint(file, flags(rest), io);
   if (cmd === 'playtest' && file) return playtest(file, io, script);
+  if (cmd === 'redteam' && file) return attack(file, flags(rest), io);
   io.err(USAGE);
   return 2;
 }
