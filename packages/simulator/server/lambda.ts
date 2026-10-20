@@ -50,6 +50,7 @@ const app = createSimApp({
     clientId: env.SIM_CLIENT_ID!,
     sandboxOrigin,
   }),
+  merchant: (path, init) => fetch(`${apiOrigin}/ucp${path}`, init),
   ipOf: (_req, c) => (c.env as { requestContext?: { http?: { sourceIp?: string } } } | undefined)?.requestContext?.http?.sourceIp ?? 'unknown',
 });
 app.route('/', siteRoutes(loadSite('./web')));

@@ -102,3 +102,34 @@ describe('visitors and tokens', () => {
     });
   });
 });
+
+describe('checkout relay', () => {
+  it("forwards the payment phase's checkout calls to the merchant with their headers", async () => {
+    const seen: { path: string; method: string; headers: Headers; body?: string }[] = [];
+    const h = harness({
+      merchant: async (path, init) => {
+        seen.push({ path, method: init.method, headers: new Headers(init.headers), body: init.body });
+        return Response.json({ id: 'cs_1', status: 'completed' });
+      },
+    });
+    const res = await h.app.fetch(
+      new Request('https://sim.alibi.test/api/ucp/checkout-sessions/cs_1/complete', {
+        method: 'POST',
+        headers: { authorization: 'Bearer hh', 'idempotency-key': 'k-1', 'content-type': 'application/json', cookie: 'x=1' },
+        body: '{"payment":{}}',
+      }),
+    );
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ id: 'cs_1', status: 'completed' });
+    expect(seen[0]).toMatchObject({ path: '/checkout-sessions/cs_1/complete', method: 'POST', body: '{"payment":{}}' });
+    expect(seen[0]!.headers.get('authorization')).toBe('Bearer hh');
+    expect(seen[0]!.headers.get('idempotency-key')).toBe('k-1');
+    expect(seen[0]!.headers.get('cookie')).toBeNull();
+  });
+
+  it('relays nothing but checkout sessions', async () => {
+    const h = harness({ merchant: async () => Response.json({}) });
+    expect((await h.app.fetch(new Request('https://sim.alibi.test/api/ucp/../mcp', { method: 'POST' }))).status).toBe(404);
+    expect((await h.app.fetch(new Request('https://sim.alibi.test/api/ucp/orders/1'))).status).toBe(404);
+  });
+});

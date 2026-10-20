@@ -40,8 +40,17 @@ export interface SimDeps {
   /** The shared client-credentials token guests play with. */
   serviceToken: () => Promise<{ accessToken: string; expiresAt: number }>;
   publicConfig: () => Promise<PublicConfig>;
+  /**
+   * The add-on's UCP checkout API. The assistant's payment phase calls it from
+   * the backend, the way a voice assistant's cloud calls a merchant.
+   */
+  merchant: (path: string, init: { method: string; headers: Record<string, string>; body?: string }) => Promise<Response>;
   ipOf: (req: Request, c: Context) => string;
 }
+
+/** Only checkout sessions travel through the relay: create, read, update, complete, cancel. */
+const CHECKOUT_PATH = /^\/checkout-sessions(\/[A-Za-z0-9_-]+(\/(complete|cancel))?)?$/;
+const RELAYED_HEADERS = ['authorization', 'content-type', 'idempotency-key', 'request-id'];
 
 export const DEFAULT_MODEL = 'claude-haiku-5-5';
 const MAX_TTS_CHARS = 1600;
@@ -166,6 +175,25 @@ export function createSimApp(deps: SimDeps): Hono {
       defaultModel: DEFAULT_MODEL,
       hostVoice: cfg.hostVoice,
       resting: spent >= capMicros(),
+    });
+  });
+
+  app.all('/api/ucp/*', async (c) => {
+    const path = c.req.path.slice('/api/ucp'.length);
+    if (!CHECKOUT_PATH.test(path)) return c.json({ reason: 'not_found' }, 404);
+    const method = c.req.method;
+    if (method !== 'GET' && method !== 'POST' && method !== 'PUT') return c.json({ reason: 'method_not_allowed' }, 405);
+    const refused = await limited(c, 'ucp', cfg.tokenLimit);
+    if (refused) return refused;
+    const headers: Record<string, string> = {};
+    for (const h of RELAYED_HEADERS) {
+      const v = c.req.header(h);
+      if (v) headers[h] = v;
+    }
+    const res = await deps.merchant(path, { method, headers, ...(method === 'GET' ? {} : { body: await c.req.text() }) });
+    return new Response(await res.text(), {
+      status: res.status,
+      headers: { 'content-type': res.headers.get('content-type') ?? 'application/json', 'cache-control': 'no-store' },
     });
   });
 

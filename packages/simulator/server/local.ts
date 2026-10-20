@@ -32,6 +32,7 @@ const app = createSimApp({
     clientId: env.SIM_CLIENT_ID ?? '5gatu3t885ojmpd172vmn82hpl',
     sandboxOrigin: 'http://localhost:5174',
   }),
+  merchant: (path, init) => fetch(`${apiOrigin}/ucp${path}`, init),
   ipOf: (req) => req.headers.get('x-forwarded-for') ?? '127.0.0.1',
 });
 

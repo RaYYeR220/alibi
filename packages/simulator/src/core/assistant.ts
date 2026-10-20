@@ -154,7 +154,8 @@ export class Assistant {
     });
     const store = this.store;
     this.wallet = createWallet({
-      ucpBase: cfg.ucpBase,
+      // Checkout goes through this page's own backend, the way an assistant's cloud reaches a merchant.
+      ucpBase: '/api/ucp',
       getToken: () => this.tokens.get(),
       speak: (t) => this.speakHost(t),
       demoPin: DEMO_PIN,

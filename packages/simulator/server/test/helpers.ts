@@ -49,6 +49,7 @@ export function harness(overrides: Partial<SimDeps> = {}, config: Partial<SimCon
       clientId: 'sim-client',
       sandboxOrigin: 'https://sandbox.alibi.test',
     }),
+    merchant: async () => Response.json({ status: 'completed' }),
     ipOf: (req: Request) => req.headers.get('x-test-ip') ?? '203.0.113.7',
     ...overrides,
   } as Harness['deps'];
