@@ -46,8 +46,9 @@ export function storeContract(name: string, make: () => Promise<Harness>) {
     it('granting the same order twice adds one credit', async () => {
       const { stores } = await make();
       const hh = uid('hh');
-      await stores.entitlements.grant(hh, 'custom-case', 'ord-same');
-      await stores.entitlements.grant(hh, 'custom-case', 'ord-same');
+      const order = uid('ord');
+      await stores.entitlements.grant(hh, 'custom-case', order);
+      await stores.entitlements.grant(hh, 'custom-case', order);
       expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(true);
       expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(false);
     });
@@ -84,7 +85,7 @@ export function storeContract(name: string, make: () => Promise<Harness>) {
       const { stores } = await make();
       const hh = uid('hh');
       expect(await stores.entitlements.has(hh, 'custom-case')).toBe(false);
-      await stores.entitlements.grant(hh, 'custom-case', 'ord-1');
+      await stores.entitlements.grant(hh, 'custom-case', uid('ord'));
       expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(true);
       expect(await stores.entitlements.consume(hh, 'custom-case')).toBe(false);
     });
