@@ -16,6 +16,7 @@ dependencies = [
 
 [project.scripts]
 alibi-validate = "alibi_casegen.cli:validate_main"
+alibi-generate = "alibi_casegen.cli:generate_main"
 
 [dependency-groups]
 dev = [

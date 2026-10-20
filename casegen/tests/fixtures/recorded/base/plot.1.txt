@@ -1,0 +1,36 @@
+```json
+{
+  "title": "The Brooch at Ashby House",
+  "tagline": "A birthday, a locked desk, and a sapphire that walked away.",
+  "setting": "A birthday dinner at Ashby House. Aunt Margaret's sapphire brooch vanished from the study desk between nine and ten.",
+  "crime": "theft",
+  "victim": { "name": "Aunt Margaret", "role": "the host", "description": "Turning seventy tonight, and furious." },
+  "places": ["the study", "the greenhouse", "the dining room", "the hall", "the pantry"],
+  "suspects": [
+    { "name": "Harold Finch", "role": "gardener", "gender": "male", "age": "60s", "look": "weathered face, flat cap, earth under his fingernails", "personality": "gruff, loyal, proud", "speech": "Short sentences, talks in gardening terms.", "secret": "He came into the study at nine for twine and is ashamed of the mud." },
+    { "name": "Clara Vance", "role": "niece", "gender": "female", "age": "20s", "look": "bobbed hair, green silk dress, restless hands", "personality": "charming, quick, evasive", "speech": "Bright and breezy, deflects with jokes.", "secret": "She owes a pawnbroker and took the brooch." },
+    { "name": "Mr Perkins", "role": "butler", "gender": "male", "age": "50s", "look": "silver hair, immaculate tailcoat, white gloves", "personality": "precise, discreet", "speech": "Formal; never gossips unless pressed.", "secret": "He holds the spare desk key, which makes him look guilty." }
+  ],
+  "culprit": "Clara Vance",
+  "motive": "She owes a large sum to a pawnbroker.",
+  "means": "She used the brass desk key, which still smells of her lily perfume.",
+  "opportunity": "She slipped into the study at a quarter past nine.",
+  "red_herring": "Perkins carries a spare key to the desk but was polishing silver all hour.",
+  "timeline": [
+    { "time": "8:00", "event": "Dinner is served." },
+    { "time": "9:00", "event": "Harold fetches twine from the study; the desk is locked." },
+    { "time": "9:15", "event": "Clara slips into the study and opens the desk." },
+    { "time": "10:00", "event": "Margaret finds the brooch gone." }
+  ],
+  "clues": [
+    { "name": "muddy boot prints", "where": "the study", "reveals": "Harold was inside the house", "lab": false },
+    { "name": "lace handkerchief", "where": "the study", "reveals": "Clara was in the study", "lab": false },
+    { "name": "brass desk key", "where": "the dining room", "reveals": "lily perfume on the key", "lab": true },
+    { "name": "pawn ticket", "where": "the hall", "reveals": "Clara's debts", "lab": false }
+  ],
+  "lies": [
+    { "suspect": "Harold Finch", "claim": "He never set foot in the house.", "truth": "He fetched twine from the study at nine.", "exposed_by": "muddy boot prints" },
+    { "suspect": "Clara Vance", "claim": "She read in the library all evening.", "truth": "She slipped into the study at a quarter past nine.", "exposed_by": "lace handkerchief" }
+  ]
+}
+```

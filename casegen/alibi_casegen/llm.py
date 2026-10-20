@@ -14,6 +14,9 @@ Role = Literal["writer", "checker"]
 
 _CONFIG_PATH = Path(__file__).resolve().parent.parent / "config.json"
 
+# A full case file runs to roughly 15k output tokens; leave room for a long one.
+MAX_TOKENS: dict[str, int] = {"writer": 32_000, "checker": 8_000}
+
 
 @cache
 def config() -> dict:
@@ -32,11 +35,21 @@ def get_venice_key() -> str:
     return key
 
 
-def make_model(role: Role) -> OpenAIModel:
+@cache
+def _key() -> str:
+    return get_venice_key()
+
+
+def make_model(role: Role, *, api_key: str | None = None) -> OpenAIModel:
     cfg = config()
     model_id = cfg["writerModel"] if role == "writer" else cfg["checkerModel"]
     return OpenAIModel(
-        client_args={"api_key": get_venice_key(), "base_url": cfg["veniceBaseUrl"]},
+        client_args={"api_key": api_key or get_venice_key(), "base_url": cfg["veniceBaseUrl"], "timeout": 900},
         model_id=model_id,
-        params={"temperature": 0.8 if role == "writer" else 0.0},
+        params={"temperature": 0.8 if role == "writer" else 0.0, "max_tokens": MAX_TOKENS[role]},
     )
+
+
+def venice_llm(role: str, key: str) -> OpenAIModel:
+    """Pipeline model factory; `key` names the call site and is only used by replay and recording."""
+    return make_model("writer" if role == "writer" else "checker", api_key=_key())

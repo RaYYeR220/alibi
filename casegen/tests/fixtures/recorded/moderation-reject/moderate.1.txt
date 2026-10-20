@@ -1,0 +1,1 @@
+{"allowed": false, "reason": "The occasion asks for a real person to be harmed."}

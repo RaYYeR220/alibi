@@ -1,0 +1,1 @@
+{"allowed": true, "reason": "Family names and a birthday dinner; nothing unsafe."}
