@@ -43,6 +43,16 @@ def _brief(path: Path) -> dict:
     return json.loads(text)
 
 
+class _StubImages:
+    def generate(self, prompt: str, *, width: int = 1024, height: int = 1024) -> bytes:
+        return b"placeholder image"
+
+
+class _StubTts:
+    def synthesize(self, text: str, voice_id: str) -> bytes:
+        return b"placeholder audio"
+
+
 def generate_main(argv: list[str] | None = None) -> int:
     from .llm import config, get_venice_key, venice_llm
     from .pipeline import JobFailed, JobInput, PipelineDeps, generate
@@ -55,6 +65,7 @@ def generate_main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--no-art", action="store_true")
     p.add_argument("--no-voices", action="store_true")
+    p.add_argument("--stub-media", action="store_true", help="run the art and voice stages with placeholder bytes")
     p.add_argument("--record", type=Path, help="keep every LLM reply here as <key>.<n>.txt")
     p.add_argument("--runs", type=int, default=500, help="red-team runs")
     args = p.parse_args(argv)
@@ -75,11 +86,13 @@ def generate_main(argv: list[str] | None = None) -> int:
     )
     llm = RecordingLlm(venice_llm, args.record) if args.record else venice_llm
     images = tts = None
-    if not args.no_art:
+    if args.stub_media:
+        images, tts = _StubImages(), _StubTts()
+    elif not args.no_art:
         from .stages.art import VeniceImages
 
         images = VeniceImages(api_key=get_venice_key(), model=config()["imageModel"], base_url=config()["veniceBaseUrl"])
-    if not args.no_voices:
+    if not args.no_voices and not args.stub_media:
         import boto3
 
         from .stages.voices import PollyTts

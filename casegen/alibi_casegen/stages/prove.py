@@ -56,6 +56,27 @@ def _norm(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", " ", re.sub(r"['’]", "", text.lower())).strip()
 
 
+def sealed_facts(case: dict) -> set[str]:
+    """Facts no one ever volunteers and no evidence implies: only the ending may say them."""
+    speakable = {k["factId"] for k in case["knowledge"] if k["tier"] != "never"}
+    implied = {f for e in case["evidence"] for f in [*e.get("implies", []), *(e.get("lab") or {}).get("resultFactIds", [])]}
+    starting = set(case["meta"].get("startingFacts", []))
+    return {f["id"] for f in case["facts"]} - speakable - implied - starting
+
+
+def structural_issues(case: dict) -> list[dict]:
+    """Design mistakes the solver does not see but play would expose."""
+    sealed = sealed_facts(case)
+    return [
+        {
+            "code": "lie_reveals_secret",
+            "detail": f"lie {lie['id']} contradicts {lie['contradicts']}, which only the ending may reveal; a crack must admit something smaller",
+        }
+        for lie in case["lies"]
+        if lie["contradicts"] in sealed
+    ]
+
+
 def check(case: dict, deps: PipelineDeps) -> list[dict]:
     try:
         models.Case.model_validate(case)
@@ -65,7 +86,7 @@ def check(case: dict, deps: PipelineDeps) -> list[dict]:
     if any(i["code"] == "format" for i in issues):
         return issues
     report = prove(case)
-    return issues + [{"code": i.code, "detail": i.detail} for i in report.issues]
+    return issues + structural_issues(case) + [{"code": i.code, "detail": i.detail} for i in report.issues]
 
 
 def run(draft: Draft, deps: PipelineDeps) -> dict:

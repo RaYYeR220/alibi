@@ -38,6 +38,7 @@ denials of guilt, questions, and anything about the future.
 
 For each claim give the id of the source that states it: a fact id (f_...), "lie:<lie id>", "evidence:<evidence id>",
 "suspect:<suspect id>", "victim", "setting" or "cast". Use null when nothing in the case file states it.
+In an ending, skip how things turn out after the accusation (something returned, someone forgiven).
 
 Reply with JSON only: {"claims": [{"anchor": "<anchor id>", "claim": "...", "source": "<id or null>"}]}"""
 
@@ -45,9 +46,12 @@ STOPWORDS = set(
     """a an and are as at be been but by did do does for from had has have he her hers him his how i if in into is it its
     me my of on or our she so than that the their them then there they this to too up was we were what when where which
     who whom why will with would you your all any just only very still also back out over again more most could should
-    one ever never not no yes""".split()
+    one ever never not no yes about""".split()
 )
+# Words people use when owning up ("what I said was not true") that carry no fact of their own.
+META = set("story true untrue false said say says told tell claim claimed lie lied lying admit admitted really actually".split())
 NUMBERS = ["no", "one", "two", "three", "four", "five", "six"]
+UNCHECKED = {"ending_wrong", "ending_partial"}
 
 
 class Claim(BaseModel):
@@ -73,7 +77,7 @@ def _stem(token: str) -> str:
 
 def content_tokens(text: str) -> set[str]:
     words = re.sub(r"[^a-z0-9]+", " ", re.sub(r"['’]s?\b", "", text.lower())).split()
-    return {_stem(w) for w in words if w not in STOPWORDS}
+    return {_stem(w) for w in words if w not in STOPWORDS and w not in META}
 
 
 def coverage(claim: str, source: str) -> float:
@@ -95,16 +99,32 @@ def sources_for(case: dict, speaker_id: str) -> dict[str, str]:
         out[f"evidence:{e['id']}"] = f"{e['name']}. {e['description']}"
     for p in case.get("places", []):
         out[f"place:{p['id']}"] = p["name"]
+    speaker = next((s for s in case["suspects"] if s["id"] == speaker_id), None)
     for lie in case["lies"]:
-        if lie["suspectId"] == speaker_id:
-            out[f"lie:{lie['id']}"] = lie["claim"]
+        if speaker and lie["suspectId"] == speaker_id:
+            # lies are first person; name the speaker so third-person claims about them match
+            out[f"lie:{lie['id']}"] = f"{speaker['name']}: {lie['claim']}"
     return out
 
 
+def _source_key(source: str | None, sources: dict[str, str]) -> str | None:
+    """Accepts the checker's ids with or without their prefix ("e_x" or "evidence:e_x")."""
+    if not source or source in sources:
+        return source
+    for prefix in ("evidence:", "lie:", "suspect:", "place:"):
+        if f"{prefix}{source}" in sources:
+            return f"{prefix}{source}"
+    return None
+
+
 def claim_supported(claim: str, source: str | None, sources: dict[str, str]) -> bool:
-    if source and source in sources and coverage(claim, sources[source]) >= 0.5:
-        return True
-    return max((coverage(claim, text) for text in sources.values()), default=0.0) >= 0.75
+    key = _source_key(source, sources)
+    if key is not None:
+        # A speaker owning up to their own lie quotes it loosely ("what I said about the library was not true").
+        needed = 0.4 if key.startswith("lie:") else 0.5
+        if coverage(claim, sources[key]) >= needed:
+            return True
+    return max((coverage(claim, text) for text in sources.values()), default=0.0) >= 0.7
 
 
 def _fact(case: dict, fact_id: str) -> dict:
@@ -214,8 +234,10 @@ def run(draft: Draft, deps: PipelineDeps) -> None:
     written = ask_json(deps.llm, "writer", "anchors", WRITER, _brief(case, anchors), validate=Rewritten.model_validate)
     _apply(anchors, written.anchors)
 
-    report: dict = {"checked": len(anchors), "rewritten": [], "dropped": [], "lint": []}
-    bad = _check(case, anchors, deps)
+    # Wrong and partial endings carry no facts by design; the spoiler guard covers them.
+    checked = [a for a in anchors if a["trigger"] not in UNCHECKED]
+    report: dict = {"checked": len(checked), "rewritten": [], "dropped": [], "lint": []}
+    bad = _check(case, checked, deps)
     if bad:
         flagged = [a for a in anchors if a["id"] in bad]
         request = (

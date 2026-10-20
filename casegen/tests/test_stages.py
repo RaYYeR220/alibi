@@ -35,6 +35,22 @@ def test_claim_is_supported_only_by_a_matching_source(tiny):
     assert not claim_supported("Harold saw a ghost in the orchard.", None, sources)
 
 
+def test_bare_ids_and_own_lie_references_are_understood(tiny):
+    sources = sources_for(tiny, "clara")
+    assert claim_supported("A lace handkerchief smelling faintly of lilies was under the study desk.", "e_handkerchief", sources)
+    assert claim_supported("Clara's story about the library with a novel was not true.", "l_clara", sources)
+
+
+def test_lie_that_contradicts_a_sealed_fact_is_flagged(tiny):
+    from alibi_casegen.stages.prove import structural_issues
+
+    assert structural_issues(tiny) == []
+    tiny["lies"][1]["contradicts"] = "f_clara_took"  # only the ending may say this
+    issues = structural_issues(tiny)
+    assert [i["code"] for i in issues] == ["lie_reveals_secret"]
+    assert "l_clara" in issues[0]["detail"]
+
+
 def test_another_suspects_lie_is_not_a_source(tiny):
     harold = sources_for(tiny, "harold")
     clara = sources_for(tiny, "clara")

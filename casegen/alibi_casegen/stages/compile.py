@@ -86,6 +86,7 @@ ISSUE_HELP = {
     "fingerprint_collision": "a fingerprint shows up in text heard before the fact is learned: change the fingerprint or the other text",
     "short_fingerprint": "fingerprints need at least three words",
     "format": "the document does not match the format",
+    "lie_reveals_secret": "breaking that lie would confess the crime mid-game: make the lie contradict where the culprit was, not what they did",
 }
 
 

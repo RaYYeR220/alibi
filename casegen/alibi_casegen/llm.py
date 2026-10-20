@@ -40,16 +40,28 @@ def _key() -> str:
     return get_venice_key()
 
 
-def make_model(role: Role, *, api_key: str | None = None) -> OpenAIModel:
+def model_params(role: Role, key: str | None = None) -> dict:
+    """Request parameters per call site. Extended thinking is off unless config names an effort for the call
+    (it is slow: a plot spent two minutes thinking before writing a word)."""
+    params: dict = {"temperature": 0.8 if role == "writer" else 0.0, "max_tokens": MAX_TOKENS[role]}
+    effort = config().get("reasoningEffort", {}).get(key or "")
+    if effort:
+        params["reasoning_effort"] = effort
+    else:
+        params["extra_body"] = {"venice_parameters": {"disable_thinking": True}}
+    return params
+
+
+def make_model(role: Role, *, key: str | None = None, api_key: str | None = None) -> OpenAIModel:
     cfg = config()
     model_id = cfg["writerModel"] if role == "writer" else cfg["checkerModel"]
     return OpenAIModel(
         client_args={"api_key": api_key or get_venice_key(), "base_url": cfg["veniceBaseUrl"], "timeout": 900},
         model_id=model_id,
-        params={"temperature": 0.8 if role == "writer" else 0.0, "max_tokens": MAX_TOKENS[role]},
+        params=model_params(role, key),
     )
 
 
 def venice_llm(role: str, key: str) -> OpenAIModel:
-    """Pipeline model factory; `key` names the call site and is only used by replay and recording."""
-    return make_model("writer" if role == "writer" else "checker", api_key=_key())
+    """Pipeline model factory; `key` names the call site (stage), which picks its reasoning effort."""
+    return make_model("writer" if role == "writer" else "checker", key=key, api_key=_key())

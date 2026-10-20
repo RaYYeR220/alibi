@@ -3,5 +3,6 @@
   "writerModel": "claude-sonnet-5-5",
   "checkerModel": "claude-haiku-5-5",
   "imageModel": "flux-2-pro",
-  "imageModelCandidates": ["flux-2-pro", "recraft-v4", "gpt-image-2", "nano-banana-pro"]
+  "imageModelCandidates": ["flux-2-pro", "recraft-v4", "gpt-image-2", "nano-banana-pro"],
+  "reasoningEffort": { "compile": "low" }
 }
